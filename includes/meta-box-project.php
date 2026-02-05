@@ -480,7 +480,10 @@ function prj_admin_scripts() {
                 }).on('select', function() {
                     // Get the selected media
                     var selections = mediaUploader.state().get('selection');
-                    var existingIds = $('#prj_items_field').val().split(',');
+                    
+                    // FIX: Handle empty value correctly to avoid empty string in array
+                    var val = $('#prj_items_field').val();
+                    var existingIds = val ? val.split(',') : [];
         
                     selections.each(function(attachment) {
                         existingIds.push(attachment.id); // Add new attachment IDs to the array

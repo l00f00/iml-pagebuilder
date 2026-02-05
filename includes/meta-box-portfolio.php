@@ -16,7 +16,7 @@ function portfolio_meta_box_callback($post) {
     wp_nonce_field('portfolio_save_meta_box_data', 'portfolio_meta_box_nonce');
     $portfolio_items = get_post_meta($post->ID, 'portfolio_items', true) ?: [];
     
-    echo '<button style="margin-bottom:30px;" id="custom_media_upload" class="button">Upload Foto</button>';
+    echo '<button style="margin-bottom:30px;" id="portfolio_media_upload" class="button">Upload Foto</button>';
     echo '<ul id="add-portfolio-item" class="portfolio-dropdown">';
     echo '<li class="dropdown-toggle">Seleziona un post</li>';
 
@@ -426,7 +426,8 @@ function portfolio_admin_scripts() {
     });
 });
 jQuery(document).ready(function($) {
-            $('#custom_media_upload').click(function(e) {
+            // FIX: Changed ID to unique 'portfolio_media_upload' to avoid conflicts
+            $('#portfolio_media_upload').click(function(e) {
                 e.preventDefault();
                 var mediaUploader = wp.media({
                     title: 'Upload Media',
@@ -437,7 +438,10 @@ jQuery(document).ready(function($) {
                 }).on('select', function() {
                     // Get the selected media
                     var selections = mediaUploader.state().get('selection');
-                    var existingIds = $('#portfolio_items_field').val().split(',');
+                    
+                    // FIX: Handle empty value correctly to avoid empty string in array
+                    var val = $('#portfolio_items_field').val();
+                    var existingIds = val ? val.split(',') : [];
         
                     selections.each(function(attachment) {
                         existingIds.push(attachment.id); // Add new attachment IDs to the array

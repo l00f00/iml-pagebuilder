@@ -154,3 +154,14 @@ flex-direction:column!important;
   max-width: 99vw!important;
 }
 }
+
+/* FIX SAFARI - Foto cover progetto */
+.left-column-progetto img {
+    max-height: 100%;
+    height: auto;
+    height: -webkit-fill-available;
+    top: 0;
+    left: 0;
+    object-fit: contain;
+    width: -webkit-fill-available!important;
+}
