@@ -42,3 +42,16 @@ Estende le funzionalità della libreria media di WordPress:
 
 ## Webhook Test
 *   Test di verifica webhook: OK.
+
+## TODO:
+*   Testare l'integrazione con Oxygen Builder.
+*   Verificare la compatibilità con altri plugin.
+*   in progetto posttype .left-column-progetto a img {
+    max-height: 100%;
+    height: auto;
+    width: -webkit-fill-available;
+    top: 0;
+    left: 0;
+    object-fit: contain;
+    width: -webkit-fill-available;
+}

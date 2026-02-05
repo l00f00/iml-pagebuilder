@@ -1,31 +1,32 @@
 <?php
 /**
- * Frontend logic (redirects, scripts).
+ * Frontend logic (redirects, scripts, styles).
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-function enqueue_simple_lightbox() {
+function iml_enqueue_frontend_scripts() {
     // Enqueue Simple Lightbox CSS
     wp_enqueue_style('simple-lightbox-css', 'https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/2.14.3/simple-lightbox.min.css');
 
     // Enqueue Simple Lightbox JS
     wp_enqueue_script('simple-lightbox-js', 'https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/2.14.3/simple-lightbox.min.js', array('jquery'), null, true);
 
-    // Se hai bisogno della versione jQuery di Simple Lightbox, puoi metterla in coda qui. Altrimenti, commenta la linea sottostante.
+    // Enqueue jQuery version if needed (original code had it)
     wp_enqueue_script('simple-lightbox-jquery-js', 'https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/2.14.3/simple-lightbox.jquery.min.js', array('jquery'), null, true);
-    // Inserisce JavaScript personalizzato nel footer
-    add_action('wp_footer', function() {
-        ?>
-        <script type="text/javascript">
-        </script>
-        <style>.sl-overlay{}.sl-wrapper, .sl-wrapper > *{z-index:300000000000000000000000000;}</style>
-        <?php
-    });
+
+    // Enqueue Custom Frontend CSS
+    wp_enqueue_style('iml-frontend-style', IML_PLUGIN_URL . 'frontend/style.css', array(), '1.0');
+
+    // Enqueue Custom Frontend JS
+    wp_enqueue_script('iml-frontend-script', IML_PLUGIN_URL . 'frontend/script.js', array('jquery', 'simple-lightbox-jquery-js'), '1.0', true);
+
+    // Custom CSS for Lightbox Z-Index
+    wp_add_inline_style('simple-lightbox-css', '.sl-overlay{}.sl-wrapper, .sl-wrapper > *{z-index:300000000000000000000000000;}');
 }
-add_action('wp_enqueue_scripts', 'enqueue_simple_lightbox');
+add_action('wp_enqueue_scripts', 'iml_enqueue_frontend_scripts');
 
 add_action('template_redirect', function() {
     // Controlla se siamo nell'area di login o amministrazione
