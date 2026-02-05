@@ -38,20 +38,31 @@ Estende le funzionalità della libreria media di WordPress:
 ## Struttura
 *   `index.php`: Entry point.
 *   `includes/`: Contiene tutta la logica divisa in moduli.
+*   `frontend/`: Contiene CSS e JS per il frontend.
 *   `old/`: Archivio del codice legacy.
 
-## Webhook Test
-*   Test di verifica webhook: OK.
+## Changelog & Status
 
-## TODO:
-*   Testare l'integrazione con Oxygen Builder.
-*   Verificare la compatibilità con altri plugin.
-*   in progetto posttype .left-column-progetto a img {
-    max-height: 100%;
-    height: auto;
-    width: -webkit-fill-available;
-    top: 0;
-    left: 0;
-    object-fit: contain;
-    width: -webkit-fill-available;
-}
+### Done (Completato)
+*   **Migrazione Codice Admin:** Tutto il codice originale (`all_admin_code.php`) è stato migrato in una struttura modulare (`includes/`).
+*   **Integrazione Registrazione Campi:** Le registrazioni dei CPT e Meta Box (`registrazionecampi.php`) sono state integrate in `includes/cpt-registrations.php`.
+*   **Migrazione Frontend:** La logica di visualizzazione della griglia homepage è stata convertita in shortcode `[iml_homepage_grid]`.
+*   **Assets Frontend:** CSS e JS sono stati separati in file dedicati (`frontend/style.css`, `frontend/script.js`) e vengono caricati correttamente.
+*   **Webhook:** Configurazione e test webhook GitHub completato.
+
+### TODO (Da Fare)
+*   [ ] **CSS Progetti:** Verificare e implementare lo stile per `.left-column-progetto a img`:
+    ```css
+    .left-column-progetto a img {
+        max-height: 100%;
+        height: auto;
+        width: -webkit-fill-available;
+        top: 0;
+        left: 0;
+        object-fit: contain;
+        width: -webkit-fill-available;
+    }
+    ```
+*   [ ] **Verifica Compatibilità:** Controllare eventuali conflitti con altri plugin installati.
+*   [ ] **Refactoring CSS:** Pulire e ottimizzare ulteriormente il CSS migrato.
+*   [ ] **Test Funzionale:** Verificare il corretto funzionamento del Drag & Drop e del salvataggio dati nell'admin.
