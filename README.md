@@ -39,3 +39,6 @@ Estende le funzionalità della libreria media di WordPress:
 *   `index.php`: Entry point.
 *   `includes/`: Contiene tutta la logica divisa in moduli.
 *   `old/`: Archivio del codice legacy.
+
+## Webhook Test
+*   Test di verifica webhook: OK.
