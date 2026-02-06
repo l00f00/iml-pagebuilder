@@ -51,6 +51,7 @@ Estende le funzionalità della libreria media di WordPress:
     *   La logica portfolio single è ora nello shortcode `[iml_portfolio_grid]`.
     *   La logica archivio (tag/cat) è ora nello shortcode `[iml_archive_grid]`.
     *   La logica archivio generico è ora nello shortcode `[iml_generic_archive_grid]`.
+    *   La logica serie/progetto single è ora nello shortcode `[iml_serie_single]`.
 *   **Assets Frontend:** CSS e JS sono stati separati in file dedicati (`frontend/style.css`, `frontend/script.js`) e vengono caricati correttamente.
 *   **Webhook:** Configurazione e test webhook GitHub completato.
 *   **Bug Builder Home:** Risolvere bug builder pagina HOME (spostare builder animazione o soluzione in place, ottimizzazione caricamento).
@@ -62,7 +63,6 @@ Estende le funzionalità della libreria media di WordPress:
 ### TODO (Elenco lavorazioni in sospeso)
 
 #### Priorità Alta & Bug
-finire di portare il codice del frontend dentro file del plugin (Progetto Single, Serie Single).
 *   [ ] **Home Builder:** Risolvere bug builder pagina HOME (spostare builder animazione in nuova pagina con label apposito).
 *   [ ] **Home Intro:** Animazione nome in INTRO — (In attesa file da cartella drive).
 *   [ ] **Home Preloading:** Inserimento animazione preloading pagina.
