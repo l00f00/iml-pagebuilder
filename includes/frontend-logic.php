@@ -80,7 +80,7 @@ function iml_homepage_lottie_preloader() {
     $lottie_url = IML_PLUGIN_URL . 'frontend/assets/ILM_Website-Logo-nero.json';
     ?>
     <!-- Lottie Preloader HTML -->
-    <div id="lottie-overlay" aria-hidden="true" style="display:none;">
+    <div id="lottie-overlay" aria-hidden="true" style="display:none; opacity: 1;">
         <div id="lottie-container"></div>
     </div>
 
@@ -95,6 +95,7 @@ function iml_homepage_lottie_preloader() {
             align-items: center;
             justify-content: center;
             pointer-events: all; /* Blocca i click durante il caricamento */
+            opacity: 1; /* Assicuriamo opacità iniziale */
         }
         #lottie-container {
             width: 100vw;
@@ -108,6 +109,9 @@ function iml_homepage_lottie_preloader() {
     <!-- Script removed: Lottie is now enqueued via wp_enqueue_scripts -->
     <script>
     (function() {
+        var startTime = Date.now();
+        console.log('Lottie Script Started at:', startTime);
+
         // Configurazione
         var lottieJSON = '<?php echo $lottie_url; ?>'; 
         
@@ -117,12 +121,16 @@ function iml_homepage_lottie_preloader() {
         
         // Se non è desktop, assicurati che sia nascosto ed esci
         if (!isDesktop) {
+            console.log('Lottie: Not desktop, skipping.');
             if (overlay) overlay.style.display = 'none';
             return;
         }
 
         // Se è desktop, mostra l'overlay e blocca lo scroll
-        if (overlay) overlay.style.display = 'flex';
+        if (overlay) {
+            overlay.style.display = 'flex';
+            overlay.style.opacity = '1'; // Force opacity
+        }
         document.documentElement.classList.add('lottie-active');
         document.body.classList.add('lottie-active');
         
@@ -130,7 +138,9 @@ function iml_homepage_lottie_preloader() {
         var done = false;
 
         function reveal(reason) {
-            console.log('Lottie Reveal triggered by:', reason);
+            var now = Date.now();
+            console.log('Lottie Reveal triggered by:', reason, 'Elapsed (ms):', now - startTime);
+            
             if (done) return;
             done = true;
             
@@ -145,6 +155,7 @@ function iml_homepage_lottie_preloader() {
                     overlay.style.display = 'none';
                     document.documentElement.classList.remove('lottie-active');
                     document.body.classList.remove('lottie-active');
+                    console.log('Lottie Overlay removed from DOM');
                 }, 1000);
             } else {
                 document.documentElement.classList.remove('lottie-active');
@@ -155,7 +166,6 @@ function iml_homepage_lottie_preloader() {
         // IMPOSTAZIONE TEMPISTICA FISSA:
         // L'animazione dura 7 secondi.
         // Il fade-out deve iniziare al 6° secondo (6000ms) e durare 1 secondo.
-        // Quindi al termine del fade (7000ms) tutto sarà finito.
         var fadeStartTime = 6000; 
 
         // Avvia il reveal (fade-out) esattamente a 6000ms
@@ -164,7 +174,7 @@ function iml_homepage_lottie_preloader() {
         }, fadeStartTime);
 
         try {
-            console.log('Initializing Lottie animation...');
+            console.log('Initializing Lottie animation with path:', lottieJSON);
             var anim = lottie.loadAnimation({
                 container: container,
                 renderer: 'svg',
@@ -176,7 +186,12 @@ function iml_homepage_lottie_preloader() {
             // Log durata animazione
             anim.addEventListener('DOMLoaded', function() {
                 console.log('Lottie DOM Loaded. Total frames:', anim.totalFrames, 'Frame rate:', anim.frameRate);
-                console.log('Estimated duration (s):', anim.totalFrames / anim.frameRate);
+                var duration = anim.totalFrames / anim.frameRate;
+                console.log('Estimated duration (s):', duration);
+            });
+            
+            anim.addEventListener('complete', function() {
+                 console.log('Lottie Animation Complete Event fired at (ms):', Date.now() - startTime);
             });
 
             // Gestione errori (es. file json mancante) - in questo caso sblocchiamo subito
