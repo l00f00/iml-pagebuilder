@@ -887,8 +887,19 @@ function iml_render_project_single($atts) {
         $featuredImageSpacer = '2em'; 
     }
     
-    // CSS Injection for spacing
+    // CSS Injection for spacing and layout
     echo '<style>';
+    // 3 Columns Layout CSS
+    if ( $layout_3_col ) {
+        echo '.related-fotos { display: flex; flex-wrap: wrap; }';
+        echo '.related-fotos .related-foto-item { flex: 0 0 33.333%; max-width: 33.333%; box-sizing: border-box; padding: 0 10px; }';
+        echo '@media (max-width: 768px) { .related-fotos .related-foto-item { flex: 0 0 100%; max-width: 100%; } }';
+    } else {
+        // 1 Column Layout CSS (Standard)
+        echo '.related-fotos { display: block; }';
+        echo '.related-fotos .related-foto-item { width: 100%; max-width: 100%; display: block; }';
+    }
+
     if ( $space && $spaceVert ) { 
         echo '.related-fotos {row-gap: 2em; column-gap: 2em;}'; 
         echo '.progetto-content {padding-bottom: '. $featuredImageSpacer .';}'; 
@@ -960,8 +971,10 @@ function iml_render_project_single($atts) {
     
     // Let's implement a meta field check. I will call it `layout_tre_colonne`.
     $abilitaSpazio = rwmb_meta('abilitaSpazio', '', $post_id); 
-    // Check strict values 'SI', 'YES', 'ON', '1', 'TRUE' (case insensitive)
-    $layout_3_col = !empty($abilitaSpazio) && in_array(strtoupper($abilitaSpazio), ['SI', 'YES', 'ON', '1', 'TRUE']);
+    
+    // Logic: 3 Columns if field is NOT empty AND NOT "NO" (case insensitive)
+    // This satisfies: "SI" -> 3col, "NO" -> 1col, Blank -> 1col.
+    $layout_3_col = !empty($abilitaSpazio) && strtoupper($abilitaSpazio) !== 'NO';
     
     // Navigation Logic
     $prj_items_alignment = get_post_meta($post_id, 'prj_items_alignment', true); // This seems to be used for navigation order? 
