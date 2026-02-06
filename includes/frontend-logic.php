@@ -24,7 +24,8 @@ function iml_enqueue_frontend_scripts() {
     wp_enqueue_script('iml-frontend-script', IML_PLUGIN_URL . 'frontend/script.js', array('jquery', 'simple-lightbox-jquery-js'), '1.0', true);
 
     // Enqueue Lottie Web globally (needed for Homepage preloader and Header animations on all pages)
-    wp_enqueue_script('lottie-web', 'https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js', array(), '5.12.2', true);
+    // Loaded in HEAD (false) to ensure it is available for the critical preloader script in wp_footer
+    wp_enqueue_script('lottie-web', 'https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js', array(), '5.12.2', false);
 
     // Custom CSS for Lightbox Z-Index
     wp_add_inline_style('simple-lightbox-css', '.sl-overlay{}.sl-wrapper, .sl-wrapper > *{z-index:300000000000000000000000000;}');
