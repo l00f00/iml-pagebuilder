@@ -960,8 +960,8 @@ function iml_render_project_single($atts) {
     
     // Let's implement a meta field check. I will call it `layout_tre_colonne`.
     $abilitaSpazio = rwmb_meta('abilitaSpazio', '', $post_id); 
-    // Check strict values 'SI' or 'NO' (case insensitive)
-    $layout_3_col = !empty($abilitaSpazio) && (strtoupper($abilitaSpazio) === 'SI');
+    // Check strict values 'SI', 'YES', 'ON', '1', 'TRUE' (case insensitive)
+    $layout_3_col = !empty($abilitaSpazio) && in_array(strtoupper($abilitaSpazio), ['SI', 'YES', 'ON', '1', 'TRUE']);
     
     // Navigation Logic
     $prj_items_alignment = get_post_meta($post_id, 'prj_items_alignment', true); // This seems to be used for navigation order? 
