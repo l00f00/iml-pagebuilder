@@ -75,6 +75,9 @@ function iml_homepage_lottie_preloader() {
     if ( ! is_front_page() ) {
         return;
     }
+    
+    // URL del file JSON dell'animazione
+    $lottie_url = IML_PLUGIN_URL . 'frontend/assets/ILM_Website-Logo-nero.json';
     ?>
     <!-- Lottie Preloader HTML -->
     <div id="lottie-overlay" aria-hidden="true" style="display:none;">
@@ -106,8 +109,7 @@ function iml_homepage_lottie_preloader() {
     <script>
     (function() {
         // Configurazione
-        // TODO: Caricare il file JSON corretto in /wp-content/uploads/ e aggiornare il percorso
-        var lottieJSON = '/wp-content/uploads/homepage-animation.json'; 
+        var lottieJSON = '<?php echo $lottie_url; ?>'; 
         
         // Check Desktop (min-width 1024px)
         var isDesktop = window.matchMedia('(min-width: 1024px)').matches;
