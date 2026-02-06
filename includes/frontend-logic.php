@@ -89,7 +89,7 @@ function iml_homepage_lottie_preloader() {
         #lottie-overlay {
             position: fixed;
             inset: 0;
-            background: #ffffff; /* Sfondo bianco */
+            background: rgba(255, 255, 255, 0.5); /* Sfondo semitrasparente per debug */
             z-index: 99999999; /* Z-index molto alto */
             display: none; /* Nascosto di default, attivato via JS se desktop */
             align-items: center;
