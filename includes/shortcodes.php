@@ -468,3 +468,79 @@ function iml_render_generic_archive_grid($atts) {
     return ob_get_clean();
 }
 
+// Shortcode: [iml_serie_single]
+add_shortcode('iml_serie_single', 'iml_render_serie_single');
+
+function iml_render_serie_single($atts) {
+    ob_start();
+
+    // Get the current post ID 
+    $post_id = get_the_ID(); 
+    // Retrieve custom fields using the post ID 
+    $description = rwmb_meta( 'descrizione_progetto', '', $post_id ); 
+    $year = rwmb_meta( 'anno', '', $post_id ); 
+    //$foto_posts = rwmb_meta( 'foto_in_progetto', '', $post_id ); 
+    $items = get_post_meta($post_id, 'prj_items', true); 
+    //$alignment = get_post_meta($post_id, 'prj_item_alignment', true) ?: 'square'; 
+
+    ?> 
+    <div class="progetto-content"> 
+        <div class="left-column-progetto"> 
+            <div class="left-column-top"> 
+                <a class="back-button" href="javascript:history.back()">Back</a>
+            </div> 
+            <h1 class="progetto-title"><?php echo get_the_title( $post_id ); ?></h1> 
+            <div class="progetto-year"><?php echo esc_html( $year ); ?></div> 
+            <div class="progetto-description"><?php echo do_shortcode( wpautop( $description ) ); ?></div> 
+        </div> 
+        <div class="right-column-progetto"> 
+            <div class="right-column-progetto-top"></div> 
+            <div class="related-fotos"> 
+        <?php 
+            if (is_array($items)) { 
+                foreach ($items as $foto_id) { 
+                    // Get the alignment for this item 
+                    $alignment = get_post_meta($foto_id, 'prj_item_alignment', true); 
+                    $single_page_true = get_post_meta($foto_id, 'has_single_page', true); 
+                    $image_url = wp_get_attachment_url($foto_id); // URL dell'immagine a dimensione piena 
+                    $thumbnail = wp_get_attachment_image_url($foto_id, 'large'); // O usa una dimensione specifica 
+                    ?> 
+                    <a class="related-foto-item" href="<?php echo esc_url($image_url); ?>" style="color:black;" data-lightbox="gallery"> 
+                        <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
+                            <div class="image-wrapper"> 
+                                <img src="<?php echo esc_url($thumbnail); ?>" alt=""> 
+                            </div> 
+                        </div> 
+                    </a> 
+                    <?php 
+                } 
+            } 
+            ?> 
+            </div> 
+        </div> 
+    </div> 
+    <script> 
+    jQuery(document).ready(function($) { 
+        var gallery = jQuery('a[data-lightbox="gallery"]').simpleLightbox({ 
+            className: 'simple-lightbox', // Adds a custom class to the lightbox wrapper 
+            widthRatio: 1, // Sets the maximum width of the image to 80% of the screen width 
+            heightRatio: 1, // Sets the maximum height of the image to 90% of the screen height 
+            scaleImageToRatio: true, // Prevents scaling the image larger than its original size, 
+            animationSpeed: 005, 
+            fadeSpeed: 5, 
+            animationSlide: false, 
+            enableKeyboard: true, 
+            preloading: true, 
+            closeText: '<div class="divclose">X</div>', 
+            navText: ['<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080"><path d="M230.56,603.18l304.42,304.42-80.41,78.98L7.99,540,454.56,93.43l80.41,80.41L230.56,476.82h841.45v126.36H230.56Z"/></svg>','<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">  <path d="M849.44,476.82l-304.42-304.42,80.41-78.98,446.57,446.57-446.57,446.57-80.41-80.41,304.42-302.98H7.99v-126.36h841.45Z"/></svg>'], 
+            spinner: false, 
+            overlay: false, 
+            docClose: false, 
+        }); 
+    }); 
+    </script>
+    <?php
+
+    return ob_get_clean();
+}
+

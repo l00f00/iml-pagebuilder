@@ -111,9 +111,13 @@
    height:640px;*/ 
    max-width:100%; 
    aspect-ratio: 1 / 1; 
+   width: inherit; /* From new CSS */
  } 
  .image-wrapper img{ 
    display: flex; /*max-width:640px!important;*/ 
+   max-width: 100%;
+   max-height: 100%;
+   object-fit: contain;
  } 
  
  .square img{width:50%; height:auto;} 
@@ -121,6 +125,7 @@
  /* Now, we align the image within the image wrapper */ 
  .fotoContainer.destra .image-wrapper { 
    justify-content: flex-end; /* Align image to the right */ 
+   width: -webkit-fill-available;
  } 
  .fotoContainer.destra .image-wrapper img{ 
      height: 100%; 
@@ -174,4 +179,85 @@
     left: 0;
     object-fit: contain;
     width: -webkit-fill-available!important;
+}
+
+/* General Styles from Serie/Progetto Single */
+.progetto-content {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 99vh;
+  height: 100%; /* Minimum height to fill the screen */
+}
+
+.left-column-progetto {
+  width: 35%;
+  padding: 28px 0 28px 0;
+  background-color:white;
+  padding-left: 5px;
+}
+
+.left-column-progetto .left-column-top {
+  background-color:white;
+  padding: 2em 0;
+}
+
+.back-button{
+  color: #fff!important;
+  mix-blend-mode: exclusion;
+  font-weight: thin;
+  top:3em;
+  position:fixed;
+}
+
+/* Duplicate definition in user CSS, merging logic */
+.left-column-progetto img {
+    /* Already defined above for Safari fix, but user provided specific rules here */
+    max-width: 63%;
+    display: block;
+    position:fixed;
+    /* top:0; left:0; inherited/merged */
+}
+
+.progetto-description{
+  text-indent: 24px;
+}
+.progetto-year{
+  padding-bottom: 1em;
+}
+
+.right-column-progetto {
+  /*text-indent: 24px;*/
+  width: 65%;
+  padding-top:4em;
+}
+.right-column-progetto-top{
+  /*padding-bottom:160px;*/
+}
+
+.related-fotos{
+  display:block;
+}
+
+.right-column-progetto-top > .related-foto-item{
+  max-width:100%;
+}
+
+/* Mobile styles */
+@media (max-width: 1120px) {
+    .left-column-progetto, .right-column-progetto {
+        width: 100vw;
+    }
+    .left-column-progetto > img {
+        max-width: 100%;
+        position:relative;
+    }
+    .left-column-progetto> a > img {
+        max-width: 100vw;
+        width:100%;
+        position:relative;
+    }
+
+    .right-column-progetto .related-photo-item {
+        width: 100%;
+    }
 }
