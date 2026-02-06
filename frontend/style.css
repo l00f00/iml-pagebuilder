@@ -108,6 +108,8 @@ flex-direction:column!important;
   display: flex;
 }
 
+.square img{width:50%; height:auto;}
+
 /* Now, we align the image within the image wrapper */
 .fotoContainer.destra .image-wrapper {
   justify-content: flex-end; /* Align image to the right */

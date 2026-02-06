@@ -46,23 +46,28 @@ Estende le funzionalità della libreria media di WordPress:
 ### FATTO (Done)
 *   **Migrazione Codice Admin:** Tutto il codice originale (`all_admin_code.php`) è stato migrato in una struttura modulare (`includes/`).
 *   **Integrazione Registrazione Campi:** Le registrazioni dei CPT e Meta Box (`registrazionecampi.php`) sono state integrate in `includes/cpt-registrations.php`.
-*   **Migrazione Frontend:** La logica di visualizzazione della griglia homepage è stata convertita in shortcode `[iml_homepage_grid]`.
+*   **Migrazione Frontend:** 
+    *   La logica homepage è ora nello shortcode `[iml_homepage_grid]`.
+    *   La logica portfolio single è ora nello shortcode `[iml_portfolio_grid]`.
+    *   La logica archivio (tag/cat) è ora nello shortcode `[iml_archive_grid]`.
+    *   La logica archivio generico è ora nello shortcode `[iml_generic_archive_grid]`.
 *   **Assets Frontend:** CSS e JS sono stati separati in file dedicati (`frontend/style.css`, `frontend/script.js`) e vengono caricati correttamente.
 *   **Webhook:** Configurazione e test webhook GitHub completato.
 *   **Bug Builder Home:** Risolvere bug builder pagina HOME (spostare builder animazione o soluzione in place, ottimizzazione caricamento).
 *   **Builder Dropdown:** Dividere righe dropdown builder in 3 colonne per esperienza piu' friendly.
 *   **Ottimizzazione Immagini:** Ottimizzazione Immagini che impediscono il caricamento del builder.
+*   **Backend Upload:** Risolto bug upload da Media non funzionante su Portfolio (conflitto ID e inizializzazione array vuoto).
+*   **Safari CSS:** Risolto bug foto "cover" progetti esplode su Safari (aggiunto `width: -webkit-fill-available!important`).
 
 ### TODO (Elenco lavorazioni in sospeso)
 
 #### Priorità Alta & Bug
+finire di portare il codice del frontend dentro file del plugin (Progetto Single, Serie Single).
 *   [ ] **Home Builder:** Risolvere bug builder pagina HOME (spostare builder animazione in nuova pagina con label apposito).
 *   [ ] **Home Intro:** Animazione nome in INTRO — (In attesa file da cartella drive).
 *   [ ] **Home Preloading:** Inserimento animazione preloading pagina.
 *   [ ] **Home Animazione:** Disaccoppiare animazione rompere stage entrata cornice di nomi.
 
-*   [ ] **Backend Upload:** Risolvere bug CARICAMENTO FILE: upload da Media non funziona su Portfolio (funziona solo su Progetto).
-*   [ ] **Safari CSS:** Risolvere bug foto "cover" progetti esplode su Safari.
 *   [ ] **Foto Cover Contain:** Applicare regola: fit orizzontale foto cover progetto  in left column non si deve sovrapporre al testo.
     ```css
     .left-column-progetto img { 
