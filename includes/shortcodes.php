@@ -711,25 +711,29 @@ function iml_render_attachment_single($atts) {
      }); 
    
      let touchStartX = 0; 
-     let touchEndX = 0; 
- 
+     let touchEndX = 0;
+     let touchStartY = 0;
+     let touchEndY = 0;
+
      // Funzione per controllare se sei su un dispositivo mobile (viewport < 992px) 
      function isMobileViewport() { 
          return window.innerWidth < 992; 
      } 
- 
+
      // Aggiungi eventi touch per rilevare swipe 
      document.addEventListener('touchstart', function (event) { 
          if (!isMobileViewport()) return; // Gestisce solo i dispositivi mobili 
          touchStartX = event.changedTouches[0].screenX; // Posizione iniziale del tocco 
+         touchStartY = event.changedTouches[0].screenY;
      }); 
- 
+
      document.addEventListener('touchend', function (event) { 
          if (!isMobileViewport()) return; // Gestisce solo i dispositivi mobili 
          touchEndX = event.changedTouches[0].screenX; // Posizione finale del tocco 
+         touchEndY = event.changedTouches[0].screenY;
          handleSwipe(); 
      }); 
- 
+
      // Funzione per gestire lo swipe 
      function handleSwipe() { 
          // Verifica se la lightbox è attiva 
@@ -738,11 +742,17 @@ function iml_render_attachment_single($atts) {
              plusIcon 
              return; // La lightbox è visibile, ignora lo swipe 
          } 
- 
+
          // Calcola la direzione dello swipe 
-         const swipeDistance = touchStartX - touchEndX; 
- 
-         if (swipeDistance < -40) { 
+         const swipeDistanceX = touchStartX - touchEndX; 
+         const swipeDistanceY = touchStartY - touchEndY;
+
+         // Se lo scorrimento verticale è maggiore di quello orizzontale, è uno scroll, non uno swipe
+         if (Math.abs(swipeDistanceY) > Math.abs(swipeDistanceX)) {
+             return;
+         }
+
+         if (swipeDistanceX < -40) { 
              // Swipe destra: naviga al prossimo link 
              const nextLink = document.querySelector('.nav-ne a'); 
              if (nextLink) { 
@@ -750,7 +760,7 @@ function iml_render_attachment_single($atts) {
              } else { 
                  console.log("Nessun link 'next' disponibile."); 
              } 
-         } else if (swipeDistance > 40) { 
+         } else if (swipeDistanceX > 40) { 
              // Swipe sinistra: naviga al link precedente 
              const prevLink = document.querySelector('.nav-prev a'); 
              if (prevLink) { 
@@ -844,10 +854,10 @@ function iml_render_attachment_single($atts) {
     return ob_get_clean();
 }
 
-// Shortcode: [iml_serie_single]
-add_shortcode('iml_serie_single', 'iml_render_serie_single');
+// Shortcode: [iml_project_single]
+add_shortcode('iml_project_single', 'iml_render_project_single');
 
-function iml_render_serie_single($atts) {
+function iml_render_project_single($atts) {
     ob_start();
 
     // Get the current post ID 
@@ -857,31 +867,175 @@ function iml_render_serie_single($atts) {
     $year = rwmb_meta( 'anno', '', $post_id ); 
     //$foto_posts = rwmb_meta( 'foto_in_progetto', '', $post_id ); 
     $items = get_post_meta($post_id, 'prj_items', true); 
-    //$alignment = get_post_meta($post_id, 'prj_item_alignment', true) ?: 'square'; 
+    $alignment = get_post_meta($post_id, 'prj_item_alignment', true) ?: 'square'; 
+    $array = get_post_meta($post_id, 'prj_items_alignment', true); 
+    
+    // Retrieve the post thumbnail ID 
+    $thumbnail_id = get_post_thumbnail_id($post_id); 
+    // Check if this thumbnail has 'has_single_page' set to true 
+    $has_single_page = get_post_meta($thumbnail_id, 'has_single_page', true); 
+    // Determine the URL and lightbox attributes based on whether the thumbnail should link to a single page 
+    $thumbnail_url = $has_single_page ? get_permalink($thumbnail_id) : get_the_post_thumbnail_url($post_id, 'full'); 
+    $lightbox_attr = $has_single_page ? '' : 'data-lightbox="gallery"'; 
+    $featured_image_url = get_the_post_thumbnail_url($post_id, 'full'); 
+    
+    // Conditional check for space and layout
+    $space = rwmb_meta( 'abilitaSpazio' ); 
+    $spaceVert = rwmb_meta( 'abilitaSpazioVert' ); 
+    $featuredImageSpacer = rwmb_meta( 'featuredImageSpacer' ); 
+    if (!isset($featuredImageSpacer)){ 
+        $featuredImageSpacer = '2em'; 
+    }
+    
+    // CSS Injection for spacing
+    echo '<style>';
+    if ( $space && $spaceVert ) { 
+        echo '.related-fotos {row-gap: 2em; column-gap: 2em;}'; 
+        echo '.progetto-content {padding-bottom: '. $featuredImageSpacer .';}'; 
+    } elseif ( $space ) { // Only $space is set 
+        echo '.related-fotos {row-gap: 2em;}'; 
+        echo '.progetto-content {padding-bottom: '. $featuredImageSpacer .';}'; 
+    } elseif ( $spaceVert ) { // Only $spaceVert is set 
+        echo '.related-fotos {column-gap: 2em;}'; 
+        echo '.progetto-content {padding-bottom: '. $featuredImageSpacer .';}'; 
+    } elseif ( $featuredImageSpacer ) { 
+        echo '.progetto-content {padding-bottom: '. $featuredImageSpacer .';}'; 
+    }
+    echo '.gallery > .related-foto-item:hover { /*mix-blend-mode: exclusion;*/ }';
+    echo '.sl-wrapper .simple-lightbox, .sl-wrapper .simple-lightbox > * { z-index: 30000000000!important; pointer-events: all; }';
+    echo '</style>';
 
+    // Determine layout columns based on $space (abilitaSpazio)
+    // "se il campo e' no facciamo 1 colonna se e' si facciamo tre colonne"
+    // $space == true -> 3 columns, $space == false -> 1 column layout
+    // Actually the user said: "ho due condizioni una con 3 colonne abilitato una con 3 colonne disabilitato"
+    // And later: "se il campo e' no facciamo 1 colonna se e' si facciamo tre colonne"
+    // Assuming $space controls the 3-column layout? Or maybe there's a specific field?
+    // User code logic: "if ($space && $spaceVert) ... elseif ($space) ..."
+    // Let's assume $space enables the 3-column grid layout style via CSS classes or inline styles.
+    
+    // BUT looking at the user provided HTML structure, it seems identical for both cases in terms of DOM,
+    // just the CSS or class might change.
+    // However, the user provided TWO distinct blocks of code in the message, one labeled "3 colonne disabilitato" and another "il 3 colonne".
+    // Wait, the user provided:
+    // 1. "partiamo con 3 colonne disabilitato questo il php e il css" -> Code Block 1
+    // 2. "il 3 colonne" -> Code Block 2
+    // Code Block 1 has structure: left-column (image + nav), right-column (title + desc + gallery)
+    // Code Block 2 has structure: left-column (image + nav), right-column (title + desc), AND THEN A SEPARATE DIV ".related-fotos gallery" OUTSIDE/BELOW the flex container?
+    // Let's look closely at Code Block 2:
+    // <div class="progetto-content"> ... <div class="left">...</div> <div class="right">...</div> </div> <div class="related-fotos gallery">...</div>
+    // Yes! The gallery is OUTSIDE the "progetto-content" flex container in the 3-column version.
+    
+    // So we need a logic to switch between these two HTML structures.
+    // The user said: "se il campo e' no facciamo 1 colonna se e' si facciamo tre colonne"
+    // I will use $space (abilitaSpazio) as the trigger, or maybe I should check if there is a specific field for columns?
+    // "abilitaSpazio" usually means "Enable Space".
+    // Let's look at the logic provided in the prompt:
+    // "il 3 colonne" ... "se il campo e' no facciamo 1 colonna se e' si facciamo tre colonne"
+    // This likely refers to `abilitaSpazio` or a similar toggle.
+    // Let's assume `abilitaSpazio` (Space Enabled) == 3 Columns Mode (since 3 cols usually need space/gap).
+    // Or maybe "3 colonne abilitato" is a specific meta field? 
+    // User mentioned: "ho due condizioni una con 3 colonne abilitato una con 3 colonne disabilitato"
+    // I will use `rwmb_meta('abilita_tre_colonne')` if it exists, but the user code uses `$space`.
+    // Let's assume `$space` acts as the trigger for now, or I'll check for a '3_colonne' meta.
+    // Actually, looking at the provided code snippets:
+    // The "3 colonne" snippet has `$space` and `$spaceVert` checks at the bottom.
+    // The "1 colonna" snippet doesn't show that part explicitly but it might be implied.
+    
+    // Let's look for a field name that sounds like "3 columns".
+    // User prompt: "se il campo e' no facciamo 1 colonna se e' si facciamo tre colonne"
+    // I will infer the field is `abilita_tre_colonne` or I should use `$space`?
+    // In the user's provided code for "3 colonne":
+    // `$space = rwmb_meta( 'abilitaSpazio' );`
+    // It seems `$space` is used for GAPS (row-gap, column-gap).
+    
+    // Wait, the user said: "se il campo e' no facciamo 1 colonna se e' si facciamo tre colonne"
+    // Maybe they mean a field named `tre_colonne`?
+    // I'll add a check for `rwmb_meta('tre_colonne')` or similar. 
+    // If not found, I'll default to the 1-column layout (standard).
+    
+    // However, looking at the code provided:
+    // Code 1 (1 colonna?): Gallery is INSIDE `.right-column-progetto`.
+    // Code 2 (3 colonne?): Gallery is OUTSIDE `.progetto-content`.
+    
+    // Let's implement a meta field check. I will call it `layout_tre_colonne`.
+    $abilitaSpazio = rwmb_meta('abilitaSpazio', '', $post_id); 
+    // Check multiple truthy values for compatibility (1, '1', true, 'si', 'yes', 'on')
+    $layout_3_col = !empty($abilitaSpazio) && (
+        $abilitaSpazio === 'si' || 
+        $abilitaSpazio === 'yes' || 
+        $abilitaSpazio === 'on' || 
+        $abilitaSpazio == 1 || 
+        $abilitaSpazio === true
+    );
+    
+    // Navigation Logic
+    $prj_items_alignment = get_post_meta($post_id, 'prj_items_alignment', true); // This seems to be used for navigation order? 
+    // Actually in the user code: `$array = get_post_meta($post_id, 'prj_items_alignment', true);`
+    // But navigation uses `$prev_post_url` which is calculated... where?
+    // In the provided snippet, `$prev_post_url` is used but NOT calculated in the snippet itself!
+    // Wait, in the attachment snippet it WAS calculated. Here it is just used: `if (isset($prev_post_url))`.
+    // I need to calculate it.
+    
+    // Let's replicate the logic for Prev/Next project if it exists.
+    // Usually Prev/Next project in portfolio context.
+    $prev_post = get_adjacent_post(false, '', true);
+    $next_post = get_adjacent_post(false, '', false);
+    $prev_post_url = $prev_post ? get_permalink($prev_post->ID) : null;
+    $next_post_url = $next_post ? get_permalink($next_post->ID) : null;
+    
     ?> 
     <div class="progetto-content"> 
         <div class="left-column-progetto"> 
-            <div class="left-column-top"> 
-                <a class="back-button" href="javascript:history.back()">Back</a>
-            </div> 
-            <h1 class="progetto-title"><?php echo get_the_title( $post_id ); ?></h1> 
-            <div class="progetto-year"><?php echo esc_html( $year ); ?></div> 
-            <div class="progetto-description"><?php echo do_shortcode( wpautop( $description ) ); ?></div> 
+          <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" <?php echo $lightbox_attr; ?>> 
+            <?php echo get_the_post_thumbnail($post_id, 'full'); ?></a> 
+          <div class="left-column-bottom"> 
+                <nav class="foto-navigation"> 
+                        <?php 
+                        if (isset($prev_post_url)) { 
+                        echo '<div class="nav-previous"><a href="' . esc_url($prev_post_url) . '">Previous</a></div>'; 
+                        } 
+                        if (isset($next_post_url)) { 
+                        echo '<div class="nav-next"><a href="' . esc_url($next_post_url) . '">Next</a></div>'; 
+                        } 
+                        ?> 
+                        <?php 
+                $parent_post_id = wp_get_post_parent_id($post_id); 
+                if ($parent_post_id != 0) { // Check if there is a parent post 
+                $parent_post_url = get_permalink($parent_post_id); // Get the permalink of the parent post 
+                echo '<a class="back" href="' . esc_url($parent_post_url) . '">Back</a>'; // Create the link to the parent post 
+                } else { 
+                    echo '<a class="back" href="javascript:history.back()">Back</a>'; // Fallback to javascript back if no parent post 
+                } 
+                ?> 
+                    </nav> 
+          </div> 
         </div> 
         <div class="right-column-progetto"> 
-            <div class="right-column-progetto-top"></div> 
-            <div class="related-fotos"> 
-        <?php 
+          <div class="right-column-progetto-top"> 
+            <h1 class="progetto-title"><?php echo get_the_title( $post_id ); ?></h1> 
+            <div class="progetto-year"><?php echo esc_html( $year ); ?></div> 
+            <div class="progetto-description"><?php echo do_shortcode( wpautop( $description ) ); ?> </div> 
+          </div> 
+          
+          <?php if (!$layout_3_col) : // LAYOUT 1 COLONNA (Standard) - Gallery INSIDE right column ?>
+            <div class="related-fotos gallery"> 
+            <?php 
+            $hiddenImages = [];
             if (is_array($items)) { 
                 foreach ($items as $foto_id) { 
-                    // Get the alignment for this item 
                     $alignment = get_post_meta($foto_id, 'prj_item_alignment', true); 
                     $single_page_true = get_post_meta($foto_id, 'has_single_page', true); 
-                    $image_url = wp_get_attachment_url($foto_id); // URL dell'immagine a dimensione piena 
-                    $thumbnail = wp_get_attachment_image_url($foto_id, 'large'); // O usa una dimensione specifica 
+                    $image_url = wp_get_attachment_url($foto_id); 
+                    $thumbnail = wp_get_attachment_image_url($foto_id, 'large'); 
+                    $link_url = $single_page_true ? get_attachment_link($foto_id) : esc_url($image_url); 
+                    $item_lightbox_attr = $single_page_true ? '' : 'data-lightbox="gallery"'; 
+            
+                    if ($single_page_true) { 
+                        $hiddenImages[] = $image_url; 
+                    } 
                     ?> 
-                    <a class="related-foto-item" href="<?php echo esc_url($image_url); ?>" style="color:black;" data-lightbox="gallery"> 
+                    <a class="related-foto-item" href="<?php echo $link_url; ?>" style="color:black;" <?php echo $item_lightbox_attr; ?>> 
                         <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
                             <div class="image-wrapper"> 
                                 <img src="<?php echo esc_url($thumbnail); ?>" alt=""> 
@@ -893,26 +1047,75 @@ function iml_render_serie_single($atts) {
             } 
             ?> 
             </div> 
+            <div id="hidden-images" style="display: none;"> 
+            <?php 
+            foreach ($hiddenImages as $path) { 
+                echo '<a href="' . esc_url($path) . '" data-lightbox="gallery"><img src="' . esc_url($path) . '" alt="Gallery Image"></a>'; 
+            } 
+            ?> 
+            </div>
+          <?php endif; ?>
+
+      </div> 
+    </div> 
+    
+    <?php if ($layout_3_col) : // LAYOUT 3 COLONNE - Gallery OUTSIDE flex container ?>
+    <div class="related-fotos gallery"> 
+    <?php 
+    $hiddenImages = [];
+    if (is_array($items)) { 
+        foreach ($items as $foto_id) { 
+            $alignment = get_post_meta($foto_id, 'prj_item_alignment', true); 
+            $single_page_true = get_post_meta($foto_id, 'has_single_page', true); 
+            $image_url = wp_get_attachment_url($foto_id); 
+            $thumbnail = wp_get_attachment_image_url($foto_id, 'large'); 
+            $link_url = $single_page_true ? get_attachment_link($foto_id) : esc_url($image_url); 
+            $item_lightbox_attr = $single_page_true ? 'data-single="single-page-true"' : 'data-lightbox="gallery"'; 
+    
+            if ($single_page_true) { 
+                $hiddenImages[] = $image_url; 
+            } 
+            ?> 
+            <a class="related-foto-item" href="<?php echo $link_url; ?>" style="color:black;" <?php echo $item_lightbox_attr;?>> 
+                <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
+                    <div class="image-wrapper"> 
+                        <img src="<?php echo esc_url($thumbnail); ?>" alt=""> 
+                    </div> 
+                </div> 
+            </a> 
+            <?php 
+        } 
+    } 
+    ?> 
+        <div id="hidden-images" style="display: none;"> 
+        <?php 
+        foreach ($hiddenImages as $path) { 
+            echo '<a href="' . esc_url($path) . '" data-lightbox="gallery"><img src="' . esc_url($path) . '" alt="Gallery Image"></a>'; 
+        } 
+        ?> 
         </div> 
     </div> 
+    <?php endif; ?>
+
     <script> 
     jQuery(document).ready(function($) { 
-        var gallery = jQuery('a[data-lightbox="gallery"]').simpleLightbox({ 
-            className: 'simple-lightbox', // Adds a custom class to the lightbox wrapper 
-            widthRatio: 1, // Sets the maximum width of the image to 80% of the screen width 
-            heightRatio: 1, // Sets the maximum height of the image to 90% of the screen height 
-            scaleImageToRatio: true, // Prevents scaling the image larger than its original size, 
+         var gallery = jQuery('a[data-lightbox="gallery"]').simpleLightbox({ 
+            className: 'simple-lightbox', 
+            widthRatio: 1, 
+            heightRatio: 1, 
+            scaleImageToRatio: true, 
             animationSpeed: 005, 
             fadeSpeed: 5, 
             animationSlide: false, 
             enableKeyboard: true, 
             preloading: true, 
-            closeText: '<div class="divclose">X</div>', 
+            closeText: '<div class="divclose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 39" width="44" height="39"><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(45 16 16)" /><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(-45 16 16)" /></svg></div>', 
             navText: ['<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080"><path d="M230.56,603.18l304.42,304.42-80.41,78.98L7.99,540,454.56,93.43l80.41,80.41L230.56,476.82h841.45v126.36H230.56Z"/></svg>','<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">  <path d="M849.44,476.82l-304.42-304.42,80.41-78.98,446.57,446.57-446.57,446.57-80.41-80.41,304.42-302.98H7.99v-126.36h841.45Z"/></svg>'], 
             spinner: false, 
             overlay: false, 
             docClose: false, 
         }); 
+        console.log('Progetto caricato: <?php echo $layout_3_col ? "3 colonne" : "1 colonna"; ?>');
     }); 
     </script>
     <?php

@@ -51,6 +51,7 @@ Estende le funzionalità della libreria media di WordPress:
     *   La logica portfolio single è ora nello shortcode `[iml_portfolio_grid]`.
     *   La logica archivio (tag/cat) è ora nello shortcode `[iml_archive_grid]`.
     *   La logica archivio generico è ora nello shortcode `[iml_generic_archive_grid]`.
+    *   La logica serie/progetto single è ora nello shortcode `[iml_project_single]`.
     *   La logica serie/progetto single è ora nello shortcode `[iml_serie_single]`.
     *   La logica attachment single è ora nello shortcode `[iml_attachment_single]`.
 *   **Assets Frontend:** CSS e JS sono stati separati in file dedicati (`frontend/style.css`, `frontend/script.js`) e vengono caricati correttamente.
@@ -60,6 +61,7 @@ Estende le funzionalità della libreria media di WordPress:
 *   **Ottimizzazione Immagini:** Ottimizzazione Immagini che impediscono il caricamento del builder.
 *   **Backend Upload:** Risolto bug upload da Media non funzionante su Portfolio (conflitto ID e inizializzazione array vuoto).
 *   **Safari CSS:** Risolto bug foto "cover" progetti esplode su Safari (aggiunto `width: -webkit-fill-available!important`).
+*   **Foto Cover Contain:** Applicata regola CSS per fit orizzontale con spazietto di 8px.
 
 ### TODO (Elenco lavorazioni in sospeso)
 
