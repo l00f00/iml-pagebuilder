@@ -89,7 +89,7 @@ function iml_homepage_lottie_preloader() {
         #lottie-overlay {
             position: fixed;
             inset: 0;
-            background: #ffffff; /* Sfondo bianco */
+            background: rgba(255, 255, 255, 0.8); /* DEBUG: Sfondo semitrasparente */
             z-index: 99999999; /* Z-index molto alto */
             display: none; /* Nascosto di default, attivato via JS se desktop */
             align-items: center;
@@ -109,6 +109,9 @@ function iml_homepage_lottie_preloader() {
     <!-- Script removed: Lottie is now enqueued via wp_enqueue_scripts -->
     <script>
     (function() {
+        var startTime = Date.now();
+        console.log('🐞 Lottie START time:', 0, 'ms (Absolute:', startTime, ')');
+
         // Configurazione
         var lottieJSON = '<?php echo $lottie_url; ?>'; 
         
@@ -118,6 +121,7 @@ function iml_homepage_lottie_preloader() {
         
         // Se non è desktop, assicurati che sia nascosto ed esci
         if (!isDesktop) {
+            console.log('Lottie: Not desktop, skipping.');
             if (overlay) overlay.style.display = 'none';
             return;
         }
@@ -133,7 +137,10 @@ function iml_homepage_lottie_preloader() {
         var container = document.getElementById('lottie-container');
         var done = false;
 
-        function reveal() {
+        function reveal(reason) {
+            var now = Date.now();
+            console.log('🐞 Lottie END triggered by:', reason, '| Time elapsed:', now - startTime, 'ms');
+            
             if (done) return;
             done = true;
             
@@ -148,6 +155,7 @@ function iml_homepage_lottie_preloader() {
                     overlay.style.display = 'none';
                     document.documentElement.classList.remove('lottie-active');
                     document.body.classList.remove('lottie-active');
+                    console.log('🐞 Lottie DOM Removed completely at:', Date.now() - startTime, 'ms');
                 }, 1000);
             } else {
                 document.documentElement.classList.remove('lottie-active');
@@ -161,9 +169,12 @@ function iml_homepage_lottie_preloader() {
         var fadeStartTime = 6000; 
 
         // Avvia il reveal (fade-out) esattamente a 6000ms
-        var timeoutId = setTimeout(reveal, fadeStartTime);
+        var timeoutId = setTimeout(function() {
+            reveal('timeout_6s');
+        }, fadeStartTime);
 
         try {
+            console.log('Initializing Lottie animation with path:', lottieJSON);
             var anim = lottie.loadAnimation({
                 container: container,
                 renderer: 'svg',
@@ -172,22 +183,33 @@ function iml_homepage_lottie_preloader() {
                 path: lottieJSON
             });
 
+            // Log durata animazione
+            anim.addEventListener('DOMLoaded', function() {
+                console.log('🐞 Lottie DOM Loaded. Total frames:', anim.totalFrames, 'Frame rate:', anim.frameRate);
+                var duration = anim.totalFrames / anim.frameRate;
+                console.log('🐞 Estimated duration (s):', duration);
+            });
+            
+            anim.addEventListener('complete', function() {
+                 console.log('🐞 Lottie Animation Complete Event fired at:', Date.now() - startTime, 'ms');
+            });
+
             // Gestione errori
             anim.addEventListener('data_failed', function() {
                 console.warn('Lottie data failed to load');
                 clearTimeout(timeoutId);
-                reveal();
+                reveal('data_failed');
             });
             anim.addEventListener('error', function() {
                 console.warn('Lottie error');
                 clearTimeout(timeoutId);
-                reveal();
+                reveal('error');
             });
 
         } catch (e) {
             console.error('Lottie init error:', e);
             clearTimeout(timeoutId);
-            reveal();
+            reveal('catch_error');
         }
     })();
     </script>
