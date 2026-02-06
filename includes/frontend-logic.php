@@ -135,21 +135,30 @@ function iml_homepage_lottie_preloader() {
             
             // Fade out
             if (overlay) {
-                overlay.style.transition = 'opacity 0.8s ease';
+                // Imposta la transizione per durare 1 secondo (1000ms)
+                overlay.style.transition = 'opacity 1s ease';
                 overlay.style.opacity = '0';
+                
+                // Rimuovi l'elemento dal DOM dopo che la transizione è completata (1000ms)
                 setTimeout(function() {
                     overlay.style.display = 'none';
                     document.documentElement.classList.remove('lottie-active');
                     document.body.classList.remove('lottie-active');
-                }, 800);
+                }, 1000);
             } else {
                 document.documentElement.classList.remove('lottie-active');
                 document.body.classList.remove('lottie-active');
             }
         }
 
-        // Fallback timeout di sicurezza (6 secondi)
-        var timeoutId = setTimeout(reveal, 6000);
+        // IMPOSTAZIONE TEMPISTICA FISSA:
+        // L'animazione dura 7 secondi.
+        // Il fade-out deve iniziare al 6° secondo (6000ms) e durare 1 secondo.
+        // Quindi al termine del fade (7000ms) tutto sarà finito.
+        var fadeStartTime = 6000; 
+
+        // Avvia il reveal (fade-out) esattamente a 6000ms
+        var timeoutId = setTimeout(reveal, fadeStartTime);
 
         try {
             var anim = lottie.loadAnimation({
@@ -160,18 +169,12 @@ function iml_homepage_lottie_preloader() {
                 path: lottieJSON
             });
 
-            // Al completamento dell'animazione
-            anim.addEventListener('complete', function() {
-                clearTimeout(timeoutId);
-                // Attendi che la pagina sia completamente caricata
-                if (document.readyState === 'complete') {
-                    reveal();
-                } else {
-                    window.addEventListener('load', reveal, { once: true });
-                }
-            });
+            // Nota: Rimuoviamo la logica 'complete' automatica per rispettare rigorosamente 
+            // la richiesta di timing (6s start fade, 7s end), a meno che l'animazione non fallisca.
+            // Se l'animazione dura esattamente 7s, il fade inizierà mentre l'ultimo secondo di animazione gira,
+            // creando l'effetto di dissolvenza finale coordinato.
 
-            // Gestione errori (es. file json mancante)
+            // Gestione errori (es. file json mancante) - in questo caso sblocchiamo subito
             anim.addEventListener('data_failed', function() {
                 console.warn('Lottie data failed to load');
                 clearTimeout(timeoutId);
