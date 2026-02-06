@@ -176,15 +176,29 @@ function iml_homepage_lottie_preloader() {
                 container: container,
                 renderer: 'svg',
                 loop: false,
-                autoplay: true,
+                autoplay: false, // Autoplay disabilitato per gestire start manuale
                 path: lottieJSON
             });
 
-            // Log durata animazione
+            // Log durata animazione e avvio dal frame desiderato
             anim.addEventListener('DOMLoaded', function() {
                 console.log('🐞 Lottie DOM Loaded. Total frames:', anim.totalFrames, 'Frame rate:', anim.frameRate);
                 var duration = anim.totalFrames / anim.frameRate;
                 console.log('🐞 Estimated duration (s):', duration);
+
+                // RICHIESTA UTENTE: Saltare i primi 100 frame
+                // Nota: 100 frame @ 24fps sono circa 4 secondi.
+                var startFrame = 100; 
+                
+                // Controllo di sicurezza: se 100 è troppo, partiamo da 0 o da un valore più basso (es. 12 frame = 0.5s)
+                if (startFrame >= anim.totalFrames) {
+                     console.warn('🐞 Start frame 100 is > total frames. Resetting to 0.');
+                     startFrame = 0;
+                }
+
+                console.log('🐞 Starting animation from frame:', startFrame);
+                // playSegments accetta [inizio, fine], true = force immediate render
+                anim.playSegments([startFrame, anim.totalFrames], true);
             });
             
             // Quando l'animazione è COMPLETATA (fine dei 7s), avvia il fade-out
