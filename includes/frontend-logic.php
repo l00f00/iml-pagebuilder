@@ -89,7 +89,7 @@ function iml_homepage_lottie_preloader() {
         #lottie-overlay {
             position: fixed;
             inset: 0;
-            background: #ffffff; /* Sfondo bianco come richiesto ("andiamo a bianco") */
+            background: #ffffff; /* Sfondo bianco */
             z-index: 99999999; /* Z-index molto alto */
             display: none; /* Nascosto di default, attivato via JS se desktop */
             align-items: center;
@@ -109,9 +109,6 @@ function iml_homepage_lottie_preloader() {
     <!-- Script removed: Lottie is now enqueued via wp_enqueue_scripts -->
     <script>
     (function() {
-        var startTime = Date.now();
-        console.log('Lottie Script Started at:', startTime);
-
         // Configurazione
         var lottieJSON = '<?php echo $lottie_url; ?>'; 
         
@@ -121,7 +118,6 @@ function iml_homepage_lottie_preloader() {
         
         // Se non è desktop, assicurati che sia nascosto ed esci
         if (!isDesktop) {
-            console.log('Lottie: Not desktop, skipping.');
             if (overlay) overlay.style.display = 'none';
             return;
         }
@@ -137,10 +133,7 @@ function iml_homepage_lottie_preloader() {
         var container = document.getElementById('lottie-container');
         var done = false;
 
-        function reveal(reason) {
-            var now = Date.now();
-            console.log('Lottie Reveal triggered by:', reason, 'Elapsed (ms):', now - startTime);
-            
+        function reveal() {
             if (done) return;
             done = true;
             
@@ -155,7 +148,6 @@ function iml_homepage_lottie_preloader() {
                     overlay.style.display = 'none';
                     document.documentElement.classList.remove('lottie-active');
                     document.body.classList.remove('lottie-active');
-                    console.log('Lottie Overlay removed from DOM');
                 }, 1000);
             } else {
                 document.documentElement.classList.remove('lottie-active');
@@ -163,16 +155,15 @@ function iml_homepage_lottie_preloader() {
             }
         }
 
-        // DEBUG: Aumentato a 8 secondi per vedere TUTTA l'animazione senza tagliarla col fade
-        var fadeStartTime = 8000; 
+        // IMPOSTAZIONE TEMPISTICA FISSA:
+        // L'animazione dura 7 secondi.
+        // Il fade-out deve iniziare al 6° secondo (6000ms) e durare 1 secondo.
+        var fadeStartTime = 6000; 
 
-        // Avvia il reveal (fade-out)
-        var timeoutId = setTimeout(function() {
-            reveal('timeout');
-        }, fadeStartTime);
+        // Avvia il reveal (fade-out) esattamente a 6000ms
+        var timeoutId = setTimeout(reveal, fadeStartTime);
 
         try {
-            console.log('Initializing Lottie animation with path:', lottieJSON);
             var anim = lottie.loadAnimation({
                 container: container,
                 renderer: 'svg',
@@ -181,36 +172,22 @@ function iml_homepage_lottie_preloader() {
                 path: lottieJSON
             });
 
-            // Log durata animazione
-            anim.addEventListener('DOMLoaded', function() {
-                console.log('Lottie DOM Loaded. Total frames:', anim.totalFrames, 'Frame rate:', anim.frameRate);
-                var duration = anim.totalFrames / anim.frameRate;
-                console.log('Estimated duration (s):', duration);
-            });
-            
-            // Se l'animazione finisce prima del timeout, NON chiudere subito in questo debug mode,
-            // lasciamo che sia il timeout a chiudere per essere sicuri di vedere tutto.
-            anim.addEventListener('complete', function() {
-                 console.log('Lottie Animation Complete Event fired at (ms):', Date.now() - startTime);
-                 // reveal('complete'); // DISABILITATO PER ORA PER VEDERE TUTTO
-            });
-
             // Gestione errori
             anim.addEventListener('data_failed', function() {
                 console.warn('Lottie data failed to load');
                 clearTimeout(timeoutId);
-                reveal('data_failed');
+                reveal();
             });
             anim.addEventListener('error', function() {
                 console.warn('Lottie error');
                 clearTimeout(timeoutId);
-                reveal('error');
+                reveal();
             });
 
         } catch (e) {
             console.error('Lottie init error:', e);
             clearTimeout(timeoutId);
-            reveal('catch_error');
+            reveal();
         }
     })();
     </script>
