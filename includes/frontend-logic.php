@@ -186,9 +186,9 @@ function iml_homepage_lottie_preloader() {
                 var duration = anim.totalFrames / anim.frameRate;
                 console.log('🐞 Estimated duration (s):', duration);
 
-                // RICHIESTA UTENTE: Saltare i primi 100 frame
-                // Nota: 100 frame @ 24fps sono circa 4 secondi.
-                var startFrame = 100; 
+                // RICHIESTA UTENTE: Saltare i primi 15 frame
+                // Nota: 15 frame @ 24fps sono circa 0.6 secondi.
+                var startFrame = 15; 
                 
                 // Controllo di sicurezza: se 100 è troppo, partiamo da 0 o da un valore più basso (es. 12 frame = 0.5s)
                 if (startFrame >= anim.totalFrames) {
