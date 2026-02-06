@@ -129,7 +129,8 @@ function iml_homepage_lottie_preloader() {
         var container = document.getElementById('lottie-container');
         var done = false;
 
-        function reveal() {
+        function reveal(reason) {
+            console.log('Lottie Reveal triggered by:', reason);
             if (done) return;
             done = true;
             
@@ -158,9 +159,12 @@ function iml_homepage_lottie_preloader() {
         var fadeStartTime = 6000; 
 
         // Avvia il reveal (fade-out) esattamente a 6000ms
-        var timeoutId = setTimeout(reveal, fadeStartTime);
+        var timeoutId = setTimeout(function() {
+            reveal('timeout');
+        }, fadeStartTime);
 
         try {
+            console.log('Initializing Lottie animation...');
             var anim = lottie.loadAnimation({
                 container: container,
                 renderer: 'svg',
@@ -169,27 +173,28 @@ function iml_homepage_lottie_preloader() {
                 path: lottieJSON
             });
 
-            // Nota: Rimuoviamo la logica 'complete' automatica per rispettare rigorosamente 
-            // la richiesta di timing (6s start fade, 7s end), a meno che l'animazione non fallisca.
-            // Se l'animazione dura esattamente 7s, il fade inizierà mentre l'ultimo secondo di animazione gira,
-            // creando l'effetto di dissolvenza finale coordinato.
+            // Log durata animazione
+            anim.addEventListener('DOMLoaded', function() {
+                console.log('Lottie DOM Loaded. Total frames:', anim.totalFrames, 'Frame rate:', anim.frameRate);
+                console.log('Estimated duration (s):', anim.totalFrames / anim.frameRate);
+            });
 
             // Gestione errori (es. file json mancante) - in questo caso sblocchiamo subito
             anim.addEventListener('data_failed', function() {
                 console.warn('Lottie data failed to load');
                 clearTimeout(timeoutId);
-                reveal();
+                reveal('data_failed');
             });
             anim.addEventListener('error', function() {
                 console.warn('Lottie error');
                 clearTimeout(timeoutId);
-                reveal();
+                reveal('error');
             });
 
         } catch (e) {
             console.error('Lottie init error:', e);
             clearTimeout(timeoutId);
-            reveal();
+            reveal('catch_error');
         }
     })();
     </script>
