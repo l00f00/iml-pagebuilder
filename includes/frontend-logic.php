@@ -89,7 +89,7 @@ function iml_homepage_lottie_preloader() {
         #lottie-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(255, 255, 255, 0.8); /* DEBUG: Sfondo semitrasparente */
+            background: #ffffff; /* Sfondo bianco */
             z-index: 99999999; /* Z-index molto alto */
             display: none; /* Nascosto di default, attivato via JS se desktop */
             align-items: center;
@@ -163,15 +163,11 @@ function iml_homepage_lottie_preloader() {
             }
         }
 
-        // IMPOSTAZIONE TEMPISTICA FISSA:
-        // L'animazione dura 7 secondi.
-        // Il fade-out deve iniziare al 6° secondo (6000ms) e durare 1 secondo.
-        var fadeStartTime = 6000; 
-
-        // Avvia il reveal (fade-out) esattamente a 6000ms
+        // FALLBACK DI SICUREZZA LUNGO: 15 secondi
+        // Questo scatta solo se l'evento 'complete' fallisce per qualche motivo
         var timeoutId = setTimeout(function() {
-            reveal('timeout_6s');
-        }, fadeStartTime);
+            reveal('fallback_timeout_15s');
+        }, 15000);
 
         try {
             console.log('Initializing Lottie animation with path:', lottieJSON);
@@ -190,8 +186,11 @@ function iml_homepage_lottie_preloader() {
                 console.log('🐞 Estimated duration (s):', duration);
             });
             
+            // Quando l'animazione è COMPLETATA (fine dei 7s), avvia il fade-out
             anim.addEventListener('complete', function() {
                  console.log('🐞 Lottie Animation Complete Event fired at:', Date.now() - startTime, 'ms');
+                 clearTimeout(timeoutId); // Annulla il fallback
+                 reveal('complete_event');
             });
 
             // Gestione errori
