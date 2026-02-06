@@ -172,13 +172,17 @@
 
 /* FIX SAFARI - Foto cover progetto */
 .left-column-progetto img {
-    max-height: 100%;
-    height: auto;
-    height: -webkit-fill-available;
+    display: block;
+    position: fixed;
     top: 0;
     left: 0;
+    height: 100vh;
+    height: -webkit-fill-available;
+    
+    /* Fit orizzontale con spazietto */
+    width: calc(35vw - 8px); /* spazietto */
+    
     object-fit: contain;
-    width: -webkit-fill-available!important;
 }
 
 /* General Styles from Serie/Progetto Single */
@@ -209,14 +213,7 @@
   position:fixed;
 }
 
-/* Duplicate definition in user CSS, merging logic */
-.left-column-progetto img {
-    /* Already defined above for Safari fix, but user provided specific rules here */
-    max-width: 63%;
-    display: block;
-    position:fixed;
-    /* top:0; left:0; inherited/merged */
-}
+/* definition removed */
 
 .progetto-description{
   text-indent: 24px;
@@ -249,6 +246,8 @@
     }
     .left-column-progetto > img {
         max-width: 100%;
+        width: 100%;
+        height: auto;
         position:relative;
     }
     .left-column-progetto> a > img {
