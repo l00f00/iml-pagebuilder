@@ -23,6 +23,11 @@ function iml_enqueue_frontend_scripts() {
     // Enqueue Custom Frontend JS
     wp_enqueue_script('iml-frontend-script', IML_PLUGIN_URL . 'frontend/script.js', array('jquery', 'simple-lightbox-jquery-js'), '1.0', true);
 
+    // Enqueue Lottie Web only on Front Page
+    if ( is_front_page() ) {
+        wp_enqueue_script('lottie-web', 'https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js', array(), '5.12.2', true);
+    }
+
     // Custom CSS for Lightbox Z-Index
     wp_add_inline_style('simple-lightbox-css', '.sl-overlay{}.sl-wrapper, .sl-wrapper > *{z-index:300000000000000000000000000;}');
 }
@@ -99,7 +104,7 @@ function iml_homepage_lottie_preloader() {
         }
     </style>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <!-- Script removed: Lottie is now enqueued via wp_enqueue_scripts -->
     <script>
     (function() {
         // Configurazione
