@@ -77,7 +77,7 @@ function iml_homepage_lottie_preloader() {
     }
     
     // URL del file JSON dell'animazione
-    $lottie_url = IML_PLUGIN_URL . 'frontend/assets/ILM_Website-Logo-nero.json';
+    $lottie_url = IML_PLUGIN_URL . 'frontend/assets/new.json';
     ?>
     <!-- Lottie Preloader HTML -->
     <div id="lottie-overlay" aria-hidden="true" style="display:none; opacity: 1;">
@@ -90,7 +90,6 @@ function iml_homepage_lottie_preloader() {
             position: fixed;
             inset: 0;
             background: #ffffff; /* Sfondo bianco come richiesto ("andiamo a bianco") */
-            /* background: transparent; TEMP DEBUG: Sfondo trasparente per vedere cosa succede sotto */
             z-index: 99999999; /* Z-index molto alto */
             display: none; /* Nascosto di default, attivato via JS se desktop */
             align-items: center;
