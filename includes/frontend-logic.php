@@ -90,6 +90,7 @@ function iml_homepage_lottie_preloader() {
             position: fixed;
             inset: 0;
             background: #ffffff; /* Sfondo bianco come richiesto ("andiamo a bianco") */
+            /* background: transparent; TEMP DEBUG: Sfondo trasparente per vedere cosa succede sotto */
             z-index: 99999999; /* Z-index molto alto */
             display: none; /* Nascosto di default, attivato via JS se desktop */
             align-items: center;
@@ -163,12 +164,10 @@ function iml_homepage_lottie_preloader() {
             }
         }
 
-        // IMPOSTAZIONE TEMPISTICA FISSA:
-        // L'animazione dura 7 secondi.
-        // Il fade-out deve iniziare al 6° secondo (6000ms) e durare 1 secondo.
-        var fadeStartTime = 6000; 
+        // DEBUG: Aumentato a 8 secondi per vedere TUTTA l'animazione senza tagliarla col fade
+        var fadeStartTime = 8000; 
 
-        // Avvia il reveal (fade-out) esattamente a 6000ms
+        // Avvia il reveal (fade-out)
         var timeoutId = setTimeout(function() {
             reveal('timeout');
         }, fadeStartTime);
@@ -190,11 +189,14 @@ function iml_homepage_lottie_preloader() {
                 console.log('Estimated duration (s):', duration);
             });
             
+            // Se l'animazione finisce prima del timeout, NON chiudere subito in questo debug mode,
+            // lasciamo che sia il timeout a chiudere per essere sicuri di vedere tutto.
             anim.addEventListener('complete', function() {
                  console.log('Lottie Animation Complete Event fired at (ms):', Date.now() - startTime);
+                 // reveal('complete'); // DISABILITATO PER ORA PER VEDERE TUTTO
             });
 
-            // Gestione errori (es. file json mancante) - in questo caso sblocchiamo subito
+            // Gestione errori
             anim.addEventListener('data_failed', function() {
                 console.warn('Lottie data failed to load');
                 clearTimeout(timeoutId);
