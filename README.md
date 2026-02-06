@@ -52,6 +52,7 @@ Estende le funzionalità della libreria media di WordPress:
     *   La logica archivio (tag/cat) è ora nello shortcode `[iml_archive_grid]`.
     *   La logica archivio generico è ora nello shortcode `[iml_generic_archive_grid]`.
     *   La logica serie/progetto single è ora nello shortcode `[iml_serie_single]`.
+    *   La logica attachment single è ora nello shortcode `[iml_attachment_single]`.
 *   **Assets Frontend:** CSS e JS sono stati separati in file dedicati (`frontend/style.css`, `frontend/script.js`) e vengono caricati correttamente.
 *   **Webhook:** Configurazione e test webhook GitHub completato.
 *   **Bug Builder Home:** Risolvere bug builder pagina HOME (spostare builder animazione o soluzione in place, ottimizzazione caricamento).
