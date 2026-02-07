@@ -22,9 +22,9 @@ function iml_render_project_single($atts) {
     // Retrieve the post thumbnail
     $thumbnail_id = get_post_thumbnail_id($post_id); 
     $has_single_page = get_post_meta($thumbnail_id, 'has_single_page', true); 
-    $thumbnail_url = $has_single_page ? get_permalink($thumbnail_id) : get_the_post_thumbnail_url($post_id, 'full'); 
+    $thumbnail_url = $has_single_page ? get_permalink($thumbnail_id) : get_the_post_thumbnail_url($post_id, 'large'); 
     $lightbox_attr = $has_single_page ? '' : 'data-lightbox="gallery"'; 
-    $featured_image_url = get_the_post_thumbnail_url($post_id, 'full'); 
+    $featured_image_url = get_the_post_thumbnail_url($post_id, 'large'); 
     
     // Conditional check for space and layout
     $space = rwmb_meta( 'abilitaSpazio' ); 
@@ -53,7 +53,7 @@ function iml_render_project_single($atts) {
     <div class="progetto-content"> 
         <div class="left-column-progetto"> 
           <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
-            <?php echo get_the_post_thumbnail($post_id, 'full'); ?></a> 
+            <?php echo get_the_post_thumbnail($post_id, 'large'); ?></a> 
           <div class="left-column-bottom"> 
                 <nav class="foto-navigation"> 
                         <?php 
@@ -327,7 +327,7 @@ function iml_render_project_single($atts) {
     <div class="progetto-content"> 
         <div class="left-column-progetto"> 
           <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
-            <?php echo get_the_post_thumbnail($post_id, 'full'); ?></a> 
+            <?php echo get_the_post_thumbnail($post_id, 'large'); ?></a> 
           <div class="left-column-bottom"> 
                 <nav class="foto-navigation"> 
                         <?php 
