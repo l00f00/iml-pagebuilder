@@ -163,15 +163,19 @@ function iml_render_project_single($atts) {
       max-height:100vh; 
     } 
     .left-column-progetto a img { 
-         max-height: 100%; 
-         height: auto; 
-         height: -webkit-fill-available; 
-         top: 0; 
-         left: 0; 
-         object-fit: contain; 
-         width: -webkit-fill-available; 
-         position: fixed; /* Manteniamo position fixed per l'allineamento in alto a sinistra */
-    } 
+          position: absolute; /* Keep if needed for precise alignment */ 
+          top: 0; 
+          left: 0; 
+          width: 100%; 
+          height: 100%; 
+          object-fit: contain; /* Or 'fill' if distortion is acceptable */ 
+     } 
+     .left-column-progetto a { 
+          position: relative; 
+          width: 100%; 
+          height: 100%; /* Adjust as needed */ 
+          display: block; /* Ensure anchor behaves as a block container */
+     } 
     .left-column-progetto .left-column-top > *{ 
       padding: 28px 0 28px 0; 
     } 
@@ -438,15 +442,19 @@ function iml_render_project_single($atts) {
       max-height:100vh; 
     } 
     .left-column-progetto a img { 
-         max-height: 100%; 
-         height: auto; 
-         height: -webkit-fill-available; 
-         top: 0; 
-         left: 0; 
-         object-fit: contain; 
-         width: -webkit-fill-available; 
-         position: fixed; /* Manteniamo position fixed per l'allineamento in alto a sinistra */
-    } 
+          position: absolute; /* Keep if needed for precise alignment */ 
+          top: 0; 
+          left: 0; 
+          width: 100%; 
+          height: 100%; 
+          object-fit: contain; /* Or 'fill' if distortion is acceptable */ 
+     } 
+     .left-column-progetto a { 
+          position: relative; 
+          width: 100%; 
+          height: 100%; /* Adjust as needed */ 
+          display: block; /* Ensure anchor behaves as a block container */
+     }
     .left-column-progetto .left-column-top > *{ 
       padding: 28px 0 28px 0; 
     } 
