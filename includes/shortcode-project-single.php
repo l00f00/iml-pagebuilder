@@ -160,21 +160,21 @@ function iml_render_project_single($atts) {
     
     .left-column-progetto { 
       width: 65%; 
-      max-height:100vh; 
+      max-height:100vh;
+      position: relative; /* Anchor for fixed image */
     } 
     .left-column-progetto a img { 
-          position: absolute; /* Keep if needed for precise alignment */ 
+          position: fixed; /* Keep fixed to viewport */
           top: 0; 
           left: 0; 
-          width: 100%; 
-          height: 100%; 
-          object-fit: contain; /* Or 'fill' if distortion is acceptable */ 
+          width: 65%; /* Match column width */
+          height: 100vh; /* Full viewport height */
+          object-fit: cover; /* Cover entire area */
+          padding-right: 8px; /* Padding on the right */
+          box-sizing: border-box; /* Include padding in width */
      } 
      .left-column-progetto a { 
-          position: relative; 
-          width: 100%; 
-          height: 100%; /* Adjust as needed */ 
-          display: block; /* Ensure anchor behaves as a block container */
+          display: block; 
      } 
     .left-column-progetto .left-column-top > *{ 
       padding: 28px 0 28px 0; 
@@ -439,21 +439,21 @@ function iml_render_project_single($atts) {
     
     .left-column-progetto { 
       width: 65%; 
-      max-height:100vh; 
+      max-height:100vh;
+      position: relative; /* Anchor for fixed image */
     } 
     .left-column-progetto a img { 
-          position: absolute; /* Keep if needed for precise alignment */ 
+          position: fixed; /* Keep fixed to viewport */
           top: 0; 
           left: 0; 
-          width: 100%; 
-          height: 100%; 
-          object-fit: contain; /* Or 'fill' if distortion is acceptable */ 
+          width: 65%; /* Match column width */
+          height: 100vh; /* Full viewport height */
+          object-fit: cover; /* Cover entire area */
+          padding-right: 8px; /* Padding on the right */
+          box-sizing: border-box; /* Include padding in width */
      } 
      .left-column-progetto a { 
-          position: relative; 
-          width: 100%; 
-          height: 100%; /* Adjust as needed */ 
-          display: block; /* Ensure anchor behaves as a block container */
+          display: block; 
      }
     .left-column-progetto .left-column-top > *{ 
       padding: 28px 0 28px 0; 
