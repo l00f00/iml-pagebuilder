@@ -69,11 +69,21 @@
             log('Frame Rate: ' + anim.frameRate);
             log('Calculated Duration: ' + duration.toFixed(2) + 's');
             
+            // Check for segments/markers
+            // Note: Lottie doesn't always expose 'segments' directly unless defined in markers.
+            // We will inspect the animation data if possible.
+            if (anim.animationData && anim.animationData.markers) {
+                 log('Markers found: ' + anim.animationData.markers.length);
+                 anim.animationData.markers.forEach(function(marker) {
+                     log('Marker: ' + marker.cm + ' (Time: ' + marker.tm + ', Duration: ' + marker.dr + ')');
+                 });
+            } else {
+                log('No markers found in animation data.');
+            }
+
             // Start from frame 0 or 15 as per previous logic, let's test full first
             log('Starting animation from frame 0...');
             anim.playSegments([0, anim.totalFrames], true);
-            // If you want to test the skip logic:
-            // anim.playSegments([15, anim.totalFrames], true);
         });
 
         anim.addEventListener('complete', function() {
