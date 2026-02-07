@@ -81,9 +81,9 @@
                 log('No markers found in animation data.');
             }
 
-            // Start from frame 0 or 15 as per previous logic, let's test full first
-            log('Starting animation from frame 0...');
-            anim.playSegments([1, anim.totalFrames], true);
+            // Start simple play without segments
+            log('Starting animation with .play()...');
+            anim.play();
         });
 
         anim.addEventListener('complete', function() {
