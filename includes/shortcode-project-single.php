@@ -164,11 +164,11 @@ function iml_render_project_single($atts) {
       position: relative; /* Anchor for fixed image */
     } 
     .left-column-progetto a img { 
-          position: fixed; /* Keep fixed to viewport */
+          position: absolute; /* Changed from fixed to absolute so it scrolls */
           top: 0; 
           left: 0; 
-          width: 65%; /* Match column width */
-          height: 100vh; /* Full viewport height */
+          width: 100%; /* Fill container width */
+          height: 100vh; /* Full viewport height initial size */
           object-fit: cover; /* Cover entire area */
           padding-right: 8px; /* Padding on the right */
           box-sizing: border-box; /* Include padding in width */
@@ -443,11 +443,11 @@ function iml_render_project_single($atts) {
       position: relative; /* Anchor for fixed image */
     } 
     .left-column-progetto a img { 
-          position: fixed; /* Keep fixed to viewport */
+          position: absolute; /* Changed from fixed to absolute so it scrolls */
           top: 0; 
           left: 0; 
-          width: 65%; /* Match column width */
-          height: 100vh; /* Full viewport height */
+          width: 100%; /* Fill container width */
+          height: 100vh; /* Full viewport height initial size */
           object-fit: cover; /* Cover entire area */
           padding-right: 8px; /* Padding on the right */
           box-sizing: border-box; /* Include padding in width */
