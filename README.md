@@ -62,16 +62,10 @@ Estende le funzionalità della libreria media di WordPress:
 *   **Backend Upload:** Risolto bug upload da Media non funzionante su Portfolio (conflitto ID e inizializzazione array vuoto).
 *   **Safari CSS:** Risolto bug foto "cover" progetti esplode su Safari (aggiunto `width: -webkit-fill-available!important`).
 *   **Foto Cover Contain:** Applicata regola CSS per fit orizzontale con spazietto di 8px.
-
-### TODO (Elenco lavorazioni in sospeso)
-
-#### Priorità Alta & Bug
-*   [ ] **Home Builder:** Risolvere bug builder pagina HOME (spostare builder animazione in nuova pagina con label apposito).
-*   [ ] **Home Intro:** Animazione nome in INTRO — (In attesa file da cartella drive).
-*   [ ] **Home Preloading:** Inserimento animazione preloading pagina.
-*   [ ] **Home Animazione:** Disaccoppiare animazione rompere stage entrata cornice di nomi.
-
-*   [ ] **Foto Cover Contain:** Applicare regola: fit orizzontale foto cover progetto  in left column non si deve sovrapporre al testo.
+*   [v] **Home Builder:** Risolvere bug builder pagina HOME (spostare builder animazione in nuova pagina con label apposito).
+*   [v] **Home Intro:** Animazione nome in INTRO — (In attesa file da cartella drive).
+*   [v] **Home Preloading:** Inserimento animazione preloading pagina.
+*   [x] Da rivedere **Foto Cover Contain:** Applicare regola: fit orizzontale foto cover progetto  in left column non si deve sovrapporre al testo.
     ```css
     .left-column-progetto img { 
          max-height: 100%; 
@@ -83,6 +77,11 @@ Estende le funzionalità della libreria media di WordPress:
          width: -webkit-fill-available; 
     }
     ```
+
+### TODO (Elenco lavorazioni in sospeso)
+
+#### Priorità Alta & Bug
+*   [ ] **Home Animazione:** Disaccoppiare animazione rompere stage entrata cornice di nomi.
 
 #### Formattazione / Layout
 *   [ ] **Menu Desktop:** Allineare menu titoli con menu tendina (allineare a fine parola, bandiera allineata a fine parola titolo).
