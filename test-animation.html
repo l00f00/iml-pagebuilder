@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottie Animation Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: monospace;
+        }
+        #lottie-container {
+            width: 80%;
+            height: 80%;
+            border: 1px solid #ccc; /* Border to see boundaries */
+        }
+        #debug-info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: #0f0;
+            padding: 10px;
+            border-radius: 5px;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="debug-info">
+        Status: Waiting...<br>
+        Frames: -<br>
+        Duration: -
+    </div>
+
+    <div id="lottie-container"></div>
+
+    <script>
+        var container = document.getElementById('lottie-container');
+        var debugEl = document.getElementById('debug-info');
+        
+        function log(msg) {
+            console.log(msg);
+            debugEl.innerHTML += '<br>' + msg;
+        }
+
+        var anim = lottie.loadAnimation({
+            container: container,
+            renderer: 'svg',
+            loop: false,
+            autoplay: false,
+            path: './frontend/assets/new.json' // Relative path
+        });
+
+        anim.addEventListener('DOMLoaded', function() {
+            var duration = anim.totalFrames / anim.frameRate;
+            log('DOM Loaded');
+            log('Total Frames: ' + anim.totalFrames);
+            log('Frame Rate: ' + anim.frameRate);
+            log('Calculated Duration: ' + duration.toFixed(2) + 's');
+            
+            // Start from frame 0 or 15 as per previous logic, let's test full first
+            log('Starting animation from frame 0...');
+            anim.playSegments([0, anim.totalFrames], true);
+            // If you want to test the skip logic:
+            // anim.playSegments([15, anim.totalFrames], true);
+        });
+
+        anim.addEventListener('complete', function() {
+            log('EVENT: complete fired!');
+        });
+
+        anim.addEventListener('loopComplete', function() {
+            log('EVENT: loopComplete');
+        });
+
+        anim.addEventListener('enterFrame', function(e) {
+            // Optional: log every second or so to avoid spam
+            // if (Math.round(e.currentTime) % 24 === 0) console.log(e.currentTime);
+        });
+        
+        anim.addEventListener('error', function(e) {
+            log('ERROR: ' + e);
+        });
+        
+        anim.addEventListener('data_failed', function() {
+            log('ERROR: Data Failed');
+        });
+
+    </script>
+</body>
+</html>
