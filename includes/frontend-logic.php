@@ -187,7 +187,10 @@ function iml_homepage_lottie_preloader() {
                 renderer: 'svg',
                 loop: false,
                 autoplay: false, // Autoplay disabilitato per gestire start manuale
-                path: lottieJSON
+                path: lottieJSON,
+                rendererSettings: {
+                    preserveAspectRatio: 'none' // STRETCH to fill container
+                }
             });
 
             // Log durata animazione e avvio dal frame desiderato
