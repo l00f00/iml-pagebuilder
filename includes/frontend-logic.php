@@ -67,6 +67,16 @@ add_action('template_redirect', function() {
 });
 
 /**
+ * Preload Lottie assets for performance
+ */
+add_action('wp_head', function() {
+    if ( is_front_page() && !is_user_logged_in() ) {
+        $lottie_url = IML_PLUGIN_URL . 'frontend/assets/new.json';
+        echo '<link rel="preload" href="' . esc_url($lottie_url) . '" as="fetch" crossorigin="anonymous">';
+    }
+}, 5);
+
+/**
  * Homepage Lottie Preloader (Desktop Only)
  * Injected via wp_footer to ensure it works even if wp_body_open is missing,
  * but with high z-index to cover everything.
@@ -188,7 +198,7 @@ function iml_homepage_lottie_preloader() {
 
                 // RICHIESTA UTENTE: Saltare i primi 15 frame
                 // Nota: 15 frame @ 24fps sono circa 0.6 secondi.
-                var startFrame = 45; 
+                var startFrame = 15; 
                 
                 // Controllo di sicurezza: se 100 è troppo, partiamo da 0 o da un valore più basso (es. 12 frame = 0.5s)
                 if (startFrame >= anim.totalFrames) {
