@@ -37,6 +37,7 @@ require_once IML_PLUGIN_DIR . 'includes/ajax-functions.php';
 
 // Include Shortcodes
 require_once IML_PLUGIN_DIR . 'includes/shortcodes.php';
+require_once IML_PLUGIN_DIR . 'includes/shortcode-project-single.php';
 
 // Include Frontend Logic
 require_once IML_PLUGIN_DIR . 'includes/frontend-logic.php';
