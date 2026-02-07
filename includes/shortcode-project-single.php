@@ -204,6 +204,9 @@ function iml_render_project_single($atts) {
     .right-column-progetto { 
       width: 35%; 
       padding-top:65px;/*era 50 px*/ 
+      background-color: white; /* Added to prevent image overlap */
+      position: relative; 
+      z-index: 10;
     } 
     .progetto-description{ 
       /*text-indent: 1em;*/ 
@@ -478,6 +481,9 @@ function iml_render_project_single($atts) {
       width: 35%; 
       padding-top:65px;/*era 50px*/ 
       padding-right:6px;/*era 0px messo a 6 per leggibilita*/ 
+      background-color: white; /* Added to prevent image overlap */
+      position: relative; 
+      z-index: 10;
     } 
     .progetto-description{ 
       /*text-indent: 1em;*/ 
