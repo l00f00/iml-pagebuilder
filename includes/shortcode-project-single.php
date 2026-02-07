@@ -162,18 +162,15 @@ function iml_render_project_single($atts) {
       width: 65%; 
       max-height:100vh; 
     } 
-    .left-column-progetto img { 
-        max-width: 63%; 
-        max-height:100%; 
-        /*height: auto;*/ 
-        height: -webkit-fill-available; 
-        display: block; 
-        position:fixed; 
-        top:0; 
-        left:0; 
-      object-fit: contain; 
-      /*background-color:green;*/ 
-      width:auto; 
+    .left-column-progetto a img { 
+         max-height: 100%; 
+         height: auto; 
+         height: -webkit-fill-available; 
+         top: 0; 
+         left: 0; 
+         object-fit: contain; 
+         width: -webkit-fill-available; 
+         position: fixed; /* Manteniamo position fixed per l'allineamento in alto a sinistra */
     } 
     .left-column-progetto .left-column-top > *{ 
       padding: 28px 0 28px 0; 
@@ -440,16 +437,15 @@ function iml_render_project_single($atts) {
       width: 65%; 
       max-height:100vh; 
     } 
-    .left-column-progetto img { 
-        /*background-color:green; 
-        max-width: 63%; modificata larghezza massima*/ 
-        max-height:100%; 
-        height: auto; 
-        height: -webkit-fill-available; 
-        top:0; 
-        left:0; 
-        object-fit: contain; 
-        width:auto; 
+    .left-column-progetto a img { 
+         max-height: 100%; 
+         height: auto; 
+         height: -webkit-fill-available; 
+         top: 0; 
+         left: 0; 
+         object-fit: contain; 
+         width: -webkit-fill-available; 
+         position: fixed; /* Manteniamo position fixed per l'allineamento in alto a sinistra */
     } 
     .left-column-progetto .left-column-top > *{ 
       padding: 28px 0 28px 0; 
