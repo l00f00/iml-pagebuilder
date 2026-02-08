@@ -85,7 +85,9 @@ Estende le funzionalità della libreria media di WordPress:
 
 #### Formattazione / Layout
 *   [v] **Menu Desktop:** Allineare menu titoli con menu tendina (allineare a fine parola, bandiera allineata a fine parola titolo).
-*   [ ] **Menu Desktop:** Allineare con testi (valutare fattibilità tecnica).
+*   [v] **Menu Desktop:** Allineare con testi (valutare fattibilità tecnica).
+*   [v] **Menu Desktop:** Fix Z-Index e posizionamento colonna destra.
+*   [v] **Backend Upload:** Risolto bug upload da Media non funzionante su Portfolio e Progetti (conflitto JS).
 *   [ ] **Menu Mobile:** Aggiungere una piccola "V" per segnare apertura sottomenu al click.
 *   [v] **Testi Progetti:** Implementare "Read More" per testi lunghi (desktop e valutare tablet).
 *   [v] **Foto Cover:** Applicare regola: verticale fit 100vh, orizzontale fit container.
