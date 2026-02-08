@@ -523,9 +523,19 @@
         position: relative !important;
         z-index: 11 !important;
     }
+    
+    #_nav_menu-21-106 .menu-item a {
+        color: black;
+    }
+
     #_nav_menu-21-106 .sub-menu {
         right: 0px !important;
         left: auto !important;
         z-index: 11 !important;
+        background-color: white; /* Ensure background is white so it covers content */
+    }
+    
+    #_nav_menu-21-106 .sub-menu .menu-item a {
+        color: black; /* Ensure text is visible on white background */
     }
 }
