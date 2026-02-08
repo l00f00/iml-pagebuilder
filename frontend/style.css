@@ -252,8 +252,9 @@
         text-align: center;
     }
     
-    /* Remove default dropdown icon if present */
-    #_nav_menu-21-106 .menu-item-has-children > a > .oxy-icon-caret-down {
+    /* Remove default dropdown icon if present - targeting both possible classes */
+    #_nav_menu-21-106 .menu-item-has-children > a > .oxy-icon-caret-down,
+    #_nav_menu-21-106 .menu-item-has-children > a > svg {
         display: none !important;
     }
     
