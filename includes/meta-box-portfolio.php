@@ -456,7 +456,9 @@ function portfolio_admin_scripts() {
                     $('#add-portfolio-item').removeClass('is-open');
                 }
             });
-jQuery(document).ready(function($) {
+        });
+        
+        jQuery(document).ready(function($) {
             // FIX: Changed ID to unique 'portfolio_media_upload' to avoid conflicts
             $('#portfolio_media_upload').click(function(e) {
                 e.preventDefault();

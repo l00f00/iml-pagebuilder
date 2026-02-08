@@ -493,8 +493,8 @@ function prj_admin_scripts() {
                 }
             });
         });
-    </script>
-    jQuery(document).ready(function($) {
+        
+        jQuery(document).ready(function($) {
             $('#custom_media_upload').click(function(e) {
                 e.preventDefault();
                 var mediaUploader = wp.media({
