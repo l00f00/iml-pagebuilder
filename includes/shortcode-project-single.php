@@ -638,10 +638,10 @@ function iml_render_project_single($atts) {
         /*mix-blend-mode: exclusion; /* Applica il metodo di fusione */ 
     } 
     
-    .sl-wrapper .simple-lightbox, .sl-wrapper .simple-lightbox > *{ 
+    /*.sl-wrapper .simple-lightbox, .sl-wrapper .simple-lightbox > *{ 
       z-index: 30000000000!important; 
       pointer-events: all; 
-    }
+    }*/
     /*
     .sl-wrapper .sl-close {
         z-index: 30000000001!important; 
