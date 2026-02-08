@@ -100,6 +100,7 @@ function iml_render_project_single($atts) {
             $lightbox_attr = $single_page_true ? '' : 'data-lightbox="gallery"'; 
             // Conditionally add a border style for items with a single page 
             //$border_style = $single_page_true ? 'border: 1px solid red;' : ''; 
+            $foto_title = get_the_title($foto_id);
     
             // if single page true add image to hiddenImages so we can show it in the lightbox anyway 
             if ($single_page_true) { 
@@ -109,6 +110,11 @@ function iml_render_project_single($atts) {
             ?> 
             <a class="related-foto-item" href="<?php echo $link_url; ?>" style="color:black;" <?php echo $lightbox_attr; ?>> 
                 <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
+                    <div class="info-overlay">
+                        <div class="year-title">
+                            <span class="title"><?php echo esc_html($foto_title); ?></span>
+                        </div>
+                    </div>
                     <div class="image-wrapper"> 
                         <img src="<?php echo esc_url($thumbnail); ?>" alt=""> 
                     </div> 
@@ -275,6 +281,33 @@ function iml_render_project_single($atts) {
     
     .fotoContainer { 
       max-width:100%; 
+      position: relative; /* Ensure relative positioning for overlay */
+    } 
+    
+    .info-overlay { 
+       position: absolute; 
+       top: 0; 
+       left: 0; 
+       width: 100%; 
+       height: 100%; 
+       color: white; 
+       opacity: 0; 
+       transition: opacity 0.3s ease; 
+       display: flex; 
+       flex-direction: column; 
+       justify-content: space-between; 
+       pointer-events: none; /* Allow clicks to pass through */
+       background: rgba(0,0,0,0.1); /* Optional: slight dark overlay for better text contrast */
+       z-index: 2;
+    } 
+
+    .year-title {
+        margin-top: auto; /* Push to bottom */
+        padding: 10px;
+    }
+    
+    .related-foto-item:hover .info-overlay { 
+       opacity: 1; 
     } 
     
     /* Style for the image wrapper */ 
@@ -429,9 +462,15 @@ function iml_render_project_single($atts) {
             $lightbox_attr = $single_page_true ? 'data-single="single-page-true"' : 'data-lightbox="gallery"'; 
             // Conditionally add a border style for items with a single page 
             //$border_style = $single_page_true ? 'border: 1px solid red;' : ''; 
+            $foto_title = get_the_title($foto_id);
             ?> 
             <a class="related-foto-item" href="<?php echo $link_url; ?>" style="color:black;" <?php echo $lightbox_attr;?>> 
                 <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
+                    <div class="info-overlay">
+                        <div class="year-title">
+                            <span class="title"><?php echo esc_html($foto_title); ?></span>
+                        </div>
+                    </div>
                     <div class="image-wrapper"> 
                         <img src="<?php echo esc_url($thumbnail); ?>" alt=""> 
                     </div> 
@@ -600,6 +639,33 @@ function iml_render_project_single($atts) {
     
     .fotoContainer { 
       max-width:100%; 
+      position: relative; /* Ensure relative positioning for overlay */
+    } 
+    
+    .info-overlay { 
+       position: absolute; 
+       top: 0; 
+       left: 0; 
+       width: 100%; 
+       height: 100%; 
+       color: white; 
+       opacity: 0; 
+       transition: opacity 0.3s ease; 
+       display: flex; 
+       flex-direction: column; 
+       justify-content: space-between; 
+       pointer-events: none; /* Allow clicks to pass through */
+       background: rgba(0,0,0,0.1); /* Optional: slight dark overlay for better text contrast */
+       z-index: 2;
+    } 
+
+    .year-title {
+        margin-top: auto; /* Push to bottom */
+        padding: 10px;
+    }
+    
+    .related-foto-item:hover .info-overlay { 
+       opacity: 1; 
     } 
     
     /* Style for the image wrapper */ 

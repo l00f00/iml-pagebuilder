@@ -87,8 +87,8 @@ Estende le funzionalità della libreria media di WordPress:
 *   [ ] **Menu Desktop:** Allineare menu titoli con menu tendina (allineare a fine parola, bandiera allineata a fine parola titolo).
 *   [ ] **Menu Desktop:** Allineare con testi (valutare fattibilità tecnica).
 *   [ ] **Menu Mobile:** Aggiungere una piccola "V" per segnare apertura sottomenu al click.
-*   [ ] **Testi Progetti:** Implementare "Read More" per testi lunghi (desktop e valutare tablet).
-*   [ ] **Foto Cover:** Applicare regola: verticale fit 100vh, orizzontale fit container.
+*   [v] **Testi Progetti:** Implementare "Read More" per testi lunghi (desktop e valutare tablet).
+*   [v] **Foto Cover:** Applicare regola: verticale fit 100vh, orizzontale fit container.
 *   [ ] **Foto Cover Orizzontale:** Gestione specifica nei progetti (es. Jhalak, Termini Underground).
 *   [ ] **Allineamento Foto:** Allineare foto "cover" orizzontale quando a dx c’è foto orizzontale (es. COEZ).
 *   [ ] **Cross-browser:** Fare check sui vari browser.
@@ -107,7 +107,7 @@ Estende le funzionalità della libreria media di WordPress:
 *   [ ] **Home:** Inserire "curated by -nome-" (attendere layout).
 *   [ ] **Home:** Escludi post (valutare se rimuovere).
 *   [ ] **Pulsante +:** Valutare se tenere.
-*   [ ] **Progetti:** Nome delle foto on hover (come Music Archives).
+*   [v] **Progetti:** Nome delle foto on hover (come Music Archives).
 *   [ ] **About:** Scrivere breve guida su modifica pagina ABOUT.
 *   [ ] **About Press:** Aggiungere in "selected press" 2025: BeTalkZ PODCAST (YouTube + Spotify) e Visioni (RaiPlay).
 *   [ ] **Tags:** Manca pulsante back e progettazione landing tag.
