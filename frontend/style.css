@@ -252,6 +252,11 @@
         text-align: center;
     }
     
+    /* Remove default dropdown icon if present */
+    #_nav_menu-21-106 .menu-item-has-children > a > .oxy-icon-caret-down {
+        display: none !important;
+    }
+    
     #_nav_menu-21-106 .menu-item-has-children > a:after {
         content: " v";
         font-size: 0.8em;
