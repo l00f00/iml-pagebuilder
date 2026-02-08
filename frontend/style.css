@@ -241,9 +241,18 @@
 /* Mobile Menu Alignment Fix */
 @media (max-width: 991px) { 
      #_nav_menu-21-106.oxy-nav-menu.oxy-nav-menu-open { 
-         /* align-items: flex-end; */ 
-         /* justify-content: flex-end; */ 
-         align-content: center;
+         width: 100% !important; 
+         display: flex !important; 
+         flex-direction: row !important; 
+         align-items: flex-end !important; 
+         justify-content: flex-end !important; 
+         flex-wrap: wrap !important; 
+         align-content: center !important; 
+         font-family: 'switzer' !important; 
+         color: #ffffff !important; 
+         background-color: #000 !important; 
+         min-height: 101vh !important; 
+         overflow-y: hidden !important; 
      }
 }
 
