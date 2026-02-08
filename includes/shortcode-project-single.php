@@ -309,24 +309,34 @@ function iml_render_project_single($atts) {
        left: 0; 
        width: 100%; 
        height: 100%; 
-       color: white; 
+       color: white; /* Keep text white */
        opacity: 0; 
        transition: opacity 0.3s ease; 
        display: flex; 
        flex-direction: column; 
        justify-content: space-between; 
        pointer-events: none; /* Allow clicks to pass through */
-       background: rgba(0,0,0,0.1); /* Optional: slight dark overlay for better text contrast */
+       /* background: rgba(0,0,0,0.1);  Removed background overlay */
        z-index: 2;
     } 
 
     .year-title {
         margin-top: auto; /* Push to bottom */
         padding: 10px;
+        /* text-shadow: 0 1px 3px rgba(0,0,0,0.5); Optional: add shadow for readability without background */
     }
     
     .related-foto-item:hover .info-overlay { 
        opacity: 1; 
+    } 
+    
+    /* When hovering the item, reduce the image opacity */
+    .related-foto-item:hover .image-wrapper img {
+        opacity: 0.8; /* Or any value you prefer */
+        transition: opacity 0.3s ease;
+    }
+    .image-wrapper img {
+        transition: opacity 0.3s ease;
     } 
     
     /* Style for the image wrapper */ 
@@ -677,24 +687,34 @@ function iml_render_project_single($atts) {
        left: 0; 
        width: 100%; 
        height: 100%; 
-       color: white; 
+       color: white; /* Keep text white */
        opacity: 0; 
        transition: opacity 0.3s ease; 
        display: flex; 
        flex-direction: column; 
        justify-content: space-between; 
        pointer-events: none; /* Allow clicks to pass through */
-       background: rgba(0,0,0,0.1); /* Optional: slight dark overlay for better text contrast */
+       /* background: rgba(0,0,0,0.1);  Removed background overlay */
        z-index: 2;
     } 
 
     .year-title {
         margin-top: auto; /* Push to bottom */
         padding: 10px;
+        /* text-shadow: 0 1px 3px rgba(0,0,0,0.5); Optional: add shadow for readability without background */
     }
     
     .related-foto-item:hover .info-overlay { 
        opacity: 1; 
+    } 
+    
+    /* When hovering the item, reduce the image opacity */
+    .related-foto-item:hover .image-wrapper img {
+        opacity: 0.8; /* Or any value you prefer */
+        transition: opacity 0.3s ease;
+    }
+    .image-wrapper img {
+        transition: opacity 0.3s ease;
     } 
     
     /* Style for the image wrapper */ 
