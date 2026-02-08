@@ -158,17 +158,13 @@
    height: auto; 
  } 
 
- /* Media query for mobile screens (less than 600px) */ 
- @media (max-width: 992px) { 
-   #custom-post-grid > :nth-child(-n+2) { 
-   flex-basis: 100%!important; /* For the first two items */ 
-   max-width: 99vw!important; 
- } 
- #custom-post-grid > :nth-child(n+3) { 
-   flex-basis: 100%!important; /* For the first two items */ 
-   max-width: 99vw!important; 
- } 
- }
+ /* Media query for mobile screens (less than 992px) */ 
+@media (max-width: 992px) { 
+  #custom-post-grid > * { 
+  flex-basis: 100%!important; /* For all items */ 
+  max-width: 100%!important; 
+} 
+}
 
 /* FIX SAFARI - Foto cover progetto */
 .left-column-progetto img {
@@ -245,7 +241,13 @@
 /* Mobile styles */
 @media (max-width: 1120px) {
     .left-column-progetto, .right-column-progetto {
-        width: 100vw;
+        width: 100%;
+        max-width: 100%;
+        padding-right: 0;
+        padding-top: 20px;
+    }
+    .progetto-content {
+        flex-direction: column;
     }
     .left-column-progetto > img {
         max-width: 100%;
@@ -254,13 +256,17 @@
         position:relative;
     }
     .left-column-progetto> a > img {
-        max-width: 100vw;
+        max-width: 100%;
         width:100%;
         position:relative;
     }
 
     .right-column-progetto .related-photo-item {
         width: 100%;
+    }
+    
+    .right-column-progetto {
+        padding-top: 0;
     }
 }
 
