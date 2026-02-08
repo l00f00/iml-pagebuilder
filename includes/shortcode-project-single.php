@@ -642,14 +642,16 @@ function iml_render_project_single($atts) {
       z-index: 30000000000!important; 
       pointer-events: all; 
     }
+    /*
     .sl-wrapper .sl-close {
-        z-index: 30000000001!important; /* Ensure close button is above everything */
+        z-index: 30000000001!important; 
         pointer-events: auto!important;
         display: block!important;
     }
     .sl-wrapper {
-        z-index: 29999999999!important; /* Wrapper z-index */
+        z-index: 29999999999!important; 
     }
+    */
     </style>
     <?php
 
