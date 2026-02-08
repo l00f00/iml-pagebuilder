@@ -238,6 +238,15 @@
   max-width:100%;
 }
 
+/* Mobile Menu Alignment Fix */
+@media (max-width: 991px) { 
+     #_nav_menu-21-106.oxy-nav-menu.oxy-nav-menu-open { 
+         /* align-items: flex-end; */ 
+         /* justify-content: flex-end; */ 
+         align-content: center;
+     }
+}
+
 /* Mobile styles */
 @media (max-width: 1120px) {
     /* ... existing mobile styles ... */
