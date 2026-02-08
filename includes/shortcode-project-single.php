@@ -417,7 +417,7 @@ function iml_render_project_single($atts) {
             preloading: true, 
             closeText: '<div class="divclose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 39" width="44" height="39"><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(45 16 16)" /><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(-45 16 16)" /></svg></div>', 
             navText: ['<','>'], 
-            spinner: false, 
+            spinner: true, 
             overlay: false, 
             docClose: false, 
         }); 

@@ -67,7 +67,7 @@ Estende le funzionalità della libreria media di WordPress:
 *   [v] **Home Preloading:** Inserimento animazione preloading pagina.
 *   [x] Da rivedere **Foto Cover Contain:** Applicare regola: fit orizzontale foto cover progetto  in left column non si deve sovrapporre al testo.
     ```css
-    .left-column-progetto img { 
+    .left-column-progetto a img { 
          max-height: 100%; 
          height: auto; 
          height: -webkit-fill-available; 
