@@ -250,6 +250,7 @@
         justify-content: center;
         width: 100%;
         text-align: center;
+        min-height: 80vh; /* Use 80vh to avoid footer/header conflicts, effectively centering it */
     }
     
     /* Remove default dropdown icon if present - targeting both possible classes */
