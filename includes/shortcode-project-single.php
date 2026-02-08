@@ -158,6 +158,25 @@ function iml_render_project_single($atts) {
         });
 
         console.log('Progetto caricato: <?php echo $layout_3_col ? "3 colonne" : "1 colonna"; ?>');
+
+        // Read More Functionality
+        var $desc = jQuery('.progetto-description');
+        var maxHeight = jQuery(window).height() * 0.6; // 60% of viewport height
+
+        if ($desc.length && $desc.height() > maxHeight) {
+            $desc.addClass('truncated');
+            jQuery('<div class="read-more-btn">Read More</div>').insertAfter($desc);
+            
+            jQuery('.read-more-btn').on('click', function() {
+                if ($desc.hasClass('truncated')) {
+                    $desc.removeClass('truncated');
+                    jQuery(this).text('Read Less');
+                } else {
+                    $desc.addClass('truncated');
+                    jQuery(this).text('Read More');
+                }
+            });
+        }
     });
     </script> <style> 
     .progetto-content { 
@@ -218,8 +237,29 @@ function iml_render_project_single($atts) {
       position: relative; 
       z-index: 10;
     } 
-    .progetto-description{ 
-      /*text-indent: 1em;*/ 
+    .progetto-description {
+        position: relative;
+        transition: max-height 0.5s ease;
+    }
+    .progetto-description.truncated {
+        max-height: 60vh; /* Adjust this value */
+        overflow: hidden;
+    }
+    .progetto-description.truncated::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        background: linear-gradient(transparent, white);
+    }
+    .read-more-btn {
+        display: block; /* Hidden by default, shown by JS if needed */
+        cursor: pointer;
+        color: black; /* Or styling */
+        margin-top: 10px;
+        text-decoration: underline;
     } 
     .right-column-progetto-top{ 
       padding-bottom:160px; 
@@ -441,6 +481,25 @@ function iml_render_project_single($atts) {
         });
 
         console.log('Progetto caricato: <?php echo $layout_3_col ? "3 colonne" : "1 colonna"; ?>');
+
+        // Read More Functionality
+        var $desc = jQuery('.progetto-description');
+        var maxHeight = jQuery(window).height() * 0.6; // 60% of viewport height
+
+        if ($desc.length && $desc.height() > maxHeight) {
+            $desc.addClass('truncated');
+            jQuery('<div class="read-more-btn">Read More</div>').insertAfter($desc);
+            
+            jQuery('.read-more-btn').on('click', function() {
+                if ($desc.hasClass('truncated')) {
+                    $desc.removeClass('truncated');
+                    jQuery(this).text('Read Less');
+                } else {
+                    $desc.addClass('truncated');
+                    jQuery(this).text('Read More');
+                }
+            });
+        }
     });
     </script> <style> 
     .progetto-content { 
@@ -507,8 +566,29 @@ function iml_render_project_single($atts) {
       position: relative; 
       z-index: 10;
     } 
-    .progetto-description{ 
-      /*text-indent: 1em;*/ 
+    .progetto-description {
+        position: relative;
+        transition: max-height 0.5s ease;
+    }
+    .progetto-description.truncated {
+        max-height: 60vh; /* Adjust this value */
+        overflow: hidden;
+    }
+    .progetto-description.truncated::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        background: linear-gradient(transparent, white);
+    }
+    .read-more-btn {
+        display: block; /* Hidden by default, shown by JS if needed */
+        cursor: pointer;
+        color: black; /* Or styling */
+        margin-top: 10px;
+        text-decoration: underline;
     } 
     .right-column-progetto-top{ 
       padding-bottom:160px; 
