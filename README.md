@@ -80,8 +80,6 @@ Estende le funzionalità della libreria media di WordPress:
 
 ### TODO (Elenco lavorazioni in sospeso)
 
-#### Priorità Alta & Bug
-*   [ ] **Home Animazione:** Disaccoppiare animazione rompere stage entrata cornice di nomi.
 
 #### Formattazione / Layout
 *   [v] **Menu Desktop:** Allineare menu titoli con menu tendina (allineare a fine parola, bandiera allineata a fine parola titolo).
