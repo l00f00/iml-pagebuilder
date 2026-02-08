@@ -89,7 +89,7 @@ Estende le funzionalità della libreria media di WordPress:
 *   [ ] **Menu Mobile:** Aggiungere una piccola "V" per segnare apertura sottomenu al click.
 *   [v] **Testi Progetti:** Implementare "Read More" per testi lunghi (desktop e valutare tablet).
 *   [v] **Foto Cover:** Applicare regola: verticale fit 100vh, orizzontale fit container.
-*   [ ] **Foto Cover Orizzontale:** Gestione specifica nei progetti (es. Jhalak, Termini Underground).
+*   [v] **Foto Cover Orizzontale:** Gestione specifica nei progetti (es. Jhalak, Termini Underground).
 *   [ ] **Allineamento Foto:** Allineare foto "cover" orizzontale quando a dx c’è foto orizzontale (es. COEZ).
 *   [ ] **Cross-browser:** Fare check sui vari browser.
 

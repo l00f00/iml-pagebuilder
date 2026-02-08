@@ -35,6 +35,15 @@ function iml_render_project_single($atts) {
     $abilita3colonne = rwmb_meta('abilita3colonne', '', $post_id); 
     $layout_3_col = !empty($abilita3colonne) && $abilita3colonne == 1;
 
+    // Check cover image orientation
+    $img_meta = wp_get_attachment_metadata($thumbnail_id);
+    $orientation_class = 'cover-horizontal'; // Default
+    if ($img_meta && isset($img_meta['width']) && isset($img_meta['height'])) {
+        if ($img_meta['height'] > $img_meta['width']) {
+            $orientation_class = 'cover-vertical';
+        }
+    }
+
     // Navigation URLs
     $prev_post = get_adjacent_post(false, '', true);
     $next_post = get_adjacent_post(false, '', false);
@@ -51,7 +60,7 @@ function iml_render_project_single($atts) {
     if (!$layout_3_col) : 
     ?>
     <div class="progetto-content"> 
-        <div class="left-column-progetto"> 
+        <div class="left-column-progetto <?php echo esc_attr($orientation_class); ?>"> 
           <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
             <?php echo get_the_post_thumbnail($post_id, 'large'); ?></a> 
           <div class="left-column-bottom"> 
@@ -198,14 +207,24 @@ function iml_render_project_single($atts) {
       position: relative; /* Anchor for fixed image */
     } 
     .left-column-progetto a img { 
-          position: absolute; /* Changed from fixed to absolute so it scrolls */
+          position: absolute; 
           top: 0; 
           left: 0; 
-          width: 100%; /* Fill container width */
-          height: 100vh; /* Full viewport height initial size */
-          object-fit: cover; /* Cover entire area */
-          padding-right: 8px; /* Padding on the right */
-          box-sizing: border-box; /* Include padding in width */
+          padding-right: 8px; 
+          box-sizing: border-box; 
+     } 
+     /* Vertical Cover: 100vh height, auto width */
+     .left-column-progetto.cover-vertical a img {
+          height: 100vh;
+          width: auto;
+          max-width: 100%;
+          object-fit: contain; /* or cover if you want to crop */
+     }
+     /* Horizontal Cover: 100% width, auto height */
+     .left-column-progetto.cover-horizontal a img {
+          width: 100%;
+          height: auto;
+          object-fit: contain;
      } 
      .left-column-progetto a { 
           display: block; 
@@ -407,7 +426,7 @@ function iml_render_project_single($atts) {
     if ($layout_3_col) : 
     ?>
     <div class="progetto-content"> 
-        <div class="left-column-progetto"> 
+        <div class="left-column-progetto <?php echo esc_attr($orientation_class); ?>"> 
           <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
             <?php echo get_the_post_thumbnail($post_id, 'large'); ?></a> 
           <div class="left-column-bottom"> 
@@ -559,14 +578,24 @@ function iml_render_project_single($atts) {
       position: relative; /* Anchor for fixed image */
     } 
     .left-column-progetto a img { 
-          position: absolute; /* Changed from fixed to absolute so it scrolls */
+          position: absolute; 
           top: 0; 
           left: 0; 
-          width: 100%; /* Fill container width */
-          height: 100vh; /* Full viewport height initial size */
-          object-fit: cover; /* Cover entire area */
-          padding-right: 8px; /* Padding on the right */
-          box-sizing: border-box; /* Include padding in width */
+          padding-right: 8px; 
+          box-sizing: border-box; 
+     } 
+     /* Vertical Cover: 100vh height, auto width */
+     .left-column-progetto.cover-vertical a img {
+          height: 100vh;
+          width: auto;
+          max-width: 100%;
+          object-fit: contain; /* or cover if you want to crop */
+     }
+     /* Horizontal Cover: 100% width, auto height */
+     .left-column-progetto.cover-horizontal a img {
+          width: 100%;
+          height: auto;
+          object-fit: contain;
      } 
      .left-column-progetto a { 
           display: block; 
