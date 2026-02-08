@@ -84,13 +84,13 @@ Estende le funzionalità della libreria media di WordPress:
 *   [ ] **Home Animazione:** Disaccoppiare animazione rompere stage entrata cornice di nomi.
 
 #### Formattazione / Layout
-*   [ ] **Menu Desktop:** Allineare menu titoli con menu tendina (allineare a fine parola, bandiera allineata a fine parola titolo).
+*   [v] **Menu Desktop:** Allineare menu titoli con menu tendina (allineare a fine parola, bandiera allineata a fine parola titolo).
 *   [ ] **Menu Desktop:** Allineare con testi (valutare fattibilità tecnica).
 *   [ ] **Menu Mobile:** Aggiungere una piccola "V" per segnare apertura sottomenu al click.
 *   [v] **Testi Progetti:** Implementare "Read More" per testi lunghi (desktop e valutare tablet).
 *   [v] **Foto Cover:** Applicare regola: verticale fit 100vh, orizzontale fit container.
 *   [v] **Foto Cover Orizzontale:** Gestione specifica nei progetti (es. Jhalak, Termini Underground).
-*   [ ] **Allineamento Foto:** Allineare foto "cover" orizzontale quando a dx c’è foto orizzontale (es. COEZ).
+*   [v] **Allineamento Foto:** Allineare foto "cover" orizzontale quando a dx c’è foto orizzontale (es. COEZ).
 *   [ ] **Cross-browser:** Fare check sui vari browser.
 
 #### Mobile
