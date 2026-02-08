@@ -520,12 +520,12 @@
 /* --- FIX MENU DESKTOP ALIGNMENT --- */
 @media (min-width: 993px) {
     #_nav_menu-21-106 {
-        position: relative;
-        z-index: 9999;
+        position: relative !important;
+        z-index: 11 !important;
     }
     #_nav_menu-21-106 .sub-menu {
         right: 0px !important;
         left: auto !important;
-        z-index: 9999 !important;
+        z-index: 11 !important;
     }
 }
