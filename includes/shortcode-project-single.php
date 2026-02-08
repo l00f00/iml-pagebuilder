@@ -147,9 +147,18 @@ function iml_render_project_single($atts) {
             overlay: false, 
             docClose: false, 
         }); 
-       
-    }); 
-    console.log('PROGETTO CARICATO 1 COLONNA'); 
+
+        // Force hide lightbox wrapper on close
+        gallery.on('close.simplelightbox', function () {
+            setTimeout(function() {
+                jQuery('.sl-wrapper').fadeOut(200, function(){
+                    jQuery(this).hide();
+                });
+            }, 100); // Small delay to allow library's own close animation to start
+        });
+
+        console.log('Progetto caricato: <?php echo $layout_3_col ? "3 colonne" : "1 colonna"; ?>');
+    });
     </script> <style> 
     .progetto-content { 
       display: flex; 
@@ -421,9 +430,18 @@ function iml_render_project_single($atts) {
             overlay: false, 
             docClose: false, 
         }); 
-       
-    }); 
-    console.log('PROGETTO CARICATO 3 colonne'); 
+
+        // Force hide lightbox wrapper on close
+        gallery.on('close.simplelightbox', function () {
+            setTimeout(function() {
+                jQuery('.sl-wrapper').fadeOut(200, function(){
+                    jQuery(this).hide();
+                });
+            }, 100); // Small delay to allow library's own close animation to start
+        });
+
+        console.log('Progetto caricato: <?php echo $layout_3_col ? "3 colonne" : "1 colonna"; ?>');
+    });
     </script> <style> 
     .progetto-content { 
       display: flex; 
