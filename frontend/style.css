@@ -259,7 +259,7 @@
     }
     
     #_nav_menu-21-106 .menu-item-has-children > a:after {
-        content: " v";
+        /* content: " v"; */
         font-size: 0.8em;
         margin-left: 5px;
         vertical-align: middle;
