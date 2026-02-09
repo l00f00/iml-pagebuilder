@@ -62,6 +62,20 @@ Estende le funzionalità della libreria media di WordPress:
 *   **Backend Upload:** Risolto bug upload da Media non funzionante su Portfolio (conflitto ID e inizializzazione array vuoto).
 *   **Safari CSS:** Risolto bug foto "cover" progetti esplode su Safari (aggiunto `width: -webkit-fill-available!important`).
 *   **Foto Cover Contain:** Applicata regola CSS per fit orizzontale con spazietto di 8px.
+*   **Menu Desktop:** Allineare menu titoli con menu tendina (allineare a fine parola, bandiera allineata a fine parola titolo).
+*   **Menu Desktop:** Allineare con testi (valutare fattibilità tecnica).
+*   **Menu Desktop:** Fix Z-Index e posizionamento colonna destra.
+*   **Backend Upload:** Risolto bug upload da Media non funzionante su Portfolio e Progetti (conflitto JS).
+*   **Menu Mobile:** Aggiungere una piccola "V" per segnare apertura sottomenu al click.
+*   **Testi Progetti:** Implementare "Read More" per testi lunghi (desktop e valutare tablet).
+*   **Foto Cover:** Applicare regola: verticale fit 100vh, orizzontale fit container.
+*   **Foto Cover Orizzontale:** Gestione specifica nei progetti (es. Jhalak, Termini Underground).
+*   **Allineamento Foto:** Allineare foto "cover" orizzontale quando a dx c’è foto orizzontale (es. COEZ).
+*   **Menu:** Finisce troppo in basso e diventa non cliccabile.
+*   **Bug Scroll:** Pagina singola progetto cambia da sola allo scroll touch.
+*   **Menu Admin:** Ogni tot crasha.
+*   **Home:** Escludi post (valutare se rimuovere).
+*   **Progetti:** Nome delle foto on hover (come Music Archives).
 *   [v] **Home Builder:** Risolvere bug builder pagina HOME (spostare builder animazione in nuova pagina con label apposito).
 *   [v] **Home Intro:** Animazione nome in INTRO — (In attesa file da cartella drive).
 *   [v] **Home Preloading:** Inserimento animazione preloading pagina.
@@ -82,32 +96,19 @@ Estende le funzionalità della libreria media di WordPress:
 
 
 #### Formattazione / Layout
-*   [v] **Menu Desktop:** Allineare menu titoli con menu tendina (allineare a fine parola, bandiera allineata a fine parola titolo).
-*   [v] **Menu Desktop:** Allineare con testi (valutare fattibilità tecnica).
-*   [v] **Menu Desktop:** Fix Z-Index e posizionamento colonna destra.
-*   [v] **Backend Upload:** Risolto bug upload da Media non funzionante su Portfolio e Progetti (conflitto JS).
-*   [ ] **Menu Mobile:** Aggiungere una piccola "V" per segnare apertura sottomenu al click.
-*   [v] **Testi Progetti:** Implementare "Read More" per testi lunghi (desktop e valutare tablet).
-*   [v] **Foto Cover:** Applicare regola: verticale fit 100vh, orizzontale fit container.
-*   [v] **Foto Cover Orizzontale:** Gestione specifica nei progetti (es. Jhalak, Termini Underground).
-*   [v] **Allineamento Foto:** Allineare foto "cover" orizzontale quando a dx c’è foto orizzontale (es. COEZ).
 *   [ ] **Cross-browser:** Fare check sui vari browser.
 
 #### Mobile
-*   [ ] **Menu:** Finisce troppo in basso e diventa non cliccabile.
 *   [ ] **Progetti:** Testo troppo a filo.
-*   [ ] **Bug Scroll:** Pagina singola progetto cambia da sola allo scroll touch.
 *   [ ] **Tags:** Pulsante TAG non sempre cliccabile, troppo in fondo.
 *   [ ] **Orizzontale:** Verificare visualizzazione schermo orizzontale (logo mangiato, cover gigante).
 
 #### Problemi Strutturali / Backend
-*   [ ] **Menu Admin:** Ogni tot crasha.
+*   (Nessuno attivo)
 
 #### Varie
 *   [ ] **Home:** Inserire "curated by -nome-" (attendere layout).
-*   [ ] **Home:** Escludi post (valutare se rimuovere).
 *   [ ] **Pulsante +:** Valutare se tenere.
-*   [v] **Progetti:** Nome delle foto on hover (come Music Archives).
 *   [ ] **About:** Scrivere breve guida su modifica pagina ABOUT.
 *   [ ] **About Press:** Aggiungere in "selected press" 2025: BeTalkZ PODCAST (YouTube + Spotify) e Visioni (RaiPlay).
 *   [ ] **Tags:** Manca pulsante back e progettazione landing tag.
