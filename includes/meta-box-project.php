@@ -244,14 +244,22 @@ function prj_admin_styles() {
             background: #fff;
             display: flex;
             flex-direction: column;
+            align-items: center; /* Center horizontally by default */
+            justify-content: center; /* Center vertically by default */
         }
+        .grid-item.sinistra { justify-content: flex-start; align-items: flex-start; }
+        .grid-item.destra { justify-content: flex-start; align-items: flex-end; }
+        .grid-item.alto { justify-content: flex-start; align-items: center; }
+        .grid-item.basso { justify-content: flex-end; align-items: center; }
+
         .grid-item .image-container {
              flex: 1;
              display: flex;
-             align-items: center;
-             justify-content: center;
+             align-items: inherit; /* Inherit alignment from grid-item */
+             justify-content: inherit; /* Inherit justification from grid-item */
              overflow: hidden;
              background: #f9f9f9;
+             width: 100%;
         }
         .grid-item img {
             max-width: 100%;
