@@ -579,4 +579,11 @@
         left: auto !important;
         z-index: 9999 !important;
     }
+    
+    .oxy-nav-menu .oxy-nav-menu-list li.menu-item {
+        list-style-type: none;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
 }
