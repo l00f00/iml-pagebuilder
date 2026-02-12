@@ -38,7 +38,7 @@ function iml_render_homepage_grid($atts) {
             $categories = get_the_terms($post_id, 'category');
             $tags = get_the_terms($post_id, 'post_tag');
             $title = get_the_title($post_id);
-            $the_thumb = get_the_post_thumbnail($post_id, 'large');
+            $the_thumb = get_the_post_thumbnail($post_id, 'full');
             
             echo '<a href="' . esc_url(get_permalink($post_id)) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($post_id) . '">';
             echo '<div class="info-overlay">';
@@ -75,7 +75,7 @@ function iml_render_homepage_grid($atts) {
                 $href = wp_get_attachment_url($post_id); 
             }
 
-            $the_thumb = wp_get_attachment_image($post_id, 'large');
+            $the_thumb = wp_get_attachment_image($post_id, 'full');
             
             echo '<a href="' . esc_url($href) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . ' ' . esc_attr($post_type) . ' ' . esc_attr($parent_type) . '" data-id="' . esc_attr($post_id) . '">';
             echo '<div class="info-overlay">';
@@ -127,7 +127,7 @@ function iml_render_portfolio_grid($atts) {
                 $tags = get_the_terms( $portfolio_single_item_id, 'post_tag' );
                 $year = rwmb_meta('anno', '', $portfolio_single_item_id);
                 $title = get_the_title($portfolio_single_item_id);
-                $the_thumb = get_the_post_thumbnail($portfolio_single_item_id, 'large');
+                $the_thumb = get_the_post_thumbnail($portfolio_single_item_id, 'full');
                 
                 echo '<a href="' . esc_url(get_permalink($portfolio_single_item_id)) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($portfolio_single_item_id) . '"> 
                       <div class="info-overlay"> 
@@ -161,7 +161,7 @@ function iml_render_portfolio_grid($atts) {
                 $title = get_the_title($portfolio_single_item_id);
                 $single_page_true = get_post_meta($portfolio_single_item_id, 'has_single_page', true);
                 $image_url = wp_get_attachment_url($portfolio_single_item_id); 
-                $thumbnail = wp_get_attachment_image_url($portfolio_single_item_id, 'large');
+                $thumbnail = wp_get_attachment_image_url($portfolio_single_item_id, 'full');
                 
                 if ($single_page_true == '1') {
                     echo '<a href="' . esc_url(get_permalink($portfolio_single_item_id)) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($portfolio_single_item_id) . '">';
@@ -182,7 +182,7 @@ function iml_render_portfolio_grid($atts) {
                 echo '</div>';
                 echo '</div>';
                 echo '<div class="image-wrapper">';
-                echo wp_get_attachment_image($portfolio_single_item_id, 'large');
+                echo wp_get_attachment_image($portfolio_single_item_id, 'full');
                 echo '</div>';
                 echo '</a>';
             }
@@ -279,7 +279,7 @@ function iml_render_archive_grid($atts) {
 
                 if ($post_type === 'progetto' || $post_type === 'serie' || $post_type === 'portfolio') {
                     $title = get_the_title($post_id);
-                    $the_thumb = get_the_post_thumbnail($post_id, 'large');
+                    $the_thumb = get_the_post_thumbnail($post_id, 'full');
                     $theimageurl = wp_get_attachment_url( get_post_thumbnail_id($post_id), 'large' );
                     $permalink = get_permalink($post_id);
 
@@ -298,7 +298,7 @@ function iml_render_archive_grid($atts) {
 
                 } elseif ($post_type === 'attachment') {
                     $title = get_the_title($post_id);
-                    $thumbnail = wp_get_attachment_image_url($post_id, 'large');
+                    $thumbnail = wp_get_attachment_image_url($post_id, 'full');
                     $permalink = get_permalink($post_id);
                     
                     echo '<a href="' . esc_url($thumbnail) .'" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($post_id) . '" data-lightbox="gallery">';
@@ -311,7 +311,7 @@ function iml_render_archive_grid($atts) {
                     echo '</div>';
                     echo '</div>';
                     echo '<div class="image-wrapper">';
-                    echo wp_get_attachment_image($post_id, 'large');
+                    echo wp_get_attachment_image($post_id, 'full');
                     echo '</div>';
                     echo '</a>';
                     echo '<div class="hidden-caption" style="display: none;">';
@@ -384,7 +384,7 @@ function iml_render_generic_archive_grid($atts) {
                 $tags = get_the_terms($post_id, 'post_tag');
                 $year = rwmb_meta('anno', '', $post_id);
                 $title = get_the_title($post_id);
-                $the_thumb = get_the_post_thumbnail($post_id, 'large');
+                $the_thumb = get_the_post_thumbnail($post_id, 'full');
                 
                 echo '<a href="' . esc_url(get_permalink($post_id)) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($post_id) . '">
                       <div class="info-overlay">
@@ -419,7 +419,7 @@ function iml_render_generic_archive_grid($atts) {
                 $title = get_the_title($post_id);
                 $single_page_true = get_post_meta($post_id, 'has_single_page', true);
                 $image_url = wp_get_attachment_url($post_id);
-                $thumbnail = wp_get_attachment_image_url($post_id, 'large');
+                $thumbnail = wp_get_attachment_image_url($post_id, 'full');
 
                 if ($single_page_true == '1') {
                     echo '<a href="' . esc_url(get_permalink($post_id)) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($post_id) . '">';
@@ -450,7 +450,7 @@ function iml_render_generic_archive_grid($atts) {
                 echo '</div>';
                 echo '</div>';
                 echo '<div class="image-wrapper">';
-                echo wp_get_attachment_image($post_id, 'large');
+                echo wp_get_attachment_image($post_id, 'full');
                 echo '</div>';
                 echo '</a>';
             } else {
@@ -488,7 +488,7 @@ function iml_render_attachment_single($atts) {
      if (is_array($items)) { 
          foreach ($items as $foto_id) { 
              // Ottieni l'URL dell'immagine di dimensioni complete 
-             $image_url = wp_get_attachment_image_url($foto_id, 'large'); 
+             $image_url = wp_get_attachment_image_url($foto_id, 'full'); 
              //echo $image_url; 
              if ($image_url) { 
                  $image_paths[] = stripslashes($image_url); 
@@ -499,7 +499,7 @@ function iml_render_attachment_single($atts) {
      // nell' array e la rimuovo per evitare immagini raddoppiate 
        $main_image_urls = [ 
            wp_get_attachment_url($post->ID), 
-           wp_get_attachment_image_url($post->ID, 'large') 
+           wp_get_attachment_image_url($post->ID, 'full') 
        ]; 
        
        // Rimuovi gli URL dell'immagine principale dall'array $image_paths 
@@ -651,7 +651,7 @@ function iml_render_attachment_single($atts) {
            <a class="related-foto-item" href="<?php echo esc_url($image_url); ?>" style="color:black;" data-lightbox="gallery"> 
            <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
                <div class="image-wrapper"> 
-                   <?php echo wp_get_attachment_image($attachment_id, 'large'); ?> 
+                   <?php echo wp_get_attachment_image($attachment_id, 'full'); ?> 
                </div> 
            </div> 
            </a> 

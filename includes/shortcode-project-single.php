@@ -22,9 +22,9 @@ function iml_render_project_single($atts) {
     // Retrieve the post thumbnail
     $thumbnail_id = get_post_thumbnail_id($post_id); 
     $has_single_page = get_post_meta($thumbnail_id, 'has_single_page', true); 
-    $thumbnail_url = $has_single_page ? get_permalink($thumbnail_id) : wp_get_attachment_image_url($thumbnail_id, 'large'); 
+    $thumbnail_url = $has_single_page ? get_permalink($thumbnail_id) : wp_get_attachment_image_url($thumbnail_id, 'full'); 
     $lightbox_attr = $has_single_page ? '' : 'data-lightbox="gallery"'; 
-    $featured_image_url = wp_get_attachment_image_url($thumbnail_id, 'large'); 
+    $featured_image_url = wp_get_attachment_image_url($thumbnail_id, 'full'); 
     
     // Conditional check for space and layout
     $space = rwmb_meta( 'abilitaSpazio' ); 
@@ -62,7 +62,7 @@ function iml_render_project_single($atts) {
     <div class="progetto-content"> 
         <div class="left-column-progetto <?php echo esc_attr($orientation_class); ?>"> 
           <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
-            <?php echo get_the_post_thumbnail($post_id, 'large'); ?></a> 
+            <?php echo get_the_post_thumbnail($post_id, 'full'); ?></a> 
           <div class="left-column-bottom"> 
                 <nav class="foto-navigation"> 
                         <?php 
@@ -101,8 +101,8 @@ function iml_render_project_single($atts) {
             // Check if the item should link to a single page 
             $single_page_true = get_post_meta($foto_id, 'has_single_page', true); 
             // Get the full-size image URL and the large thumbnail URL 
-            $image_url = wp_get_attachment_image_url($foto_id, 'large'); // Changed from full URL to large size
-            $thumbnail = wp_get_attachment_image_url($foto_id, 'large'); 
+            $image_url = wp_get_attachment_image_url($foto_id, 'full'); // Changed from full URL to large size
+            $thumbnail = wp_get_attachment_image_url($foto_id, 'full'); 
             // Determine the link URL and whether to use lightbox 
             //$link_url = $single_page_true ? get_permalink($foto_id) : esc_url($image_url); 
             $link_url = $single_page_true ? get_attachment_link($foto_id) : esc_url($image_url); 
@@ -438,7 +438,7 @@ function iml_render_project_single($atts) {
     <div class="progetto-content"> 
         <div class="left-column-progetto <?php echo esc_attr($orientation_class); ?>"> 
           <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
-            <?php echo get_the_post_thumbnail($post_id, 'large'); ?></a> 
+            <?php echo get_the_post_thumbnail($post_id, 'full'); ?></a> 
           <div class="left-column-bottom"> 
                 <nav class="foto-navigation"> 
                         <?php 
@@ -478,8 +478,8 @@ function iml_render_project_single($atts) {
             // Check if the item should link to a single page 
             $single_page_true = get_post_meta($foto_id, 'has_single_page', true); 
             // Get the full-size image URL and the large thumbnail URL 
-            $image_url = wp_get_attachment_image_url($foto_id, 'large'); // Changed from full URL to large size
-            $thumbnail = wp_get_attachment_image_url($foto_id, 'large'); 
+            $image_url = wp_get_attachment_image_url($foto_id, 'full'); // Changed from full URL to large size
+            $thumbnail = wp_get_attachment_image_url($foto_id, 'full'); 
             // Determine the link URL and whether to use lightbox 
             //$link_url = $single_page_true ? get_permalink($foto_id) : esc_url($image_url); 
             $link_url = $single_page_true ? get_attachment_link($foto_id) : esc_url($image_url); 
