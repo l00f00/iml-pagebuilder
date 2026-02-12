@@ -80,7 +80,7 @@ Estende le funzionalità della libreria media di WordPress:
 *   [v] **Home Builder:** Risolvere bug builder pagina HOME (spostare builder animazione in nuova pagina con label apposito).
 *   [v] **Home Intro:** Animazione nome in INTRO — (In attesa file da cartella drive).
 *   [v] **Home Preloading:** Inserimento animazione preloading pagina.
-*   [x] Da rivedere **Foto Cover Contain:** Applicare regola: fit orizzontale foto cover progetto  in left column non si deve sovrapporre al testo.
+*   [v] Da rivedere **Foto Cover Contain:** Applicare regola: fit orizzontale foto cover progetto  in left column non si deve sovrapporre al testo.
     ```css
     .left-column-progetto a img { 
          max-height: 100%; 
@@ -91,7 +91,7 @@ Estende le funzionalità della libreria media di WordPress:
          object-fit: contain; 
          width: -webkit-fill-available; 
     }
-    ```
+*   [v] effetto escludi in home – forse levare decidere alla fine (io, Riccardo, lo toglierei)    ```
 
 ### TODO (Elenco lavorazioni in sospeso)
 
