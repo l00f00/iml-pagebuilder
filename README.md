@@ -76,6 +76,7 @@ Estende le funzionalità della libreria media di WordPress:
 *   **Menu Admin:** Ogni tot crasha.
 *   **Home:** Escludi post (valutare se rimuovere).
 *   **Progetti:** Nome delle foto on hover (come Music Archives).
+*   **Menu Desktop:** Aggiornato stile per allineamento a destra (flex-end) delle voci di menu.
 *   [v] **Home Builder:** Risolvere bug builder pagina HOME (spostare builder animazione in nuova pagina con label apposito).
 *   [v] **Home Intro:** Animazione nome in INTRO — (In attesa file da cartella drive).
 *   [v] **Home Preloading:** Inserimento animazione preloading pagina.
