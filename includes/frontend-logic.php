@@ -28,7 +28,7 @@ function iml_enqueue_frontend_scripts() {
     wp_enqueue_script('lottie-web', 'https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js', array(), '5.12.2', false);
 
     // Custom CSS for Lightbox Z-Index
-    wp_add_inline_style('simple-lightbox-css', '.sl-overlay{background-color:#fff;opacity:1;}.sl-wrapper{z-index:300000000000000000000000000;}.sl-wrapper .sl-close, .sl-wrapper .sl-navigation{z-index:300000000000000000000000001;}');
+    wp_add_inline_style('simple-lightbox-css', '.sl-overlay{}.sl-wrapper, .sl-wrapper > *{z-index:300000000000000000000000000;}');
 }
 add_action('wp_enqueue_scripts', 'iml_enqueue_frontend_scripts');
 
