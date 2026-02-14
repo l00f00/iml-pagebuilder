@@ -16,59 +16,43 @@ function iml_render_project_single($atts) {
 
     ob_start();
 
-    // --- SETUP & DATA RETRIEVAL ---
-    $post_id = get_the_ID(); 
-    $description = rwmb_meta( 'descrizione_progetto', '', $post_id ); 
-    $year = rwmb_meta( 'anno', '', $post_id ); 
-    $items = get_post_meta($post_id, 'prj_items', true); 
-    
-    // Retrieve the post thumbnail
-    $thumbnail_id = get_post_thumbnail_id($post_id); 
-    $has_single_page = get_post_meta($thumbnail_id, 'has_single_page', true); 
-    $thumbnail_url = $has_single_page ? get_permalink($thumbnail_id) : wp_get_attachment_image_url($thumbnail_id, 'full'); 
-    // Fix: Default lightbox attribute should be present for layout 1 unless overridden later
-    $lightbox_attr = 'data-lightbox="gallery"'; 
-    $featured_image_url = wp_get_attachment_image_url($thumbnail_id, 'full'); 
-    
-    // Conditional check for space and layout
-    $space = rwmb_meta( 'abilitaSpazio' ); 
-    $spaceVert = rwmb_meta( 'abilitaSpazioVert' ); 
-    $featuredImageSpacer = rwmb_meta( 'featuredImageSpacer' ) ?: '2em'; 
-    
-    // Determine Layout: 3 Columns if 'abilita3colonne' is set to 1 (true)
-    $abilita3colonne = rwmb_meta('abilita3colonne', '', $post_id); 
-    $layout_3_col = !empty($abilita3colonne) && $abilita3colonne == 1;
-    $layout_class = $layout_3_col ? 'layout-3-col' : 'layout-1-col';
-
-    // Check cover image orientation
-    $img_meta = wp_get_attachment_metadata($thumbnail_id);
-    $orientation_class = 'cover-horizontal'; // Default
-    if ($img_meta && isset($img_meta['width']) && isset($img_meta['height'])) {
-        if ($img_meta['height'] > $img_meta['width']) {
-            $orientation_class = 'cover-vertical';
-        }
-    }
-
-    // Navigation URLs
+    // --- SETUP Navigation (Required for the user's snippet to work) ---
     $prev_post = get_adjacent_post(false, '', true);
     $next_post = get_adjacent_post(false, '', false);
     $prev_post_url = $prev_post ? get_permalink($prev_post->ID) : null;
     $next_post_url = $next_post ? get_permalink($next_post->ID) : null;
-    
-    // --- START OUTPUT ---
-    ?>
 
-    <div class="progetto-content <?php echo esc_attr($layout_class); ?>"> 
-        <div class="left-column-progetto <?php echo esc_attr($orientation_class); ?>"> 
+    // --- USER PROVIDED CODE START ---
+    // Get the current post ID 
+    $post_id = get_the_ID(); 
+    // Retrieve custom fields using the post ID 
+    $description = rwmb_meta( 'descrizione_progetto', '', $post_id ); 
+    $year = rwmb_meta( 'anno', '', $post_id ); 
+    //$foto_posts = rwmb_meta( 'foto_in_progetto', '', $post_id ); 
+    $items = get_post_meta($post_id, 'prj_items', true); 
+    $alignment = get_post_meta($post_id, 'prj_item_alignment', true) ?: 'square'; 
+    $array = get_post_meta($post_id, 'prj_items_alignment', true); 
+    //print_r($items); 
+    // Retrieve the post thumbnail ID 
+    $thumbnail_id = get_post_thumbnail_id($post_id); 
+    // Check if this thumbnail has 'has_single_page' set to true 
+    $has_single_page = get_post_meta($thumbnail_id, 'has_single_page', true); 
+    // Determine the URL and lightbox attributes based on whether the thumbnail should link to a single page 
+    $thumbnail_url = $has_single_page ? get_permalink($thumbnail_id) : get_the_post_thumbnail_url($post_id, 'full'); 
+    $lightbox_attr = 'data-lightbox="gallery"'; 
+    $featured_image_url = get_the_post_thumbnail_url($post_id, 'full'); 
+    ?> 
+    <div class="progetto-content"> 
+        <div class="left-column-progetto"> 
           <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
             <?php echo get_the_post_thumbnail($post_id, 'full'); ?></a> 
           <div class="left-column-bottom"> 
                 <nav class="foto-navigation"> 
                         <?php 
-                        if (isset($prev_post_url) && !empty($prev_post_url)) { 
+                        if (isset($prev_post_url)) { 
                         echo '<div class="nav-previous"><a href="' . esc_url($prev_post_url) . '">Previous</a></div>'; 
                         } 
-                        if (isset($next_post_url) && !empty($next_post_url)) { 
+                        if (isset($next_post_url)) { 
                         echo '<div class="nav-next"><a href="' . esc_url($next_post_url) . '">Next</a></div>'; 
                         } 
                         ?> 
@@ -88,15 +72,11 @@ function iml_render_project_single($atts) {
           <div class="right-column-progetto-top"> 
             <h1 class="progetto-title"><?php echo get_the_title( $post_id ); ?></h1> 
             <div class="progetto-year"><?php echo esc_html( $year ); ?></div> 
-            <div class="progetto-description"><?php echo do_shortcode( wpautop( $description ) ); ?> </div> 
+            <div class="progetto-description"><?php echo do_shortcode( wpautop( $description ) );  //print_r($array);?> </div> 
           </div> 
-        <?php if($layout_3_col): ?>
-        </div> <!-- End right-column-progetto ONLY for 3 cols layout before grid -->
-        <?php endif; ?>
-            
             <div class="related-fotos gallery"> 
     <?php 
-    $hiddenImages = [];
+    $hiddenImages = []; // Initialize to avoid errors
     if (is_array($items)) { 
         foreach ($items as $foto_id) { 
             // Get the alignment for this item 
@@ -104,21 +84,14 @@ function iml_render_project_single($atts) {
             // Check if the item should link to a single page 
             $single_page_true = get_post_meta($foto_id, 'has_single_page', true); 
             // Get the full-size image URL and the large thumbnail URL 
-            // FIX: Use full url for image_url, but large for thumbnail to match user request
             $image_url = wp_get_attachment_url($foto_id); 
             $thumbnail = wp_get_attachment_image_url($foto_id, 'large'); 
-            
             // Determine the link URL and whether to use lightbox 
+            //$link_url = $single_page_true ? get_permalink($foto_id) : esc_url($image_url); 
             $link_url = $single_page_true ? get_attachment_link($foto_id) : esc_url($image_url); 
-            
-            // Logic for lightbox attribute based on user code
-            if ($layout_3_col) {
-                 $lightbox_attr = $single_page_true ? 'data-single="single-page-true"' : 'data-lightbox="gallery"';
-            } else {
-                 $lightbox_attr = $single_page_true ? '' : 'data-lightbox="gallery"';
-            }
-            
-            $foto_title = get_the_title($foto_id);
+            $lightbox_attr = $single_page_true ? '' : 'data-lightbox="gallery"'; 
+            // Conditionally add a border style for items with a single page 
+            //$border_style = $single_page_true ? 'border: 1px solid red;' : ''; 
     
             // if single page true add image to hiddenImages so we can show it in the lightbox anyway 
             if ($single_page_true) { 
@@ -128,7 +101,6 @@ function iml_render_project_single($atts) {
             ?> 
             <a class="related-foto-item" href="<?php echo $link_url; ?>" style="color:black;" <?php echo $lightbox_attr; ?>> 
                 <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
-                     <!-- REMOVED INFO OVERLAY as it was not in user provided code -->
                     <div class="image-wrapper"> 
                         <img src="<?php echo esc_url($thumbnail); ?>" alt=""> 
                     </div> 
@@ -146,14 +118,11 @@ function iml_render_project_single($atts) {
         } 
         ?> 
       </div> 
-    <?php if(!$layout_3_col): ?>
-    </div> <!-- End right-column-progetto for 1 col layout -->
-    <?php endif; ?>
-    </div>
-    
+    </div> 
     <script> 
     jQuery(document).ready(function($) { 
         // Utilizza SimpleLightbox con jQuery su tutti gli elementi che hanno data-lightbox="gallery" 
+        //jQuery('a[data-lightbox="gallery"]').simpleLightbox(); 
         var gallery = jQuery('a[data-lightbox="gallery"]').simpleLightbox({ 
             className: 'simple-lightbox', // Adds a custom class to the lightbox wrapper 
             widthRatio: 1, // Sets the maximum width of the image to 80% of the screen width 
@@ -166,16 +135,17 @@ function iml_render_project_single($atts) {
             preloading: true, 
             closeText: '<div class="divclose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 39" width="44" height="39"><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(45 16 16)" /><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(-45 16 16)" /></svg></div>', 
             navText: ['<','>'], 
-            spinner: <?php echo $layout_3_col ? 'true' : 'false'; ?>, 
+            spinner: false, 
             overlay: false, 
             docClose: false, 
         }); 
-
-        console.log('PROGETTO CARICATO <?php echo $layout_3_col ? "3 colonne" : "1 COLONNA"; ?>');
+       
     });
-    </script> 
-
-    <?php 
+    </script>
+    <?php
+    // --- USER PROVIDED CODE END ---
+    
+    // --- SPACING & STYLES LOGIC ---
     // Conditional check: 
     $space = rwmb_meta( 'abilitaSpazio' ); 
     $spaceVert = rwmb_meta( 'abilitaSpazioVert' ); 
