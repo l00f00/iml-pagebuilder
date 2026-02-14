@@ -11,9 +11,6 @@ if (!defined('ABSPATH')) {
 add_shortcode('iml_project_single', 'iml_render_project_single');
 
 function iml_render_project_single($atts) {
-    // Enqueue styles locally for this shortcode
-    wp_enqueue_style('iml-project-frontend-style', IML_PLUGIN_URL . 'includes/post-types/project/frontend-style.css', array(), '1.0');
-
     ob_start();
 
     // --- SETUP Navigation ---
@@ -29,7 +26,6 @@ function iml_render_project_single($atts) {
     $description = rwmb_meta( 'descrizione_progetto', '', $post_id ); 
     $year = rwmb_meta( 'anno', '', $post_id ); 
     $items = get_post_meta($post_id, 'prj_items', true); 
-    // $alignment = get_post_meta($post_id, 'prj_item_alignment', true) ?: 'square'; // Used inside loop
     
     $thumbnail_id = get_post_thumbnail_id($post_id); 
     $has_single_page = get_post_meta($thumbnail_id, 'has_single_page', true); 
@@ -39,6 +35,15 @@ function iml_render_project_single($atts) {
     // --- DETERMINE LAYOUT ---
     $abilita3colonne = rwmb_meta('abilita3colonne', '', $post_id); 
     $layout_3_col = !empty($abilita3colonne) && $abilita3colonne == 1;
+
+    // --- ENQUEUE STYLES BASED ON LAYOUT ---
+    if ($layout_3_col) {
+         // Load CSS for 3 Columns (User provided snippet)
+         wp_enqueue_style('iml-project-frontend-style-3col', IML_PLUGIN_URL . 'includes/post-types/project/frontend-style-3col.css', array(), '1.0');
+    } else {
+         // Load CSS for 1 Column (Standard/Original)
+         wp_enqueue_style('iml-project-frontend-style', IML_PLUGIN_URL . 'includes/post-types/project/frontend-style.css', array(), '1.0');
+    }
 
     if ($layout_3_col) {
         // ==========================================
