@@ -177,6 +177,8 @@ function portfolio_enqueue_admin_styles() {
 // Include lo script JavaScript per rendere la lista "sortable" e gestire l'aggiunta e la rimozione
 add_action('admin_footer', 'portfolio_admin_scripts');
 function portfolio_admin_scripts() {
+    $screen = get_current_screen();
+    if ($screen->post_type !== 'portfolio') return;
     ?>
     <script type="text/javascript">
         jQuery(document).ready(function($) {
@@ -188,20 +190,25 @@ function portfolio_admin_scripts() {
             $list.sortable({
                 placeholder: 'ui-state-highlight',
                 update: function(event, ui) {
-                    updateField();
+                    updatePortfolioField();
                 }
             });
 
-            // Aggiorna il campo nascosto con gli ID correnti dopo il drag-and-drop
-            function updateField() {
-                var ids = $list.sortable('toArray', { attribute: 'data-id' });
+            // Function to update the hidden field with the current IDs
+            function updatePortfolioField() {
+                var ids = [];
+                $('#portfolio-items-list .grid-item').each(function() {
+                    var id = $(this).data('id');
+                    if (id) ids.push(id);
+                });
+                
                 $field.val(ids.join(','));
             }
 
             // Gestisci il click del pulsante di rimozione
             $list.on('click', '.remove-item', function() {
                 $(this).closest('.grid-item').remove();
-                updateField();
+                updatePortfolioField();
             });
 
             // Queue-based Lazy Loader
@@ -336,7 +343,7 @@ function portfolio_admin_scripts() {
                 });
 
                 // Update the hidden input field
-                updateField();
+                updatePortfolioField();
 
                 // Clear selected items after adding
                 selectedItems = [];

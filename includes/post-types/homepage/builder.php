@@ -135,10 +135,10 @@ function homepage_inline_js() {
 
                 $list.sortable({ 
                     placeholder: 'ui-state-highlight', 
-                    update: function(event, ui) { updateField(); } 
+                    update: function(event, ui) { updateHomepageField(); } 
                 }); 
 
-                function updateField() { 
+                function updateHomepageField() { 
                     var ids = []; 
                     $('#homepage-items-list .grid-item').each(function() { 
                         ids.push($(this).data('id')); 
@@ -148,7 +148,7 @@ function homepage_inline_js() {
 
                 $list.on('click', '.remove-item', function() { 
                     $(this).closest('.grid-item').remove(); 
-                    updateField(); 
+                    updateHomepageField(); 
                 }); 
 
                 // Handle Alignment Change
@@ -263,7 +263,7 @@ function homepage_inline_js() {
                         $list.append(gridItemHTML); 
                     }); 
 
-                    updateField(); 
+                    updateHomepageField(); 
                     selectedItems = []; 
                     $('#add-homepage-item .dropdown-toggle').text('Seleziona un post'); 
                     $('#add-homepage-item .item-preview').removeClass('selected'); 

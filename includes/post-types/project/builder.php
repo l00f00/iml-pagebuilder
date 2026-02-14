@@ -228,6 +228,8 @@ function prj_enqueue_admin_styles() {
 // Include lo script JavaScript per rendere la lista "sortable" e gestire l'aggiunta e la rimozione
     add_action('admin_footer', 'prj_admin_scripts');
     function prj_admin_scripts() {
+        $screen = get_current_screen();
+        if ($screen->post_type !== 'progetto' && $screen->post_type !== 'serie') return;
         ?>
         <script type="text/javascript">
             jQuery(document).ready(function($) {
@@ -239,20 +241,24 @@ function prj_enqueue_admin_styles() {
                 $list.sortable({
                     placeholder: 'ui-state-highlight',
                     update: function(event, ui) {
-                        updateField();
+                        updatePrjField();
                     }
                 });
     
                 // Aggiorna il campo nascosto con gli ID correnti dopo il drag-and-drop
-                function updateField() {
-                    var ids = $list.sortable('toArray', { attribute: 'data-id' });
+                function updatePrjField() {
+                    var ids = [];
+                    $('#prj-items-list .grid-item').each(function() {
+                        var id = $(this).data('id');
+                        if (id) ids.push(id);
+                    });
                     $field.val(ids.join(','));
                 }
     
                 // Gestisci il click del pulsante di rimozione
                 $list.on('click', '.remove-item', function() {
                     $(this).closest('.grid-item').remove();
-                    updateField();
+                    updatePrjField();
                 });
     
                 // Queue-based Lazy Loader
@@ -387,7 +393,7 @@ function prj_enqueue_admin_styles() {
                     });
             
                     // Update the hidden input field
-                    updateField();
+                    updatePrjField();
             
                     // Clear selected items after adding
                     selectedItems = [];
