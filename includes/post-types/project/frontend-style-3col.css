@@ -146,7 +146,12 @@
 @media (max-width: 1120px) { 
     .left-column-progetto, .right-column-progetto { 
         width: 100vw; 
-    } 
+    }
+    
+    .left-column-progetto {
+        padding: 0 !important;
+    }
+    
     .left-column-progetto > img { 
         max-width: 100%; 
         position:relative; 
@@ -156,6 +161,11 @@
         width:100%; 
         position:relative; 
     } 
+
+    .right-column-progetto {
+        padding-left: 0 !important; /* Remove padding left on mobile */
+        padding-right: 0 !important; /* Remove padding right on mobile */
+    }
 
     .right-column-progetto .related-photo-item { 
         width: 100%; 
