@@ -186,7 +186,12 @@ function iml_render_project_single($atts) {
             
             // Fix: close lightbox when clicking on wrapper (overlay)
             $('body').on('click', '.sl-wrapper', function(e) {
-                 if (!$(e.target).closest('.sl-image').length && !$(e.target).closest('.sl-navigation').length && !$(e.target).closest('.sl-close').length) {
+                 // Check if the click is directly on the wrapper OR on the overlay (if separate)
+                 // And NOT on the image, navigation, or close button (though close button has its own handler)
+                 if (!$(e.target).closest('.sl-image').length && 
+                     !$(e.target).closest('.sl-navigation').length && 
+                     !$(e.target).closest('.sl-close').length &&
+                     !$(e.target).closest('.sl-counter').length) {
                      gallery.close();
                  }
             });
@@ -194,6 +199,7 @@ function iml_render_project_single($atts) {
             // Fix: ensure close button works
             $('body').on('click', '.sl-close', function(e) {
                 e.preventDefault();
+                e.stopPropagation(); // Stop propagation to avoid double triggering
                 gallery.close();
             }); 
             
@@ -334,7 +340,12 @@ function iml_render_project_single($atts) {
             
              // Fix: close lightbox when clicking on wrapper (overlay)
             $('body').on('click', '.sl-wrapper', function(e) {
-                 if (!$(e.target).closest('.sl-image').length && !$(e.target).closest('.sl-navigation').length && !$(e.target).closest('.sl-close').length) {
+                 // Check if the click is directly on the wrapper OR on the overlay (if separate)
+                 // And NOT on the image, navigation, or close button (though close button has its own handler)
+                 if (!$(e.target).closest('.sl-image').length && 
+                     !$(e.target).closest('.sl-navigation').length && 
+                     !$(e.target).closest('.sl-close').length &&
+                     !$(e.target).closest('.sl-counter').length) {
                      gallery.close();
                  }
             });
@@ -342,6 +353,7 @@ function iml_render_project_single($atts) {
             // Fix: ensure close button works
             $('body').on('click', '.sl-close', function(e) {
                 e.preventDefault();
+                e.stopPropagation(); // Stop propagation to avoid double triggering
                 gallery.close();
             }); 
            
