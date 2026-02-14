@@ -151,6 +151,18 @@ function homepage_inline_js() {
                     updateField(); 
                 }); 
 
+                // Handle Alignment Change
+                $list.on('change', '.item-alignment', function() {
+                    var alignment = $(this).val();
+                    var $gridItem = $(this).closest('.grid-item');
+                    
+                    // Remove all alignment classes
+                    $gridItem.removeClass('alto basso sinistra destra');
+                    
+                    // Add new alignment class
+                    $gridItem.addClass(alignment);
+                });
+
                 // Toggle dropdown
                 $('#add-homepage-item').on('click', '.dropdown-toggle', function(event) { 
                     var $parent = $(this).parent();

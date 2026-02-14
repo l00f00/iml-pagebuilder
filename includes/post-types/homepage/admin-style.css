@@ -158,7 +158,13 @@
 
 /* Container immagini nel builder */
 .image-container { display: flex; width: 100%; height: 100%; overflow: hidden; background: #f9f9f9; } 
-.image-container img { width: 100%; height: 100%; object-fit: contain; } 
+.image-container img { 
+    max-width: 100%; 
+    max-height: 100%; 
+    width: auto; 
+    height: auto; 
+    object-fit: contain; /* Optional, but safe */
+} 
 .fotoContainer.destra .image-container { justify-content: flex-end; } 
 .fotoContainer.sinistra .image-container { justify-content: flex-start; } 
 .fotoContainer.alto .image-container { align-items: flex-start; } 
