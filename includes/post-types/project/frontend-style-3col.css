@@ -21,8 +21,7 @@
     max-width: 63%; modificata larghezza massima*/ 
     max-height:100%; 
     min-height: 100vh; 
-    height: auto; 
-    height: -webkit-fill-available; 
+    height: 100vh; /* Force height to screen height */
     top:0; 
     left:0; 
     object-fit: cover; 
