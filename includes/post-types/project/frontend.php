@@ -17,10 +17,12 @@ function iml_render_project_single($atts) {
     ob_start();
 
     // --- SETUP Navigation (Required for the user's snippet to work) ---
+    /*
     $prev_post = get_adjacent_post(false, '', true);
     $next_post = get_adjacent_post(false, '', false);
     $prev_post_url = $prev_post ? get_permalink($prev_post->ID) : null;
     $next_post_url = $next_post ? get_permalink($next_post->ID) : null;
+    */
 
     // --- USER PROVIDED CODE START ---
     // Get the current post ID 
