@@ -256,24 +256,38 @@ function prj_enqueue_admin_styles() {
     
                 // Toggle dropdown on click
                 $('#add-prj-item').on('click', '.dropdown-toggle', function(event) {
-                    // Toggle class 'active' on parent ul to show/hide items via CSS
                     var $parent = $(this).parent();
                     $parent.toggleClass('active');
                     
-                    // Trigger lazy loading when dropdown opens
                     if ($parent.hasClass('active')) {
-                         // Load images that are in viewport or just load all of them once opened
-                         // Simple approach: load all when opened to avoid complexity with scroll detection inside overflow div
-                         $('.lazy-thumb').each(function() {
-                             var $img = $(this);
-                             if ($img.attr('src') === '') {
-                                 $img.attr('src', $img.data('src'));
-                             }
-                         });
+                        // Load the first batch immediately
+                        loadMoreImages();
                     }
-                    
                     event.stopPropagation(); 
                 });
+
+                // Scroll event handler for lazy loading on the wrapper div
+                $('#add-prj-item').on('scroll', function() {
+                    // Check if we are near the bottom (500px threshold)
+                    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 500) {
+                        loadMoreImages();
+                    }
+                });
+
+                function loadMoreImages() {
+                    // Find the next batch of unloaded images (e.g., next 50)
+                    var $imagesToLoad = $('#add-prj-item .lazy-thumb').filter(function() {
+                        return !$(this).attr('src'); // Select if src is empty or undefined
+                    }).slice(0, 50);
+                    
+                    if ($imagesToLoad.length > 0) {
+                        $imagesToLoad.each(function() {
+                            var $img = $(this);
+                            $img.attr('src', $img.data('src'));
+                        });
+                        // console.log('Loaded batch of ' + $imagesToLoad.length + ' images');
+                    }
+                }
     
                 // Handle dropdown item selection
                 $('#add-prj-item li:not(.dropdown-toggle)').on('click', function() {
