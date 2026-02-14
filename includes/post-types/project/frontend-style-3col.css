@@ -15,16 +15,17 @@
    max-height:100vh; 
  } 
  .left-column-progetto img { 
-     /*background-color:green; 
-     max-width: 63%; modificata larghezza massima*/ 
-     max-height:100%; 
-     height: auto; 
-     height: -webkit-fill-available; 
-     top:0; 
-     left:0; 
-     object-fit: contain; 
-     width:auto; 
- } 
+    /*background-color:green; 
+    max-width: 63%; modificata larghezza massima*/ 
+    max-height:100%; 
+    height: auto; 
+    height: -webkit-fill-available; 
+    top:0; 
+    left:0; 
+    object-fit: contain; 
+    width:auto; 
+    position: fixed;
+} 
  .left-column-progetto .left-column-top > *{ 
    padding: 28px 0 28px 0; 
  } 
