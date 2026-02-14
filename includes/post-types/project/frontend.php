@@ -42,7 +42,7 @@ function iml_render_project_single($atts) {
          wp_enqueue_style('iml-project-frontend-style-3col', IML_PLUGIN_URL . 'includes/post-types/project/frontend-style-3col.css', array(), '1.0');
     } else {
          // Load CSS for 1 Column (Standard/Original)
-         wp_enqueue_style('iml-project-frontend-style', IML_PLUGIN_URL . 'includes/post-types/project/frontend-style.css', array(), '1.0');
+         wp_enqueue_style('iml-project-frontend-style-1col', IML_PLUGIN_URL . 'includes/post-types/project/frontend-style-1col.css', array(), '1.0');
     }
 
     if ($layout_3_col) {
