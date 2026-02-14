@@ -186,8 +186,9 @@ function iml_render_project_single($atts) {
             }); 
             
             // Fix: close lightbox when clicking on wrapper (overlay)
-            $('body').on('click', '.sl-wrapper', function(e) {
-                 console.log('Clicked on .sl-wrapper');
+            // Use 'document' instead of 'body' for better event delegation
+            $(document).on('click', '.sl-wrapper', function(e) {
+                 console.log('Clicked on .sl-wrapper (via document delegation)');
                  // Check if the click is directly on the wrapper OR on the overlay (if separate)
                  // And NOT on the image, navigation, or close button (though close button has its own handler)
                  if (!$(e.target).closest('.sl-image').length && 
@@ -202,8 +203,8 @@ function iml_render_project_single($atts) {
             });
             
             // Fix: ensure close button works
-            $('body').on('click', '.sl-close', function(e) {
-                console.log('Clicked on .sl-close');
+            $(document).on('click', '.sl-close', function(e) {
+                console.log('Clicked on .sl-close (via document delegation)');
                 e.preventDefault();
                 e.stopPropagation(); // Stop propagation to avoid double triggering
                 gallery.close();
@@ -346,8 +347,9 @@ function iml_render_project_single($atts) {
             }); 
             
              // Fix: close lightbox when clicking on wrapper (overlay)
-            $('body').on('click', '.sl-wrapper', function(e) {
-                 console.log('Clicked on .sl-wrapper');
+            // Use 'document' instead of 'body' for better event delegation
+            $(document).on('click', '.sl-wrapper', function(e) {
+                 console.log('Clicked on .sl-wrapper (via document delegation)');
                  // Check if the click is directly on the wrapper OR on the overlay (if separate)
                  // And NOT on the image, navigation, or close button (though close button has its own handler)
                  if (!$(e.target).closest('.sl-image').length && 
@@ -362,8 +364,8 @@ function iml_render_project_single($atts) {
             });
             
             // Fix: ensure close button works
-            $('body').on('click', '.sl-close', function(e) {
-                console.log('Clicked on .sl-close');
+            $(document).on('click', '.sl-close', function(e) {
+                console.log('Clicked on .sl-close (via document delegation)');
                 e.preventDefault();
                 e.stopPropagation(); // Stop propagation to avoid double triggering
                 gallery.close();
