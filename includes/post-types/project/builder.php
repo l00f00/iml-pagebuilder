@@ -267,25 +267,58 @@ function prj_enqueue_admin_styles() {
                 });
 
                 // Scroll event handler for lazy loading on the wrapper div
+                var isLoading = false;
                 $('#add-prj-item').on('scroll', function() {
                     // Check if we are near the bottom (500px threshold)
-                    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 500) {
+                    if (!isLoading && $(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 500) {
                         loadMoreImages();
                     }
                 });
 
                 function loadMoreImages() {
-                    // Find the next batch of unloaded images (e.g., next 50)
+                    if (isLoading) return; // Prevent multiple triggers
+                    
+                    isLoading = true;
+                    // Find the next batch of unloaded images (e.g., next 20 - Reduced from 50 to avoid connection issues)
                     var $imagesToLoad = $('#add-prj-item .lazy-thumb').filter(function() {
                         return !$(this).attr('src'); // Select if src is empty or undefined
-                    }).slice(0, 50);
+                    }).slice(0, 20);
                     
                     if ($imagesToLoad.length > 0) {
+                        console.log('Starting batch load of ' + $imagesToLoad.length + ' images...');
+                        
+                        var batchLoadedCount = 0;
+                        var totalInBatch = $imagesToLoad.length;
+                        
                         $imagesToLoad.each(function() {
                             var $img = $(this);
+                            
+                            // Attach one-time event handler BEFORE setting src to ensure we catch it (though usually safe here)
+                            $img.one('load error', function() {
+                                batchLoadedCount++;
+                                
+                                // Check if this batch is fully processed
+                                if (batchLoadedCount >= totalInBatch) {
+                                    isLoading = false; // Release lock
+                                    
+                                    var totalLoaded = $('#add-prj-item .lazy-thumb[src]').length;
+                                    var totalImages = $('#add-prj-item .lazy-thumb').length;
+                                    console.log('Batch completed. Progress: ' + totalLoaded + ' / ' + totalImages);
+                                    
+                                    if (totalLoaded >= totalImages) {
+                                        console.log('ALL IMAGES LOADED SUCCESSFULLY!');
+                                    }
+                                }
+                            });
+                            
+                            // Set src to start loading
                             $img.attr('src', $img.data('src'));
                         });
-                        // console.log('Loaded batch of ' + $imagesToLoad.length + ' images');
+                    } else {
+                         // No more images to load, but we keep isLoading true or false?
+                         // If no images left, we don't need to do anything.
+                         isLoading = false;
+                         console.log('No more images to load.');
                     }
                 }
     
