@@ -255,18 +255,6 @@ function prj_enqueue_admin_styles() {
                     updateField();
                 });
     
-                // Toggle dropdown on click
-                $('#add-prj-item').on('click', '.dropdown-toggle', function(event) {
-                    var $parent = $(this).parent();
-                    $parent.toggleClass('active');
-                    
-                    if ($parent.hasClass('active')) {
-                        // Load the first batch immediately
-                        loadMoreImages();
-                    }
-                    event.stopPropagation(); 
-                });
-
                 // Queue-based Lazy Loader
                 var loadQueue = [];
                 var activeLoads = 0;
