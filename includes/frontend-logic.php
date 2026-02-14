@@ -43,25 +43,12 @@ add_action('template_redirect', function() {
 
     // Escludi gli utenti autenticati
     if ( is_user_logged_in() || is_preview() ){
-        return; // Non fare nulla per gli utenti autenticati
+        return; // Non fare nulla per gli utenti autenticati, lasciali entrare
     }
 
-    // Controlla se l'URL corrente è la homepage
-    //if (is_front_page()) {
-    //    wp_redirect('https://www.imlphotographer.com/new/', 301); // Reindirizzamento permanente
-    //    exit;
-    //}
-    // Se l'utente NON è autenticato e siamo sulla homepage, reindirizza
-    if ( !is_user_logged_in() && is_front_page() ) {
+    // Se l'utente NON è autenticato e siamo sulla homepage, reindirizza alla pagina Coming Soon (/new/)
+    if ( is_front_page() ) {
         wp_redirect('https://www.imlphotographer.com/new/', 301);
-        exit;
-    }
-    if ( is_user_logged_in() && is_front_page() && is_preview() ) {
-        wp_redirect('https://www.imlphotographer.com/homeIlaria', 301);
-        exit;
-    }
-        if ( is_user_logged_in() && is_front_page()) {
-        wp_redirect('https://www.imlphotographer.com/homeIlariaBBBB', 301);
         exit;
     }
 });
