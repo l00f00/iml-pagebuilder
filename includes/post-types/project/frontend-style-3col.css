@@ -188,7 +188,7 @@
 }
 
 .description-content.collapsed {
-    max-height: calc(100vh - 120px); /* Screen height minus title/year/padding approx */
+    max-height: calc(100vh - 8em); /* Screen height minus title/year/padding approx */
     overflow: hidden;
     position: relative;
 }
@@ -209,7 +209,7 @@
     display: inline-block;
     margin-top: 10px;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: normal;
     text-decoration: underline;
     color: inherit;
 }
