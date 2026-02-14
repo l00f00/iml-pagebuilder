@@ -42,57 +42,72 @@
     background-color: #fafafa;
     border: 1px dashed #ccc;
 }
-.prj-dropdown {
-list-style: none;
-padding: 0;
-margin: 0;
-border: 1px solid lightgray;
-position: relative; /* Parent container for absolute positioning */
-width: auto; /* Adjust width as needed */
-cursor: pointer;
+#add-prj-item {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* 6 columns on large screens */
+    gap: 10px;
+    max-height: 350px; /* Approx 3 rows height */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: #fff;
+    list-style: none;
+    margin-bottom: 20px;
 }
 
-.prj-dropdown .dropdown-toggle {
-padding: 5px 10px;
-background-color: #fff;
-position: relative;
+#add-prj-item li {
+    display: flex !important; /* Override any inline display:none */
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    transition: all 0.2s;
 }
 
-.prj-dropdown .dropdown-toggle:after {
-content: '';
-position: absolute;
-right: 10px;
-top: 50%;
-border-width: 5px;
-border-style: solid;
-border-color: #000 transparent transparent transparent;
-transform: translateY(-50%);
+#add-prj-item li:hover {
+    background-color: #e5e5e5;
 }
 
-.prj-dropdown li {
-padding: 5px 10px;
-background-color: #fff;
-border-top: 1px solid lightgray;
-display: none; /* Initially hide all items */
-position: relative; /* Absolutely position each item */
-width: 100%; /* Match the width of the parent container */
-box-sizing: border-box; /* Include padding and borders in the width */
-z-index: 11; /* Ensure it's above other content */
+#add-prj-item li.selected {
+    border-color: #2271b1;
+    background-color: #f0f6fc;
+    box-shadow: 0 0 5px rgba(34, 113, 177, 0.5);
 }
 
-.prj-dropdown li:first-child {
-display: block; /* Always show the toggle item */
-position: relative; /* Position this item relative to the dropdown */
-z-index: auto; /* Reset z-index for the toggle item */
-}
-.prj-dropdown li:hover {
-background-color: #f2f2f2;
+#add-prj-item li img {
+    width: 60px; /* Small icons */
+    height: 60px;
+    object-fit: cover;
+    margin-bottom: 8px;
+    margin-right: 0; /* Reset previous margin */
 }
 
-.prj-dropdown img {
-vertical-align: middle;
-margin-right: 10px;
+#add-prj-item li span.title {
+    font-size: 12px;
+    line-height: 1.2;
+    word-break: break-word;
 }
+
+/* Responsive Grid */
+@media (max-width: 1400px) {
+    #add-prj-item { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 900px) {
+    #add-prj-item { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+    #add-prj-item { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 400px) {
+    #add-prj-item { grid-template-columns: 1fr; }
+}
+
+/* Hide original dropdown styles that conflict */
+.prj-dropdown .dropdown-toggle { display: none !important; }
 /* Style for the image wrapper */
 .image-container {
 display: flex; /* Use flexbox for alignment */

@@ -21,8 +21,8 @@ function prj_meta_box_callback($post) {
     echo '<button style="margin-bottom:30px;" id="custom_media_upload" class="button">Upload Foto</button>';
     
     echo '<div style="position:relative;">'; // Wrapper
-    echo '<ul id="add-prj-item" class="prj-dropdown">';
-    echo '<li class="dropdown-toggle">Seleziona foto</li>';
+    echo '<ul id="add-prj-item" class="prj-grid-selector">';
+    // Removed dropdown-toggle line
 
     // List of selectable posts
     $selectable_posts = new WP_Query([
@@ -45,22 +45,25 @@ function prj_meta_box_callback($post) {
             // For other post types, get the post thumbnail
             $thumbnail_url = get_the_post_thumbnail_url($post_id, 'thumbnail');
         }
+        
+        // Check if item is already in grid to mark as selected
+        $is_selected = in_array($post_id, $prj_items) ? ' selected' : '';
 
         // Output the list item with the thumbnail and title
-        echo '<li value="' . esc_attr($post_id) . '" style="display: none;">';
+        echo '<li value="' . esc_attr($post_id) . '" class="' . $is_selected . '" data-id="' . esc_attr($post_id) . '">';
         if ($thumbnail_url) {
-            echo '<img src="' . esc_url($thumbnail_url) . '" alt="" style="width: 100px; height: 100px; margin-right: 10px;">';
+            echo '<img src="' . esc_url($thumbnail_url) . '" alt="">';
         }
-        echo get_the_title();
-        echo ' - ';
-        if($post_type === 'attachment'){echo 'Foto';} else {echo $post_type;}
+        echo '<span class="title">' . get_the_title() . '</span>';
+        // echo ' - ';
+        // if($post_type === 'attachment'){echo 'Foto';} else {echo $post_type;}
         echo '</li>';
     }
     }
     wp_reset_postdata();
 
     echo '</ul>';
-    echo '<button type="button" id="add-item" style="margin-top: 10px; width: 100%;">Aggiungi alla Griglia</button>';
+    // Removed "Aggiungi alla Griglia" button as per request for direct interaction
     echo '</div>'; // End wrapper
 
     // Hidden field to track post IDs
@@ -250,53 +253,47 @@ function prj_admin_scripts() {
             });
 
     jQuery(document).ready(function($) {
-    var selectedItems = [];
+    // Handle item selection/deselection from the grid selector
+    $('#add-prj-item li').on('click', function() {
+        var $this = $(this);
+        var postId = $this.data('id');
+        var thumbUrl = $this.find('img').attr('src');
+        var title = $this.find('.title').text();
 
-    // Toggle dropdown on click
-    $('#add-prj-item').on('click', '.dropdown-toggle', function(event) {
-        $(this).siblings('li').toggle();
-        event.stopPropagation(); // Prevent this click from being propagated
-    });
+        // Check if item is already in the grid
+        var $existingItem = $('#prj-items-list .grid-item[data-id="' + postId + '"]');
 
-    // Handle dropdown item selection
-    $('#add-prj-item li:not(.dropdown-toggle)').on('click', function() {
-        var postId = $(this).attr('value');
-        var selectedTitle = $(this).text();
-
-        // Check and toggle selection
-        var selectedItemIndex = selectedItems.findIndex(item => item.id === postId);
-        if (selectedItemIndex > -1) {
-            selectedItems.splice(selectedItemIndex, 1); // Remove item if already selected
-            $(this).removeClass('selected');
+        if ($existingItem.length > 0) {
+            // Remove from grid
+            $existingItem.remove();
+            $this.removeClass('selected');
         } else {
-            selectedItems.push({id: postId, title: selectedTitle}); // Add new item to the selection
-            $(this).addClass('selected');
-        }
-
-        // Display the selected items
-        var displayText = selectedItems.map(function(item) {
-            return item.title;
-        }).join(', ');
-        $('#add-prj-item .dropdown-toggle').text(displayText || 'Seleziona un post');
-    });
-
-    // Append selected items to grid on button click
-    $('#add-item').on('click', function() {
-        selectedItems.forEach(function(item) {
-            var gridItemHTML = '<div class="grid-item" data-id="' + item.id + '">' +
+            // Add to grid
+            // We need to fetch the item HTML or construct it. 
+            // For simplicity and immediate feedback, we'll construct a basic version.
+            // Ideally, we might want to AJAX this to get the full PHP render (with alignment options), 
+            // but the previous JS also constructed HTML. Let's improve the JS construction.
+            
+            var gridItemHTML = '<div class="grid-item fotoContainer square" data-id="' + postId + '">' +
+                '<div class="image-container">' +
+                '<img src="' + thumbUrl + '" alt="" class="attachment-medium size-medium">' +
+                '</div>' +
+                '<select class="item-alignment" name="item_alignment[' + postId + ']">' +
+                '<option value="alto">Alto</option>' +
+                '<option value="basso">Basso</option>' +
+                '<option value="sinistra">Sinistra</option>' +
+                '<option value="destra">Destra</option>' +
+                '</select>' +
                 '<button type="button" class="remove-item">Remove</button>' +
-                '<p>' + item.title + '</p></div>';
+                '<div style="color: deeppink;">attachment</div>' + 
+                '</div>';
 
             $('#prj-items-list').append(gridItemHTML);
-        });
+            $this.addClass('selected');
+        }
 
         // Update the hidden input field
         updateField();
-
-        // Clear selected items after adding
-        selectedItems = [];
-        $('#add-prj-item .dropdown-toggle').text('Seleziona un post');
-        $('#add-prj-item li').removeClass('selected').hide();
     });
 
     // Function to update the hidden field with the current IDs
@@ -307,12 +304,16 @@ function prj_admin_scripts() {
         });
         $('#prj_items_field').val(ids.join(','));
     }
-
-    // Close dropdown when clicking outside
-    $(document).on('click', function(event) {
-        if (!$(event.target).closest('#add-prj-item').length) {
-            $('#add-prj-item li').not('.dropdown-toggle').hide();
-        }
+    
+    // Sync removal from grid back to the selector
+    $('#prj-items-list').on('click', '.remove-item', function() {
+        var postId = $(this).closest('.grid-item').data('id');
+        // Remove 'selected' class from the corresponding item in the selector
+        $('#add-prj-item li[data-id="' + postId + '"]').removeClass('selected');
+        // The item is removed from DOM by the other handler, but we need to ensure updateField runs.
+        // Wait for other handler or trigger removal here?
+        // The existing handler is: $list.on('click', '.remove-item', ...) which runs updateField.
+        // So we just need to update the visual state of the selector.
     });
 });
         
