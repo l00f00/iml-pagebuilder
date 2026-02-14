@@ -22,8 +22,14 @@ function iml_render_attachment_single($atts) {
      //echo $parent_post_id; 
      $parent_post_type = get_post_type( $parent_post_id ); 
      // Fetch the associative array from parent post meta 
-     $items = get_post_meta($parent_post_id, 'prj_items', true); 
-     //echo count($items); 
+    $items = get_post_meta($parent_post_id, 'prj_items', true); 
+    
+    // If prj_items is empty, try fetching portfolio_items (for Portfolio parents)
+    if (empty($items)) {
+        $items = get_post_meta($parent_post_id, 'portfolio_items', true);
+    }
+    
+    //echo count($items); 
      $image_paths = []; 
      
      if (is_array($items)) { 
@@ -55,21 +61,49 @@ function iml_render_attachment_single($atts) {
        $image_paths = array_values($image_paths); // Reindex array 
  
      $prj_items_alignment = get_post_meta($parent_post_id, 'prj_items_alignment', true); 
-     //echo count($prj_items_alignment); 
-     //must be valid also for portfolio portfolio_items_alignment 
-     if (!empty($prj_items_alignment) && is_array($prj_items_alignment)) { 
-         // Assuming $prj_items_alignment is an associative array where keys are post IDs 
-         // Convert array keys to a simple array of post IDs 
-         $post_ids = array_keys($prj_items_alignment); 
+    if (empty($prj_items_alignment)) {
+        $prj_items_alignment = get_post_meta($parent_post_id, 'portfolio_items_alignment', true); // Or whatever the key is for portfolio
+        // The portfolio builder actually saves alignment in 'portfolio_item_alignment' on the ITEM itself, not the parent array?
+        // Wait, portfolio/builder.php says: $alignment = get_post_meta($post_id, 'portfolio_item_alignment', true);
+        // But for navigation, we need the ORDER.
+        // The order is in $items array (if it's just IDs).
+        // Let's check portfolio/builder.php:
+        // $portfolio_items = get_post_meta($post->ID, 'portfolio_items', true) ?: [];
+        // It's an array of IDs.
+        // prj_items_alignment seems to be an associative array in Project?
+        // Let's assume for Portfolio, the order is just $items.
+    }
+    
+    //echo count($prj_items_alignment); 
+    //must be valid also for portfolio portfolio_items_alignment 
+    if (!empty($items) && is_array($items)) {
+         // If $items is a simple array of IDs (Portfolio style) or Project style?
+         // Project builder saves 'prj_items' as array of IDs too?
+         // Let's check project/builder.php if needed. Assuming $items is array of IDs.
+         
+         $post_ids = $items;
          // Find current post's index 
          $current_index = array_search($post->ID, $post_ids); 
- 
+
          // Previous and Next post URLs 
          $prev_post_id = $post_ids[$current_index - 1] ?? null; 
          $next_post_id = $post_ids[$current_index + 1] ?? null; 
          $prev_post_url = $prev_post_id ? get_permalink($prev_post_id) : null; 
          $next_post_url = $next_post_id ? get_permalink($next_post_id) : null; 
-     } 
+    } elseif (!empty($prj_items_alignment) && is_array($prj_items_alignment)) { 
+        // Fallback for old Project structure if prj_items_alignment was the source of truth
+        // Assuming $prj_items_alignment is an associative array where keys are post IDs 
+        // Convert array keys to a simple array of post IDs 
+        $post_ids = array_keys($prj_items_alignment); 
+        // Find current post's index 
+        $current_index = array_search($post->ID, $post_ids); 
+
+        // Previous and Next post URLs 
+        $prev_post_id = $post_ids[$current_index - 1] ?? null; 
+        $next_post_id = $post_ids[$current_index + 1] ?? null; 
+        $prev_post_url = $prev_post_id ? get_permalink($prev_post_id) : null; 
+        $next_post_url = $next_post_id ? get_permalink($next_post_id) : null; 
+    } 
  
      if ( have_posts() ) : while ( have_posts() ) : the_post(); 
      $attachment_id = get_the_ID(); 
