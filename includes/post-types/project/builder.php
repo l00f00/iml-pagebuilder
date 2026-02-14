@@ -270,37 +270,46 @@ function prj_enqueue_admin_styles() {
                 var isLoading = false;
                 $('#add-prj-item').on('scroll', function() {
                     // Check if we are near the bottom (500px threshold)
-                    if (!isLoading && $(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 500) {
+                    var scrollTop = $(this).scrollTop();
+                    var innerHeight = $(this).innerHeight();
+                    var scrollHeight = $(this)[0].scrollHeight;
+                    
+                    // console.log('Scroll: ' + scrollTop + ' + ' + innerHeight + ' / ' + scrollHeight);
+                    
+                    if (!isLoading && scrollTop + innerHeight >= scrollHeight - 600) {
                         loadMoreImages();
                     }
                 });
 
                 function loadMoreImages() {
-                    if (isLoading) return; // Prevent multiple triggers
+                    if (isLoading) return;
                     
                     isLoading = true;
-                    // Find the next batch of unloaded images (e.g., next 20)
-                    // We need to filter explicitly for src="" (empty string)
-                    var $imagesToLoad = $('#add-prj-item .lazy-thumb').filter(function() {
-                        var src = $(this).attr('src');
-                        return (src === "" || typeof src === 'undefined') || $(this).data('failed');
-                    }).slice(0, 20);
+                    // Find next batch using a class marker 'loading-started' to be robust
+                    var $imagesToLoad = $('#add-prj-item .lazy-thumb:not(.loading-started)').slice(0, 30);
                     
                     if ($imagesToLoad.length > 0) {
-                        console.log('Starting batch load of ' + $imagesToLoad.length + ' images...');
+                        console.log('Loading next batch of ' + $imagesToLoad.length + ' images...');
                         
                         var batchLoadedCount = 0;
                         var totalInBatch = $imagesToLoad.length;
                         
+                        // Mark as started immediately to exclude from next selection
+                        $imagesToLoad.addClass('loading-started');
+                        
+                        // Safety timeout
+                        var batchTimeout = setTimeout(function() {
+                             if (isLoading) {
+                                 console.warn('Batch timeout. Forcing continue.');
+                                 isLoading = false; 
+                             }
+                        }, 8000);
+
                         $imagesToLoad.each(function() {
                             var $img = $(this);
-                            var retryCount = $img.data('retry') || 0;
+                            var retryCount = 0;
                             
-                            // Reset failed status if retrying
-                            $img.data('failed', false);
-                            
-                            // Attach event handlers
-                            $img.off('load error'); // Clear previous handlers to avoid duplicates on retry
+                            $img.off('load error');
                             
                             $img.on('load', function() {
                                 batchLoadedCount++;
@@ -308,54 +317,47 @@ function prj_enqueue_admin_styles() {
                             });
                             
                             $img.on('error', function() {
-                                if (retryCount < 3) { // Retry up to 3 times
+                                if (retryCount < 3) {
                                     retryCount++;
-                                    $img.data('retry', retryCount);
-                                    
-                                    // Small delay before retry
                                     setTimeout(function() {
-                                        // Force reload by appending timestamp or just resetting src
-                                        // Simple reset often works for connection closed errors
-                                        $img.attr('src', '');
-                                        setTimeout(function(){ $img.attr('src', $img.data('src')); }, 100);
-                                    }, 1000 * retryCount); // Backoff delay
+                                        var src = $img.data('src');
+                                        $img.attr('src', ''); // Clear to force reload
+                                        setTimeout(function(){ $img.attr('src', src); }, 50);
+                                    }, 1000 * retryCount);
                                 } else {
-                                    // Give up on this image for this batch, mark as failed so we don't block
-                                    $img.data('failed', true);
                                     batchLoadedCount++;
                                     checkBatchCompletion();
                                 }
                             });
                             
-                            // Set src to start loading (if not already set or if retrying)
-                            if (!$img.attr('src')) {
-                                $img.attr('src', $img.data('src'));
-                            }
+                            // Start loading
+                            $img.attr('src', $img.data('src'));
                         });
                         
                         function checkBatchCompletion() {
-                             // Check if this batch is fully processed
                              if (batchLoadedCount >= totalInBatch) {
-                                 isLoading = false; // Release lock
+                                 clearTimeout(batchTimeout);
+                                 isLoading = false;
                                  
-                                 // Count images that have a non-empty src attribute and haven't failed
-                                 var totalLoaded = $('#add-prj-item .lazy-thumb').filter(function() { 
-                                     return $(this).attr('src') !== "" && !$(this).data('failed'); 
-                                 }).length;
-                                 
+                                 var totalStarted = $('#add-prj-item .lazy-thumb.loading-started').length;
                                  var totalImages = $('#add-prj-item .lazy-thumb').length;
                                  
-                                 console.log('Batch completed. Images currently loaded/visible: ' + totalLoaded + ' / ' + totalImages);
+                                 console.log('Progress: ' + totalStarted + ' / ' + totalImages);
                                  
-                                 if (totalLoaded >= totalImages) {
-                                     console.log('ALL IMAGES IN DATABASE LOADED!');
+                                 if (totalStarted >= totalImages) {
+                                     console.log('ALL IMAGES QUEUED FOR LOADING!');
+                                 } else {
+                                     // Check if we need to load more immediately (if screen is not full)
+                                     var $container = $('#add-prj-item');
+                                     if ($container.scrollTop() + $container.innerHeight() >= $container[0].scrollHeight - 600) {
+                                         setTimeout(loadMoreImages, 50);
+                                     }
                                  }
                              }
                         }
                         
                     } else {
                          isLoading = false;
-                         console.log('No more images to load.');
                     }
                 }
     
