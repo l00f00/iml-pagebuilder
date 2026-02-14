@@ -46,8 +46,9 @@ add_action('template_redirect', function() {
         return; // Non fare nulla per gli utenti autenticati, lasciali entrare
     }
 
-    // Se l'utente NON è autenticato e siamo sulla homepage, reindirizza alla pagina Coming Soon (/new/)
-    if ( is_front_page() ) {
+    // Se l'utente NON è autenticato, reindirizza alla pagina Coming Soon (/new/)
+    // Escludiamo la pagina /new/ stessa per evitare un loop di reindirizzamento infinito
+    if ( !is_page('new') ) {
         wp_redirect('https://www.imlphotographer.com/new/', 301);
         exit;
     }
