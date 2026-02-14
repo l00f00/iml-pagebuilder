@@ -30,6 +30,7 @@
     width: -webkit-fill-available;
     position: relative;
     box-sizing: border-box;
+    display: inline;
 }
 .left-column-progetto .left-column-top > *{
   padding: 28px 0 28px 0;
