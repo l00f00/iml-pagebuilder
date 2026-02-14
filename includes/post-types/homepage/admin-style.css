@@ -165,6 +165,15 @@
     height: auto; 
     object-fit: contain; /* Optional, but safe */
 } 
+
+/* Quando l'allineamento è verticale (Alto/Basso), l'immagine deve riempire la larghezza */
+.fotoContainer.alto .image-container img,
+.fotoContainer.basso .image-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover; /* Opzionale: per tagliare invece di deformare se l'aspect ratio è estremo */
+}
+
 .fotoContainer.destra .image-container { justify-content: flex-end; } 
 .fotoContainer.sinistra .image-container { justify-content: flex-start; } 
 .fotoContainer.alto .image-container { align-items: flex-start; } 
