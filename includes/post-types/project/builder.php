@@ -279,10 +279,11 @@ function prj_enqueue_admin_styles() {
                     if (isLoading) return; // Prevent multiple triggers
                     
                     isLoading = true;
-                    // Find the next batch of unloaded images (e.g., next 20 - Reduced from 50 to avoid connection issues)
+                    // Find the next batch of unloaded images (e.g., next 20)
+                    // We need to filter explicitly for src="" (empty string)
                     var $imagesToLoad = $('#add-prj-item .lazy-thumb').filter(function() {
-                        // Check if src is empty or if it failed loading (we can add a data-failed attribute)
-                        return !$(this).attr('src') || $(this).data('failed');
+                        var src = $(this).attr('src');
+                        return (src === "" || typeof src === 'undefined') || $(this).data('failed');
                     }).slice(0, 20);
                     
                     if ($imagesToLoad.length > 0) {
@@ -337,8 +338,11 @@ function prj_enqueue_admin_styles() {
                              if (batchLoadedCount >= totalInBatch) {
                                  isLoading = false; // Release lock
                                  
-                                 // Check ONLY images that have attempted loading (have src attribute)
-                                 var totalLoaded = $('#add-prj-item .lazy-thumb[src]').not(function() { return $(this).data('failed'); }).length;
+                                 // Count images that have a non-empty src attribute and haven't failed
+                                 var totalLoaded = $('#add-prj-item .lazy-thumb').filter(function() { 
+                                     return $(this).attr('src') !== "" && !$(this).data('failed'); 
+                                 }).length;
+                                 
                                  var totalImages = $('#add-prj-item .lazy-thumb').length;
                                  
                                  console.log('Batch completed. Images currently loaded/visible: ' + totalLoaded + ' / ' + totalImages);
