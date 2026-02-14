@@ -84,7 +84,12 @@ function iml_render_project_single($atts) {
             <div class="right-column-progetto-top"> 
                 <h1 class="progetto-title"><?php echo get_the_title( $post_id ); ?></h1> 
                 <div class="progetto-year"><?php echo esc_html( $year ); ?></div> 
-                <div class="progetto-description"><?php echo do_shortcode( wpautop( $description ) );  //print_r($array);?> </div> 
+                <div class="progetto-description">
+                    <div class="description-content collapsed">
+                        <?php echo do_shortcode( wpautop( $description ) ); ?>
+                    </div>
+                    <a href="#" class="read-more-toggle">Read More</a>
+                </div> 
             </div> 
         </div> 
         </div> 
@@ -134,6 +139,19 @@ function iml_render_project_single($atts) {
         
         <script> 
         jQuery(document).ready(function($) { 
+            // Read More functionality
+            $('.read-more-toggle').click(function(e) {
+                e.preventDefault();
+                var content = $(this).prev('.description-content');
+                if (content.hasClass('collapsed')) {
+                    content.removeClass('collapsed').addClass('expanded');
+                    $(this).text('Read Less');
+                } else {
+                    content.removeClass('expanded').addClass('collapsed');
+                    $(this).text('Read More');
+                }
+            });
+
             // Utilizza SimpleLightbox con jQuery su tutti gli elementi che hanno data-lightbox="gallery" 
             //jQuery('a[data-lightbox="gallery"]').simpleLightbox(); 
             var gallery = jQuery('a[data-lightbox="gallery"]').simpleLightbox({ 
