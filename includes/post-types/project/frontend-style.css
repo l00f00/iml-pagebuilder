@@ -14,34 +14,24 @@
     display: block;
 }
 
+/* LEFT COLUMN STYLES - Common */
 .left-column-progetto {
     width: 65%;
     max-height:100vh;
-    position: relative; /* Anchor for fixed image */
 }
-.left-column-progetto a img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        padding-right: 8px;
-        box-sizing: border-box;
-    }
-    /* Vertical Cover: 100vh height, auto width */
-    .left-column-progetto.cover-vertical a img {
-        height: 100vh;
-        width: auto;
-        max-width: 100%;
-        object-fit: contain; /* or cover if you want to crop */
-    }
-    /* Horizontal Cover: 100% width, auto height */
-    .left-column-progetto.cover-horizontal a img {
-        width: 100%;
-        height: auto;
-        object-fit: contain;
-    }
-    .left-column-progetto a {
-        display: block;
-    }
+.left-column-progetto img {
+    max-width: 63%;
+    max-height:100%;
+    /*height: auto;*/
+    height: -webkit-fill-available;
+    display: block;
+    position:fixed;
+    top:0;
+    left:0;
+    object-fit: contain;
+    /*background-color:green;*/
+    width:auto;
+}
 .left-column-progetto .left-column-top > *{
     padding: 28px 0 28px 0;
 }
@@ -68,6 +58,7 @@
     padding: 28px 0 28px 0;
 }
 
+/* RIGHT COLUMN STYLES - Common */
 .right-column-progetto {
     width: 35%;
     padding-top:65px;/*era 50px*/
@@ -77,33 +68,14 @@
     z-index: 10;
 }
 .progetto-description {
+    /*text-indent: 1em;*/
     position: relative;
-    transition: max-height 0.5s ease;
-}
-.progetto-description.truncated {
-    max-height: 60vh; /* Adjust this value */
-    overflow: hidden;
-}
-.progetto-description.truncated::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 50px;
-    background: linear-gradient(transparent, white);
-}
-.read-more-btn {
-    display: block; /* Hidden by default, shown by JS if needed */
-    cursor: pointer;
-    color: black; /* Or styling */
-    margin-top: 10px;
-    text-decoration: underline;
 }
 .right-column-progetto-top{
     padding-bottom:160px;
 }
 
+/* Grid/List Item Styles */
 .right-column-progetto-top > .related-foto-item{
     max-width:100%;
 }
@@ -111,42 +83,6 @@
 .fotoContainer {
     max-width:100%;
     position: relative; /* Ensure relative positioning for overlay */
-}
-
-.info-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    color: white; /* Keep text white */
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    pointer-events: none; /* Allow clicks to pass through */
-    /* background: rgba(0,0,0,0.1);  Removed background overlay */
-    z-index: 2;
-}
-
-.year-title {
-    margin-top: auto; /* Push to bottom */
-    padding: 10px;
-    /* text-shadow: 0 1px 3px rgba(0,0,0,0.5); Optional: add shadow for readability without background */
-}
-
-.related-foto-item:hover .info-overlay {
-    opacity: 1;
-}
-
-/* When hovering the item, reduce the image opacity */
-.related-foto-item:hover .image-wrapper img {
-    opacity: 0.8; /* Or any value you prefer */
-    transition: opacity 0.3s ease;
-}
-.image-wrapper img {
-    transition: opacity 0.3s ease;
 }
 
 /* Style for the image wrapper */
@@ -208,6 +144,20 @@
     color: black;
     background-color: white;
 }
+
+/* 3 COL SPECIFIC OVERRIDES from user input */
+.layout-3-col .left-column-progetto img { 
+    /*background-color:green; 
+    max-width: 63%; modificata larghezza massima*/ 
+    max-height:100%; 
+    height: auto; 
+    height: -webkit-fill-available; 
+    top:0; 
+    left:0; 
+    object-fit: contain; 
+    width:auto; 
+} 
+
 /* Mobile styles */
 @media (max-width: 1120px) {
     .left-column-progetto, .right-column-progetto {

@@ -26,7 +26,8 @@ function iml_render_project_single($atts) {
     $thumbnail_id = get_post_thumbnail_id($post_id); 
     $has_single_page = get_post_meta($thumbnail_id, 'has_single_page', true); 
     $thumbnail_url = $has_single_page ? get_permalink($thumbnail_id) : wp_get_attachment_image_url($thumbnail_id, 'full'); 
-    $lightbox_attr = $has_single_page ? '' : 'data-lightbox="gallery"'; 
+    // Fix: Default lightbox attribute should be present for layout 1 unless overridden later
+    $lightbox_attr = 'data-lightbox="gallery"'; 
     $featured_image_url = wp_get_attachment_image_url($thumbnail_id, 'full'); 
     
     // Conditional check for space and layout
@@ -89,6 +90,10 @@ function iml_render_project_single($atts) {
             <div class="progetto-year"><?php echo esc_html( $year ); ?></div> 
             <div class="progetto-description"><?php echo do_shortcode( wpautop( $description ) ); ?> </div> 
           </div> 
+        <?php if($layout_3_col): ?>
+        </div> <!-- End right-column-progetto ONLY for 3 cols layout before grid -->
+        <?php endif; ?>
+            
             <div class="related-fotos gallery"> 
     <?php 
     $hiddenImages = [];
@@ -99,15 +104,19 @@ function iml_render_project_single($atts) {
             // Check if the item should link to a single page 
             $single_page_true = get_post_meta($foto_id, 'has_single_page', true); 
             // Get the full-size image URL and the large thumbnail URL 
-            $image_url = wp_get_attachment_image_url($foto_id, 'full'); // Changed from full URL to large size
-            $thumbnail = wp_get_attachment_image_url($foto_id, 'full'); 
+            // FIX: Use full url for image_url, but large for thumbnail to match user request
+            $image_url = wp_get_attachment_url($foto_id); 
+            $thumbnail = wp_get_attachment_image_url($foto_id, 'large'); 
+            
             // Determine the link URL and whether to use lightbox 
             $link_url = $single_page_true ? get_attachment_link($foto_id) : esc_url($image_url); 
-            // $lightbox_attr logic differs slightly in original code between layout types, but mostly consistent
-            // In layout 1: $lightbox_attr = $single_page_true ? '' : 'data-lightbox="gallery"';
-            // In layout 3: $lightbox_attr = $single_page_true ? 'data-single="single-page-true"' : 'data-lightbox="gallery"';
-            // We'll use the layout 3 logic as it's more comprehensive
-            $lightbox_attr = $single_page_true ? 'data-single="single-page-true"' : 'data-lightbox="gallery"'; 
+            
+            // Logic for lightbox attribute based on user code
+            if ($layout_3_col) {
+                 $lightbox_attr = $single_page_true ? 'data-single="single-page-true"' : 'data-lightbox="gallery"';
+            } else {
+                 $lightbox_attr = $single_page_true ? '' : 'data-lightbox="gallery"';
+            }
             
             $foto_title = get_the_title($foto_id);
     
@@ -119,11 +128,7 @@ function iml_render_project_single($atts) {
             ?> 
             <a class="related-foto-item" href="<?php echo $link_url; ?>" style="color:black;" <?php echo $lightbox_attr; ?>> 
                 <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
-                    <div class="info-overlay">
-                        <div class="year-title">
-                            <span class="title"><?php echo esc_html($foto_title); ?></span>
-                        </div>
-                    </div>
+                     <!-- REMOVED INFO OVERLAY as it was not in user provided code -->
                     <div class="image-wrapper"> 
                         <img src="<?php echo esc_url($thumbnail); ?>" alt=""> 
                     </div> 
@@ -141,8 +146,11 @@ function iml_render_project_single($atts) {
         } 
         ?> 
       </div> 
-    </div> 
+    <?php if(!$layout_3_col): ?>
+    </div> <!-- End right-column-progetto for 1 col layout -->
+    <?php endif; ?>
     </div>
+    
     <script> 
     jQuery(document).ready(function($) { 
         // Utilizza SimpleLightbox con jQuery su tutti gli elementi che hanno data-lightbox="gallery" 
@@ -163,35 +171,7 @@ function iml_render_project_single($atts) {
             docClose: false, 
         }); 
 
-        // Force hide lightbox wrapper on close
-        gallery.on('close.simplelightbox', function () {
-            setTimeout(function() {
-                jQuery('.sl-wrapper').fadeOut(200, function(){
-                    jQuery(this).hide();
-                });
-            }, 100); // Small delay to allow library's own close animation to start
-        });
-
-        console.log('Progetto caricato: <?php echo $layout_3_col ? "3 colonne" : "1 colonna"; ?>');
-
-        // Read More Functionality
-        var $desc = jQuery('.progetto-description');
-        var maxHeight = jQuery(window).height() * 0.6; // 60% of viewport height
-
-        if ($desc.length && $desc.height() > maxHeight) {
-            $desc.addClass('truncated');
-            jQuery('<div class="read-more-btn">Read More</div>').insertAfter($desc);
-            
-            jQuery('.read-more-btn').on('click', function() {
-                if ($desc.hasClass('truncated')) {
-                    $desc.removeClass('truncated');
-                    jQuery(this).text('Read Less');
-                } else {
-                    $desc.addClass('truncated');
-                    jQuery(this).text('Read More');
-                }
-            });
-        }
+        console.log('PROGETTO CARICATO <?php echo $layout_3_col ? "3 colonne" : "1 COLONNA"; ?>');
     });
     </script> 
 
