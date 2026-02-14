@@ -25,8 +25,7 @@ function portfolio_meta_box_callback($post) {
     $selectable_posts = new WP_Query([
         'post_type'      => ['progetto', 'serie', 'attachment'], // Aggiungi altri post type se necessario
         'posts_per_page' => -1,
-        'post_status'    => 'inherit', // Attachments usually have 'inherit' status
-        'post_mime_type' => 'image', // Only images
+        'post_status'    => ['publish', 'inherit'], // Attachments usually have 'inherit' status, others 'publish'
         'orderby'        => 'date',
         'order'          => 'DESC',
     ]);
