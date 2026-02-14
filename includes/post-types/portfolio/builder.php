@@ -19,12 +19,16 @@ function portfolio_meta_box_callback($post) {
     echo '<div style="position:relative;">'; // Wrapper
     echo '<ul id="add-portfolio-item" class="portfolio-dropdown">';
     echo '<li class="dropdown-toggle">Seleziona un post</li>';
+    echo '<div id="portfolio-loader-status" class="portfolio-loader-status">Caricamento immagini... <span id="portfolio-loader-count">0</span>%</div>';
 
     // List of selectable posts
     $selectable_posts = new WP_Query([
         'post_type'      => ['progetto', 'serie', 'attachment'], // Aggiungi altri post type se necessario
         'posts_per_page' => -1,
-        'post_status'    => 'any',
+        'post_status'    => 'inherit', // Attachments usually have 'inherit' status
+        'post_mime_type' => 'image', // Only images
+        'orderby'        => 'date',
+        'order'          => 'DESC',
     ]);
 
     if ($selectable_posts->have_posts()) {
@@ -43,9 +47,9 @@ function portfolio_meta_box_callback($post) {
         }
 
         // Output the list item with the thumbnail and title
-        echo '<li value="' . esc_attr($post_id) . '" style="display: none;">';
+        echo '<li value="' . esc_attr($post_id) . '">';
         if ($thumbnail_url) {
-            echo '<img src="' . esc_url($thumbnail_url) . '" alt="" style="width: 100px; height: 100px; margin-right: 5px;">';
+            echo '<img src="" data-src="' . esc_url($thumbnail_url) . '" class="lazy-thumb" alt="">';
         }
         echo get_the_title();
         echo ' - ';
@@ -200,72 +204,146 @@ function portfolio_admin_scripts() {
                 updateField();
             });
 
-    jQuery(document).ready(function($) {
-    var selectedItems = [];
+            // Queue-based Lazy Loader
+            var loadQueue = [];
+            var activeLoads = 0;
+            var maxConcurrent = 6; // Browser typically allows 6 connections per domain
+            var isQueueRunning = false;
+            var totalImages = 0;
+            var loadedCount = 0;
 
-    // Toggle dropdown on click
-    $('#add-portfolio-item').on('click', '.dropdown-toggle', function(event) {
-        $(this).siblings('li').toggle();
-        event.stopPropagation(); // Prevent this click from being propagated
-    });
+            // Toggle dropdown on click
+            $('#add-portfolio-item').on('click', '.dropdown-toggle', function(event) {
+                var $parent = $(this).parent();
+                $parent.toggleClass('active');
+                
+                if ($parent.hasClass('active')) {
+                    startImageLoading();
+                }
+                event.stopPropagation(); 
+            });
 
-    // Handle dropdown item selection
-    $('#add-portfolio-item li:not(.dropdown-toggle)').on('click', function() {
-        var postId = $(this).attr('value');
-        var selectedTitle = $(this).text();
+            function startImageLoading() {
+                // Only start if not already running and there are images to load
+                if (isQueueRunning) return;
+                
+                // Initialize queue with all unloaded images
+                var $unloaded = $('#add-portfolio-item .lazy-thumb').filter(function() {
+                    return !$(this).attr('src');
+                });
+                
+                if ($unloaded.length === 0) return; // All done
+                
+                console.log('Starting queue for ' + $unloaded.length + ' images...');
+                $('#portfolio-loader-status').addClass('visible');
+                
+                // Reset counts for progress bar (based on total in list)
+                totalImages = $('#add-portfolio-item .lazy-thumb').length;
+                loadedCount = $('#add-portfolio-item .lazy-thumb[src]').length;
+                updateProgress();
 
-        // Check and toggle selection
-        var selectedItemIndex = selectedItems.findIndex(item => item.id === postId);
-        if (selectedItemIndex > -1) {
-            selectedItems.splice(selectedItemIndex, 1); // Remove item if already selected
-            $(this).removeClass('selected');
-        } else {
-            selectedItems.push({id: postId, title: selectedTitle}); // Add new item to the selection
-            $(this).addClass('selected');
-        }
+                // Convert jQuery object to array for the queue
+                loadQueue = $unloaded.toArray();
+                isQueueRunning = true;
+                
+                // Kick off the initial batch
+                processQueue();
+            }
 
-        // Display the selected items
-        var displayText = selectedItems.map(function(item) {
-            return item.title;
-        }).join(', ');
-        $('#add-portfolio-item .dropdown-toggle').text(displayText || 'Seleziona un post');
-    });
+            function processQueue() {
+                // Stop if queue empty
+                if (loadQueue.length === 0) {
+                    if (activeLoads === 0) {
+                        isQueueRunning = false;
+                        $('#portfolio-loader-status').removeClass('visible');
+                        console.log('All images loaded.');
+                    }
+                    return;
+                }
 
-    // Append selected items to grid on button click
-    $('#add-item').on('click', function() {
-        selectedItems.forEach(function(item) {
-            var gridItemHTML = '<div class="grid-item" data-id="' + item.id + '">' +
-                '<button type="button" class="remove-item">Remove</button>' +
-                '<p>' + item.title + '</p></div>';
+                // Fill up the concurrent slots
+                while (activeLoads < maxConcurrent && loadQueue.length > 0) {
+                    var img = loadQueue.shift();
+                    var $img = $(img);
+                    
+                    activeLoads++;
+                    
+                    $img.off('load error');
+                    
+                    $img.on('load error', function() {
+                        activeLoads--;
+                        loadedCount++;
+                        updateProgress();
+                        // Trigger next immediately
+                        processQueue();
+                    });
+                    
+                    // Start load
+                    $img.attr('src', $img.data('src'));
+                }
+            }
+            
+            function updateProgress() {
+                var percent = Math.round((loadedCount / totalImages) * 100);
+                $('#portfolio-loader-count').text(percent);
+                
+                if (loadedCount >= totalImages) {
+                     $('#portfolio-loader-status').text('Caricamento completato!');
+                     setTimeout(function() {
+                         $('#portfolio-loader-status').removeClass('visible');
+                     }, 2000);
+                }
+            }
 
-            $('#portfolio-items-list').append(gridItemHTML);
-        });
+            // Handle dropdown item selection
+            $('#add-portfolio-item li:not(.dropdown-toggle)').on('click', function() {
+                var postId = $(this).attr('value');
+                var selectedTitle = $(this).text();
 
-        // Update the hidden input field
-        updateField();
+                // Check and toggle selection
+                var selectedItemIndex = selectedItems.findIndex(item => item.id === postId);
+                if (selectedItemIndex > -1) {
+                    selectedItems.splice(selectedItemIndex, 1); // Remove item if already selected
+                    $(this).removeClass('selected');
+                } else {
+                    selectedItems.push({id: postId, title: selectedTitle}); // Add new item to the selection
+                    $(this).addClass('selected');
+                }
 
-        // Clear selected items after adding
-        selectedItems = [];
-        $('#add-portfolio-item .dropdown-toggle').text('Seleziona un post');
-        $('#add-portfolio-item li').removeClass('selected').hide();
-    });
+                // Update toggle text summary
+                var displayText = selectedItems.map(function(item) {
+                     // Simplify title for display
+                     return item.title.substring(0, 15) + (item.title.length>15?'...':'');
+                }).join(', ');
+                $('#add-portfolio-item .dropdown-toggle').text(displayText || 'Seleziona foto (click to close)');
+            });
 
-    // Function to update the hidden field with the current IDs
-    function updateField() {
-        var ids = [];
-        $('#portfolio-items-list .grid-item').each(function() {
-            ids.push($(this).data('id'));
-        });
-        $('#portfolio_items_field').val(ids.join(','));
-    }
+            // Close dropdown when clicking outside
+            $(document).on('click', function(event) {
+                if (!$(event.target).closest('#add-portfolio-item').length) {
+                    $('#add-portfolio-item').removeClass('active');
+                }
+            });
+            
+            // Append selected items to grid on button click
+            $('#add-item').on('click', function() {
+                selectedItems.forEach(function(item) {
+                    var gridItemHTML = '<div class="grid-item" data-id="' + item.id + '">' +
+                        '<button type="button" class="remove-item">Remove</button>' +
+                        '<p>' + item.title + '</p></div>';
 
-    // Close dropdown when clicking outside
-    $(document).on('click', function(event) {
-        if (!$(event.target).closest('#add-portfolio-item').length) {
-            $('#add-portfolio-item li').not('.dropdown-toggle').hide();
-        }
-    });
-});
+                    $('#portfolio-items-list').append(gridItemHTML);
+                });
+
+                // Update the hidden input field
+                updateField();
+
+                // Clear selected items after adding
+                selectedItems = [];
+                $('#add-portfolio-item .dropdown-toggle').text('Seleziona un post');
+                $('#add-portfolio-item li').removeClass('selected');
+                $('#add-portfolio-item').removeClass('active');
+            });
         });
     </script>
     <?php

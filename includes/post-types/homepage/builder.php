@@ -20,37 +20,45 @@ function homepage_meta_box_callback($post) {
     wp_nonce_field('homepage_save_meta_box_data', 'homepage_meta_box_nonce'); 
     $homepage_items = get_post_meta($post->ID, 'homepage_items', true) ?: []; 
 
-    // Dropdown for selecting posts 
-    echo '<ul id="add-homepage-item" class="homepage-dropdown">'; 
-    echo '<li class="dropdown-toggle">Seleziona i post da aggiungere</li>'; 
+    echo '<div id="add-homepage-item" class="homepage-dropdown">';
+    echo '<div class="dropdown-toggle">Seleziona un post</div>';
+    echo '<div id="homepage-loader-status" class="homepage-loader-status">Caricamento immagini... <span id="homepage-loader-count">0</span>%</div>';
 
-    $selectable_posts = new WP_Query([ 
-        'post_type'      => ['progetto','portfolio', 'serie', 'attachment'], 
-        'posts_per_page' => -1, 
-        'post_status'    => 'published', 
-    ]); 
+    // List of selectable posts
+    $selectable_posts = new WP_Query([
+        'post_type'      => ['progetto', 'portfolio', 'serie', 'attachment'],
+        'posts_per_page' => -1,
+        'post_status'    => ['publish', 'inherit'], // Include inherit for attachments
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+    ]);
 
-    if ($selectable_posts->have_posts()) { 
-        while ($selectable_posts->have_posts()) { 
-            $selectable_posts->the_post(); 
-            $post_id = get_the_ID(); 
-            $post_type = get_post_type($post_id); 
-            $thumbnail_url = $post_type === 'attachment' ? wp_get_attachment_image_url($post_id, 'thumbnail') : get_the_post_thumbnail_url($post_id, 'thumbnail'); 
+    if ($selectable_posts->have_posts()) {
+        while ($selectable_posts->have_posts()) {
+            $selectable_posts->the_post();
+            $post_id = get_the_ID();
+            $post_type = get_post_type($post_id);
+            $thumbnail_url = '';
 
-            // AGGIORNATO: Struttura interna più pulita per la griglia
-            echo '<li value="' . esc_attr($post_id) . '" class="dropdown-item" style="display: none;">'; 
-            if ($thumbnail_url) { 
-                echo '<div class="item-preview"><img src="' . esc_url($thumbnail_url) . '" alt=""></div>'; 
-            } 
+            if ($post_type === 'attachment') {
+                 $thumbnail_url = wp_get_attachment_image_url($post_id, 'thumbnail');
+            } else {
+                 $thumbnail_url = get_the_post_thumbnail_url($post_id, 'thumbnail');
+            }
+
+            echo '<div class="item-preview" data-id="' . $post_id . '" data-title="' . esc_attr(get_the_title()) . '">';
+            if ($thumbnail_url) {
+                echo '<img src="" data-src="' . esc_url($thumbnail_url) . '" class="lazy-thumb" alt="">';
+            }
             echo '<div class="item-info">';
             echo '<span class="item-title">' . get_the_title() . '</span>';
             echo '<span class="item-type">' . ($post_type === 'attachment' ? 'Foto' : $post_type) . '</span>';
             echo '</div>';
-            echo '</li>'; 
-        } 
-    } 
-    wp_reset_postdata(); 
-    echo '</ul>'; 
+            echo '</div>';
+        }
+        wp_reset_postdata();
+    }
+    echo '</div>';
     echo '<button type="button" id="add-homepage-item-button">Aggiungi alla griglia</button>'; 
 
     // Hidden field to track post IDs 
@@ -116,6 +124,14 @@ function homepage_inline_js() {
                 var $field = $('#homepage_items_field'); 
                 var selectedItems = []; 
 
+                // Queue-based Lazy Loader
+                var loadQueue = [];
+                var activeLoads = 0;
+                var maxConcurrent = 6;
+                var isQueueRunning = false;
+                var totalImages = 0;
+                var loadedCount = 0;
+
                 $list.sortable({ 
                     placeholder: 'ui-state-highlight', 
                     update: function(event, ui) { updateField(); } 
@@ -136,17 +152,78 @@ function homepage_inline_js() {
 
                 // Toggle dropdown
                 $('#add-homepage-item').on('click', '.dropdown-toggle', function(event) { 
-                    $(this).siblings('li').toggle(); 
-                    $(this).parent().toggleClass('is-open');
+                    var $parent = $(this).parent();
+                    $parent.toggleClass('active');
+                    
+                    if ($parent.hasClass('active')) {
+                        startImageLoading();
+                    }
                     event.stopPropagation(); 
                 }); 
 
-                // Handle selection
-                $('#add-homepage-item').on('click', 'li.dropdown-item', function(event) { 
-                    var postId = $(this).attr('value'); 
-                    var selectedTitle = $(this).find('.item-title').text(); 
+                function startImageLoading() {
+                    if (isQueueRunning) return;
+                    
+                    var $unloaded = $('#add-homepage-item .lazy-thumb').filter(function() {
+                        return !$(this).attr('src');
+                    });
+                    
+                    if ($unloaded.length === 0) return;
+                    
+                    console.log('Starting queue for ' + $unloaded.length + ' images...');
+                    $('#homepage-loader-status').addClass('visible');
+                    
+                    totalImages = $('#add-homepage-item .lazy-thumb').length;
+                    loadedCount = $('#add-homepage-item .lazy-thumb[src]').length;
+                    updateProgress();
 
-                    var index = selectedItems.findIndex(item => item.id === postId); 
+                    loadQueue = $unloaded.toArray();
+                    isQueueRunning = true;
+                    processQueue();
+                }
+
+                function processQueue() {
+                    if (loadQueue.length === 0) {
+                        if (activeLoads === 0) {
+                            isQueueRunning = false;
+                            $('#homepage-loader-status').removeClass('visible');
+                        }
+                        return;
+                    }
+
+                    while (activeLoads < maxConcurrent && loadQueue.length > 0) {
+                        var img = loadQueue.shift();
+                        var $img = $(img);
+                        activeLoads++;
+                        $img.off('load error');
+                        $img.on('load error', function() {
+                            activeLoads--;
+                            loadedCount++;
+                            updateProgress();
+                            processQueue();
+                        });
+                        $img.attr('src', $img.data('src'));
+                    }
+                }
+                
+                function updateProgress() {
+                    var percent = Math.round((loadedCount / totalImages) * 100);
+                    $('#homepage-loader-count').text(percent);
+                    
+                    if (loadedCount >= totalImages) {
+                         $('#homepage-loader-status').text('Caricamento completato!');
+                         setTimeout(function() {
+                             $('#homepage-loader-status').removeClass('visible');
+                         }, 2000);
+                    }
+                }
+
+                // Handle selection
+                $('#add-homepage-item').on('click', '.item-preview', function(event) { 
+                    var postId = $(this).data('id'); 
+                    var selectedTitle = $(this).data('title'); 
+
+                    var index = selectedItems.findIndex(item => item.id == postId); 
                     if (index > -1) { 
                         selectedItems.splice(index, 1); 
                         $(this).removeClass('selected'); 
@@ -156,7 +233,10 @@ function homepage_inline_js() {
                     } 
 
                     var displayText = selectedItems.map(item => item.title).join(', '); 
-                    $('#add-homepage-item .dropdown-toggle').text(displayText || 'Seleziona i post'); 
+                    // Truncate for display
+                    if (displayText.length > 50) displayText = displayText.substring(0, 50) + '...';
+                    
+                    $('#add-homepage-item .dropdown-toggle').text(displayText || 'Seleziona post (click to close)'); 
                     event.stopPropagation(); 
                 }); 
 
@@ -172,15 +252,14 @@ function homepage_inline_js() {
 
                     updateField(); 
                     selectedItems = []; 
-                    $('#add-homepage-item .dropdown-toggle').text('Seleziona i post'); 
-                    $('#add-homepage-item li.dropdown-item').removeClass('selected').hide(); 
-                    $('#add-homepage-item').removeClass('is-open');
+                    $('#add-homepage-item .dropdown-toggle').text('Seleziona un post'); 
+                    $('#add-homepage-item .item-preview').removeClass('selected'); 
+                    $('#add-homepage-item').removeClass('active');
                 }); 
 
                 $(document).on('click', function(event) { 
                     if (!$(event.target).closest('#add-homepage-item').length) { 
-                        $('#add-homepage-item li.dropdown-item').hide(); 
-                        $('#add-homepage-item').removeClass('is-open');
+                        $('#add-homepage-item').removeClass('active');
                     } 
                 }); 
             }); 
