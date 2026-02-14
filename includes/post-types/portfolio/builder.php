@@ -54,6 +54,15 @@ function portfolio_meta_box_callback($post) {
         echo ' - ';
         $type_label = ($post_type === 'attachment' ? 'Foto' : $post_type);
         echo '<span class="item-type type-' . esc_attr($post_type) . '">' . $type_label . '</span>';
+        
+        // Check for Single Page status
+        if ($post_type === 'attachment') {
+            $has_single = get_post_meta($post_id, 'has_single_page', true);
+            if ($has_single) {
+                echo '<span style="color: green; font-size: 10px; display: block; margin-top: 2px;">&#10004; Pagina Singola</span>';
+            }
+        }
+        
         echo '</li>';
     }
     }
