@@ -24,7 +24,7 @@
     height: 100vh; /* Force height to screen height */
     top:0; 
     left:0; 
-    object-fit: cover; 
+    object-fit: contain; /* Changed from cover to contain as per request */
     object-position: left center; 
     /*object-fit: cover; 
     object-position: left center;*/ 
