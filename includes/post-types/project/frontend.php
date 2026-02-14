@@ -180,8 +180,21 @@ function iml_render_project_single($atts) {
                 closeText: '<div class="divclose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 39" width="44" height="39"><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(45 16 16)" /><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(-45 16 16)" /></svg></div>', 
                 navText: ['<','>'], 
                 spinner: false, 
-                overlay: false, 
-                docClose: false, 
+                overlay: true, 
+                docClose: true, 
+            }); 
+            
+            // Fix: close lightbox when clicking on wrapper (overlay)
+            $('body').on('click', '.sl-wrapper', function(e) {
+                 if (!$(e.target).closest('.sl-image').length && !$(e.target).closest('.sl-navigation').length && !$(e.target).closest('.sl-close').length) {
+                     gallery.close();
+                 }
+            });
+            
+            // Fix: ensure close button works
+            $('body').on('click', '.sl-close', function(e) {
+                e.preventDefault();
+                gallery.close();
             }); 
             
         }); 
@@ -315,8 +328,21 @@ function iml_render_project_single($atts) {
                 closeText: '<div class="divclose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 39" width="44" height="39"><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(45 16 16)" /><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(-45 16 16)" /></svg></div>', 
                 navText: ['<','>'], 
                 spinner: false, 
-                overlay: false, 
-                docClose: false, 
+                overlay: true, 
+                docClose: true, 
+            }); 
+            
+             // Fix: close lightbox when clicking on wrapper (overlay)
+            $('body').on('click', '.sl-wrapper', function(e) {
+                 if (!$(e.target).closest('.sl-image').length && !$(e.target).closest('.sl-navigation').length && !$(e.target).closest('.sl-close').length) {
+                     gallery.close();
+                 }
+            });
+            
+            // Fix: ensure close button works
+            $('body').on('click', '.sl-close', function(e) {
+                e.preventDefault();
+                gallery.close();
             }); 
            
             console.log('PROGETTO CARICATO 1 colonna');
