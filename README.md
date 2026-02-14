@@ -51,6 +51,7 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 *   [ ] Spaziature con punta amministratore corrette (Si/No)
 *   [ ] Immagine al click va a singola (Si/No)
 *   [ ] Galleria si chiude bene (Si/No)
+*   [ ] Mobile: Layout semplificato 1 colonna (Si/No)
 
 **Layout 1 Colonna:**
 *   [ ] Immagine principale corretta (Si/No)
@@ -59,6 +60,7 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 *   [ ] Spaziature con punta amministratore corrette (Si/No)
 *   [ ] Immagine al click va a singola (Si/No)
 *   [ ] Galleria si chiude bene (Si/No)
+*   [ ] Mobile: Layout semplificato 1 colonna (Si/No)
 
 ## Changelog & Status
 
