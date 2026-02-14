@@ -91,7 +91,7 @@ function portfolio_render_grid_item($post_id) {
     $image_id = ('attachment' === $post_type) ? $post_id : get_post_thumbnail_id($post_id);
     if ($image_id) {
         $image_data = wp_get_attachment_metadata($image_id);
-        if ($image_data['width'] < $image_data['height']) {
+        if (isset($image_data['width']) && isset($image_data['height']) && $image_data['width'] < $image_data['height']) {
             $image_orientation = 'vertical';
         }
     }
@@ -164,6 +164,7 @@ function save_portfolio_meta_box_data($post_id) {
                 $portfolio_items_alignment[$item_id] = sanitize_text_field($alignment); // Aggiungi all'array
             }
         }
+        update_post_meta($post_id, 'portfolio_items_alignment', $portfolio_items_alignment);
     }
 
     // Salva l'array di allineamenti come meta field, solo se non è vuoto
@@ -221,6 +222,18 @@ function portfolio_admin_scripts() {
             $list.on('click', '.remove-item', function() {
                 $(this).closest('.grid-item').remove();
                 updatePortfolioField();
+            });
+
+            // Handle Alignment Change
+            $list.on('change', '.item-alignment', function() {
+                var alignment = $(this).val();
+                var $gridItem = $(this).closest('.grid-item');
+                
+                // Remove all alignment classes
+                $gridItem.removeClass('alto basso sinistra destra');
+                
+                // Add new alignment class
+                $gridItem.addClass(alignment);
             });
 
             // Queue-based Lazy Loader
