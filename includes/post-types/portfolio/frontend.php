@@ -61,9 +61,9 @@ function iml_render_portfolio_grid($atts) {
                       </a>';
             
             } elseif ($post_type === 'attachment') {
-                $categories = get_the_category_list('<ul><li>', '</li><li>', '</li></ul>', $portfolio_single_item_id);
-                $tags = get_the_tag_list('<ul><li>', '</li><li>', '</li></ul>', $portfolio_single_item_id);
-                $year = rwmb_meta('anno', '', $portfolio_single_item_id);
+                // $categories = get_the_category_list('<ul><li>', '</li><li>', '</li></ul>', $portfolio_single_item_id);
+                // $tags = get_the_tag_list('<ul><li>', '</li><li>', '</li></ul>', $portfolio_single_item_id);
+                // $year = rwmb_meta('anno', '', $portfolio_single_item_id);
                 $parent_project = wp_get_post_parent_id($portfolio_single_item_id);
                 $parent_project_title = get_the_title($parent_project);
                 $title = get_the_title($portfolio_single_item_id);
