@@ -41,6 +41,21 @@ Estende le funzionalità della libreria media di WordPress:
 *   `frontend/`: Contiene CSS e JS per il frontend.
 *   `old/`: Archivio del codice legacy.
 
+## LISTA CONTROLLO E TEST (CHECKLIST)
+Da verificare per ogni nuovo inserimento o modifica ai progetti:
+
+**Layout 3 Colonne:**
+*   [ ] Immagine principale verticale corretta (Si/No)
+*   [ ] Spazio dal testo presente (Si/No)
+*   [ ] Read More corretto e funzionante (Si/No)
+*   [ ] Spaziature con punta amministratore corrette (Si/No)
+
+**Layout 1 Colonna:**
+*   [ ] Immagine principale corretta (Si/No)
+*   [ ] Spazio dal testo presente (Si/No)
+*   [ ] Read More corretto e funzionante (Si/No)
+*   [ ] Spaziature con punta amministratore corrette (Si/No)
+
 ## Changelog & Status
 
 ### FATTO (Done)
