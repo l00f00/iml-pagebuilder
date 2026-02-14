@@ -46,17 +46,14 @@ function prj_meta_box_callback($post) {
             $thumbnail_url = get_the_post_thumbnail_url($post_id, 'thumbnail');
         }
 
-        // Output the list item with the thumbnail and title - GRID STYLE
-        echo '<li value="' . esc_attr($post_id) . '" class="dropdown-item" style="display: none;">';
+        // Output the list item with the thumbnail and title
+        echo '<li value="' . esc_attr($post_id) . '" style="display: none;">';
         if ($thumbnail_url) {
-            echo '<div class="item-preview"><img src="' . esc_url($thumbnail_url) . '" alt=""></div>';
-        } else {
-             echo '<div class="item-preview" style="background:#eee;"></div>';
+            echo '<img src="' . esc_url($thumbnail_url) . '" alt="" style="width: 100px; height: 100px; margin-right: 10px;">';
         }
-        echo '<div class="item-info">';
-        echo '<span class="item-title">' . get_the_title() . '</span>';
-        echo '<span class="item-type">' . ($post_type === 'attachment' ? 'Foto' : $post_type) . '</span>';
-        echo '</div>';
+        echo get_the_title();
+        echo ' - ';
+        if($post_type === 'attachment'){echo 'Foto';} else {echo $post_type;}
         echo '</li>';
     }
     }
@@ -213,189 +210,13 @@ function count_child_posts($post_id) {
 add_action('save_post', 'save_prj_meta_box_data');
 
 // Include lo stile CSS per gestire l'aspetto della griglia e dei pulsanti
-add_action('admin_head', 'prj_admin_styles');
-function prj_admin_styles() {
-    ?>
-    <style>
-        #prj-items-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        #add-item {
-            margin: 20px 0;
-            background-color: #2271b1;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            cursor: pointer;
-            padding: 10px 20px;
-            font-weight: 600;
-        }
-        #add-item:hover { background-color: #135e96; }
-
-        .grid-item {
-            flex: 0 1 calc(33.333% - 10px);
-            box-sizing: border-box;
-            position: relative;
-            border: 1px solid #ddd;
-            padding: 5px;
-            aspect-ratio: 1 / 1;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Center horizontally by default */
-            justify-content: center; /* Center vertically by default */
-        }
-        .grid-item.sinistra { justify-content: flex-start; align-items: flex-start; }
-        .grid-item.destra { justify-content: flex-start; align-items: flex-end; }
-        .grid-item.alto { justify-content: flex-start; align-items: center; }
-        .grid-item.basso { justify-content: flex-end; align-items: center; }
-
-        .grid-item .image-container {
-             flex: 1;
-             display: flex;
-             align-items: inherit; /* Inherit alignment from grid-item */
-             justify-content: inherit; /* Inherit justification from grid-item */
-             overflow: hidden;
-             background: #f9f9f9;
-             width: 100%;
-        }
-        .grid-item img {
-            max-width: 100%;
-            height: auto;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        .grid-item .remove-item {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background-color: #d63638;
-            border: none;
-            border-radius: 3px;
-            color: white;
-            cursor: pointer;
-            padding: 2px 8px;
-            font-size: 10px;
-            z-index: 10;
-        }
-        .ui-state-highlight {
-            height: 150px;
-            background-color: #fafafa;
-            border: 1px dashed #ccc;
-        }
-        
-        /* Dropdown Styles - Grid Layout */
-        .prj-dropdown {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            border: 1px solid #ccd0d4;
-            background: #fff;
-            position: relative;
-            width: 100%;
-            cursor: pointer;
-            display: flex;
-            flex-wrap: wrap;
-            max-height: 400px; /* Scrollable if too long */
-            overflow-y: auto;
-        }
-        .prj-dropdown.is-open {
-            padding: 10px;
-            border-color: #8c8f94;
-            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
-            z-index: 100;
-        }
-
-        .prj-dropdown .dropdown-toggle {
-            width: 100%;
-            padding: 10px 15px;
-            background-color: #f6f7f7;
-            position: sticky; /* Keeps it at top when scrolling inside ul */
-            top: 0;
-            z-index: 20;
-            border-bottom: 1px solid #ddd;
-            font-weight: 600;
-        }
-
-        .prj-dropdown .dropdown-toggle:after {
-            content: '';
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            border: 5px solid transparent;
-            border-top-color: #333;
-            transform: translateY(-25%);
-        }
-
-        .prj-dropdown li.dropdown-item {
-            flex: 0 0 calc(25% - 10px); /* 4 columns */
-            margin: 5px;
-            padding: 8px;
-            border: 1px solid #eee;
-            background: #fff;
-            display: none; /* Managed by JS */
-            flex-direction: column;
-            align-items: center;
-            box-sizing: border-box;
-            transition: all 0.2s;
-        }
-        
-        .prj-dropdown li.dropdown-item:hover {
-            background-color: #f0f6fb;
-            border-color: #2271b1;
-        }
-        .prj-dropdown li.dropdown-item.selected {
-            background-color: #e7f0f7;
-            border-color: #2271b1;
-            box-shadow: inset 0 0 0 1px #2271b1;
-        }
-
-        .prj-dropdown .item-preview {
-            width: 100%;
-            aspect-ratio: 1/1;
-            overflow: hidden;
-            margin-bottom: 8px;
-            background: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .prj-dropdown .item-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .prj-dropdown .item-info {
-            text-align: center;
-            width: 100%;
-        }
-        .prj-dropdown .item-title {
-            display: block;
-            font-size: 11px;
-            font-weight: 600;
-            line-height: 1.3;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .prj-dropdown .item-type {
-            display: block;
-            font-size: 9px;
-            color: #666;
-            text-transform: uppercase;
-            margin-top: 3px;
-        }
-
-        @media (max-width: 782px) {
-            .prj-dropdown li.dropdown-item {
-                flex: 0 0 calc(50% - 10px); /* 2 columns on mobile */
-            }
-        }
-    </style>
-    <?php
+add_action('admin_enqueue_scripts', 'prj_enqueue_admin_styles');
+function prj_enqueue_admin_styles() {
+    // Load only on post edit pages
+    $screen = get_current_screen();
+    if ($screen->post_type === 'progetto' || $screen->post_type === 'serie') {
+        wp_enqueue_style('prj-admin-style', IML_PLUGIN_URL . 'includes/post-types/project/admin-style.css', array(), '1.0');
+    }
 }
 
 // Include lo script JavaScript per rendere la lista "sortable" e gestire l'aggiunta e la rimozione
@@ -428,79 +249,72 @@ function prj_admin_scripts() {
                 updateField();
             });
 
-            // Toggle dropdown on click
-            $('#add-prj-item').on('click', '.dropdown-toggle', function(event) {
-                var $dropdown = $(this).parent();
-                $dropdown.toggleClass('is-open');
-                
-                // Toggle visibility of items
-                if ($dropdown.hasClass('is-open')) {
-                    $(this).siblings('li').css('display', 'flex'); // Show as flex items
-                } else {
-                    $(this).siblings('li').hide();
-                }
-                event.stopPropagation();
-            });
+    jQuery(document).ready(function($) {
+    var selectedItems = [];
 
-            // Handle dropdown item selection
-            $('#add-prj-item').on('click', 'li.dropdown-item', function(event) {
-                var postId = $(this).attr('value');
-                var selectedTitle = $(this).find('.item-title').text();
+    // Toggle dropdown on click
+    $('#add-prj-item').on('click', '.dropdown-toggle', function(event) {
+        $(this).siblings('li').toggle();
+        event.stopPropagation(); // Prevent this click from being propagated
+    });
 
-                // Check and toggle selection
-                var selectedItemIndex = selectedItems.findIndex(item => item.id === postId);
-                if (selectedItemIndex > -1) {
-                    selectedItems.splice(selectedItemIndex, 1); // Remove item if already selected
-                    $(this).removeClass('selected');
-                } else {
-                    selectedItems.push({id: postId, title: selectedTitle}); // Add new item to the selection
-                    $(this).addClass('selected');
-                }
+    // Handle dropdown item selection
+    $('#add-prj-item li:not(.dropdown-toggle)').on('click', function() {
+        var postId = $(this).attr('value');
+        var selectedTitle = $(this).text();
 
-                // Display the selected items
-                var displayText = selectedItems.map(function(item) {
-                    return item.title;
-                }).join(', ');
-                $('#add-prj-item .dropdown-toggle').text(displayText || 'Seleziona foto');
-                event.stopPropagation(); // Stop propagation to keep dropdown open
-            });
+        // Check and toggle selection
+        var selectedItemIndex = selectedItems.findIndex(item => item.id === postId);
+        if (selectedItemIndex > -1) {
+            selectedItems.splice(selectedItemIndex, 1); // Remove item if already selected
+            $(this).removeClass('selected');
+        } else {
+            selectedItems.push({id: postId, title: selectedTitle}); // Add new item to the selection
+            $(this).addClass('selected');
+        }
 
-            // Append selected items to grid on button click
-            $('#add-item').on('click', function() {
-                selectedItems.forEach(function(item) {
-                    var gridItemHTML = '<div class="grid-item" data-id="' + item.id + '">' +
-                        '<div class="image-container" style="display:flex; align-items:center; justify-content:center;">' +
-                        '<span style="font-size:10px; color:#666;">Salva per anteprima</span>' +
-                        '</div>' +
-                        '<select class="item-alignment" name="item_alignment[' + item.id + ']">' +
-                        '<option value="alto">Alto</option><option value="basso">Basso</option>' +
-                        '<option value="sinistra">Sinistra</option><option value="destra">Destra</option>' +
-                        '</select>' +
-                        '<div style="color: deeppink;">Foto</div>' +
-                        '<button type="button" class="remove-item">Remove</button>' + 
-                        '</div>';
+        // Display the selected items
+        var displayText = selectedItems.map(function(item) {
+            return item.title;
+        }).join(', ');
+        $('#add-prj-item .dropdown-toggle').text(displayText || 'Seleziona un post');
+    });
 
-                    $list.append(gridItemHTML);
-                });
+    // Append selected items to grid on button click
+    $('#add-item').on('click', function() {
+        selectedItems.forEach(function(item) {
+            var gridItemHTML = '<div class="grid-item" data-id="' + item.id + '">' +
+                '<button type="button" class="remove-item">Remove</button>' +
+                '<p>' + item.title + '</p></div>';
 
-                // Update the hidden input field
-                updateField();
-
-                // Clear selected items after adding
-                selectedItems = [];
-                $('#add-prj-item .dropdown-toggle').text('Seleziona foto');
-                $('#add-prj-item li.dropdown-item').removeClass('selected').hide();
-                $('#add-prj-item').removeClass('is-open');
-            });
-
-            // Close dropdown when clicking outside
-            $(document).on('click', function(event) {
-                if (!$(event.target).closest('#add-prj-item').length) {
-                    $('#add-prj-item li.dropdown-item').hide();
-                    $('#add-prj-item').removeClass('is-open');
-                }
-            });
+            $('#prj-items-list').append(gridItemHTML);
         });
+
+        // Update the hidden input field
+        updateField();
+
+        // Clear selected items after adding
+        selectedItems = [];
+        $('#add-prj-item .dropdown-toggle').text('Seleziona un post');
+        $('#add-prj-item li').removeClass('selected').hide();
+    });
+
+    // Function to update the hidden field with the current IDs
+    function updateField() {
+        var ids = [];
+        $('#prj-items-list .grid-item').each(function() {
+            ids.push($(this).data('id'));
+        });
+        $('#prj_items_field').val(ids.join(','));
+    }
+
+    // Close dropdown when clicking outside
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('#add-prj-item').length) {
+            $('#add-prj-item li').not('.dropdown-toggle').hide();
+        }
+    });
+});
         
         jQuery(document).ready(function($) {
             $('#custom_media_upload').click(function(e) {
@@ -534,6 +348,7 @@ function prj_admin_scripts() {
                 mediaUploader.open();
             });
         });
+    });
     </script>
     <?php
 }

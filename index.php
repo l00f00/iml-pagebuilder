@@ -20,24 +20,31 @@ require_once IML_PLUGIN_DIR . 'includes/cpt-registrations.php';
 // Include admin cleanup and settings
 require_once IML_PLUGIN_DIR . 'includes/admin-cleanup.php';
 
-// Include Portfolio Meta Box
-require_once IML_PLUGIN_DIR . 'includes/meta-box-portfolio.php';
-
-// Include Homepage Meta Box
-require_once IML_PLUGIN_DIR . 'includes/meta-box-homepage.php';
-
-// Include Project Meta Box
-require_once IML_PLUGIN_DIR . 'includes/meta-box-project.php';
-
 // Include Attachment Custom Fields
 require_once IML_PLUGIN_DIR . 'includes/attachment-fields.php';
 
 // Include AJAX Functions
 require_once IML_PLUGIN_DIR . 'includes/ajax-functions.php';
 
-// Include Shortcodes
-require_once IML_PLUGIN_DIR . 'includes/shortcodes.php';
-require_once IML_PLUGIN_DIR . 'includes/shortcode-project-single.php';
+// --- NEW STRUCTURE INCLUDES ---
 
-// Include Frontend Logic
+// Project
+require_once IML_PLUGIN_DIR . 'includes/post-types/project/builder.php';
+require_once IML_PLUGIN_DIR . 'includes/post-types/project/frontend.php';
+
+// Portfolio
+require_once IML_PLUGIN_DIR . 'includes/post-types/portfolio/builder.php';
+require_once IML_PLUGIN_DIR . 'includes/post-types/portfolio/frontend.php';
+
+// Homepage
+require_once IML_PLUGIN_DIR . 'includes/post-types/homepage/builder.php';
+require_once IML_PLUGIN_DIR . 'includes/post-types/homepage/frontend.php';
+
+// Attachment
+require_once IML_PLUGIN_DIR . 'includes/post-types/attachment/frontend.php';
+
+// Archive
+require_once IML_PLUGIN_DIR . 'includes/post-types/archive/frontend.php';
+
+// Include Frontend Logic (Enqueues, Redirects)
 require_once IML_PLUGIN_DIR . 'includes/frontend-logic.php';

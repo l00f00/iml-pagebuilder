@@ -1,0 +1,193 @@
+/* --- Styles for Attachment Single (Foto Content) --- */
+#code_block-6-243{
+  width:-webkit-fill-available;
+}
+.foto-content {
+  display: flex;
+  flex-wrap: wrap;
+  height: 100%; /* Minimum height to fill the screen */
+  padding-top:24px;
+}
+.nav-prev-next {
+    display: flex;
+    justify-content: space-between;
+    gap:5px;
+    width: 100%; /* Assicura che i pulsanti occupino tutta la larghezza del container */
+    max-width: 300px; /* Imposta una larghezza massima per i pulsanti */
+    margin-bottom:5px;
+}
+.nav-prev a:hover,.nav-ne a:hover {
+    color: black;
+    background-color: white;
+}
+.nav-prev a,.nav-ne a {
+    color: white;
+    background-color: black;
+}
+
+.back{
+  color: white;
+  background-color: black;
+}
+.back:hover{
+  color: black;
+  background-color: white;
+}
+
+.left-column {
+  width: 35%; /* Set each column to take up half the screen's width */
+  max-height:inherit;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-evenly; Distributes space between items */
+  height:inherit;
+}
+.left-column .left-column-top{
+  /*height:80%;*/
+  /*height:100%;*/
+  /*didascalia a tutta*/
+  flex: 1;
+  overflow-y: auto;
+}
+
+ .left-column .left-column-bottom{
+  height:15%;
+   display:flex;
+   flex-direction: row;
+    align-content: flex-end;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+.left-column .left-column-bottom {
+    height: 15%;
+    display: flex;
+    flex-direction: row;
+    align-content: flex-end;
+    justify-content: flex-start;
+    align-items: flex-end;
+    /*position: fixed;*/
+    bottom: 6px;
+   /*  mix-blend-mode:exclusion;*/
+}
+  .foto-navigation > * {
+   /*  mix-blend-mode:exclusion;*/
+  }
+
+.left-column .left-column-top:first-child {
+  padding: 41px 0 28px 0;
+}
+/* 
+.left-column .left-column-top{
+  padding: 28px 0 28px 0;
+}
+.left-column .left-column-top > *{
+  padding: 28px 0 28px 0;
+}
+*/
+.left-column .left-column-top > .foto-description {
+  padding: 28px 0 28px 0;
+  /*text-indent: 24px;*/
+}
+
+
+.categories-tags, .year-title {
+  margin: 0px;
+}
+
+.categories-tags {
+  align-self: flex-start;
+  display:flex;
+}
+
+.categories-tags > ul {
+    margin: 0;
+    padding: 0;
+    background: white;
+}
+
+.categories-tags > ul > li {
+  z-index:9999;
+  color: white; /* White text */
+  background: black;
+  margin:0;
+  padding:0;
+  display:block;
+  max-width: 100%;
+}
+
+.right-column {
+  width: 65%; /* Set each column to take up half the screen's width */
+  height:inherit;
+}
+
+/* Adjust the image container within the right column */
+.right-column .fotoContainer {
+  width: 100%;
+  /*height: calc( 100% - 1em );*/
+  height: 100%;
+  display:block;
+}
+
+/* Responsive styles */ 
+@media (max-width: 992px) { 
+  .fotoContainer img { 
+    max-width: 100%; /* Full width on mobile */ 
+  } 
+  .foto-content { 
+    display: flex; 
+    flex-direction:column; 
+    flex-wrap: nowrap; 
+    height: 100%!important; 
+  } 
+
+    .left-column, .right-column { 
+      width: 100%; /* Each column takes full width on smaller screens */ 
+    } 
+    .left-column .left-column-top > *{ 
+    padding: 0px 0 0px 0; 
+  } 
+  .left-column .left-column-top{ 
+    padding: 0px 0 0px 0; 
+  } 
+  
+  .left-column .left-column-top > .foto-description { 
+    padding: 28px 0 28px 0; 
+    text-indent: 24px; 
+  } 
+  .right-column { 
+    order: -1; /* This will move the image above the text on mobile */ 
+  } 
+
+  .fotoContainer { 
+    width: 100%; 
+  } 
+  .left-column .left-column-bottom { 
+    height: 15%; 
+    display: flex; 
+    flex-direction: row; 
+    align-content: flex-end; 
+    justify-content: flex-start; 
+    align-items: flex-end; 
+    /*position: fixed;*/ 
+    bottom: 6px; 
+    /*mix-blend-mode:exclusion;*/ 
+} 
+.back{ 
+  color: white; 
+  background-color: black; 
+} 
+.back:hover{ 
+  color: black; 
+  background-color: white; 
+} 
+
+} 
+.absolute-plus-icon { 
+    font-size: 28px; 
+    color: white; 
+    font-weight: bold; 
+    mix-blend-mode: exclusion; /* Effetto "escludi" */ 
+    /* text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);  Aggiungi ombra per visibilità */ 
+    pointer-events: none; /* Evita interazione con l'icona */ 
+}

@@ -1,0 +1,145 @@
+#portfolio-items-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+#add-item {
+    margin: 20px 0;
+    background-color: #2271b1;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-weight: 600;
+}
+#add-item:hover { background-color: #135e96; }
+
+.grid-item {
+    flex: 0 1 calc(33.333% - 10px);
+    box-sizing: border-box;
+    position: relative;
+    border: 1px solid #ddd;
+    padding: 5px;
+    aspect-ratio: 1 / 1;
+}
+.grid-item img {
+    max-width: 100%;
+    height: auto;
+}
+.grid-item .remove-item {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff6d6d;
+    border: none;
+    border-radius: 15px;
+    color: white;
+    cursor: pointer;
+}
+.ui-state-highlight {
+    height: 150px;
+    background-color: #fafafa;
+    border: 1px dashed #ccc;
+}
+.portfolio-dropdown {
+list-style: none;
+padding: 0;
+margin: 0;
+border: 1px solid lightgray;
+position: relative; /* Parent container for absolute positioning */
+width: auto; /* Adjust width as needed */
+cursor: pointer;
+}
+
+.portfolio-dropdown .dropdown-toggle {
+padding: 5px 10px;
+background-color: #fff;
+position: relative;
+}
+
+.portfolio-dropdown .dropdown-toggle:after {
+content: '';
+position: absolute;
+right: 10px;
+top: 50%;
+border-width: 5px;
+border-style: solid;
+border-color: #000 transparent transparent transparent;
+transform: translateY(-50%);
+}
+
+.portfolio-dropdown li {
+padding: 5px 10px;
+background-color: #fff;
+border-top: 1px solid lightgray;
+display: none; /* Initially hide all items */
+position: relative; /* Absolutely position each item */
+width: 100%; /* Match the width of the parent container */
+box-sizing: border-box; /* Include padding and borders in the width */
+z-index: 11; /* Ensure it's above other content */
+}
+
+.portfolio-dropdown li:first-child {
+display: block; /* Always show the toggle item */
+position: relative; /* Position this item relative to the dropdown */
+z-index: auto; /* Reset z-index for the toggle item */
+}
+.portfolio-dropdown li:hover {
+background-color: #f2f2f2;
+}
+
+.portfolio-dropdown img {
+vertical-align: middle;
+margin-right: 10px;
+}
+/* Style for the image wrapper */
+.image-container {
+display: flex; /* Use flexbox for alignment */
+/* width:640px;
+height:640px;*/
+max-width:100%;
+height: -webkit-fill-available;
+}
+.image-container img{
+display:flex;
+max-width: 100%;
+max-height:100%;  
+object-fit:contain;/*not sure*/
+}
+
+/* Now, we align the image within the image wrapper */
+.fotoContainer.destra .image-container {
+justify-content: flex-end; /* Align image to the right */
+width: -webkit-fill-available;
+}
+.fotoContainer.destra .image-container img{
+height: 100%;
+width: auto;
+}
+
+.fotoContainer.sinistra .image-container {
+justify-content: flex-start; /* Align image to the left */
+}
+.fotoContainer.sinistra .image-container img {
+height: 100%;
+width: auto;
+}
+
+.fotoContainer.alto .image-container {
+align-items: flex-start; /* Align image to the top */
+}
+
+.fotoContainer.alto .image-container img{
+width: 100%;
+height: auto;
+object-fit:contain;
+}
+
+.fotoContainer.basso .image-container {
+align-items: flex-end; /* Align image to the bottom */
+}
+.fotoContainer.basso .image-container img {
+width: 100%;
+height: auto;
+}

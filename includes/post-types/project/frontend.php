@@ -1,0 +1,224 @@
+<?php
+/**
+ * Shortcode: [iml_project_single]
+ * Handles the single project display with switchable layouts (1 Column / 3 Columns).
+ */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+add_shortcode('iml_project_single', 'iml_render_project_single');
+
+function iml_render_project_single($atts) {
+    // Enqueue styles locally for this shortcode
+    wp_enqueue_style('iml-project-frontend-style', IML_PLUGIN_URL . 'includes/post-types/project/frontend-style.css', array(), '1.0');
+
+    ob_start();
+
+    // --- SETUP & DATA RETRIEVAL ---
+    $post_id = get_the_ID(); 
+    $description = rwmb_meta( 'descrizione_progetto', '', $post_id ); 
+    $year = rwmb_meta( 'anno', '', $post_id ); 
+    $items = get_post_meta($post_id, 'prj_items', true); 
+    
+    // Retrieve the post thumbnail
+    $thumbnail_id = get_post_thumbnail_id($post_id); 
+    $has_single_page = get_post_meta($thumbnail_id, 'has_single_page', true); 
+    $thumbnail_url = $has_single_page ? get_permalink($thumbnail_id) : wp_get_attachment_image_url($thumbnail_id, 'full'); 
+    $lightbox_attr = $has_single_page ? '' : 'data-lightbox="gallery"'; 
+    $featured_image_url = wp_get_attachment_image_url($thumbnail_id, 'full'); 
+    
+    // Conditional check for space and layout
+    $space = rwmb_meta( 'abilitaSpazio' ); 
+    $spaceVert = rwmb_meta( 'abilitaSpazioVert' ); 
+    $featuredImageSpacer = rwmb_meta( 'featuredImageSpacer' ) ?: '2em'; 
+    
+    // Determine Layout: 3 Columns if 'abilita3colonne' is set to 1 (true)
+    $abilita3colonne = rwmb_meta('abilita3colonne', '', $post_id); 
+    $layout_3_col = !empty($abilita3colonne) && $abilita3colonne == 1;
+    $layout_class = $layout_3_col ? 'layout-3-col' : 'layout-1-col';
+
+    // Check cover image orientation
+    $img_meta = wp_get_attachment_metadata($thumbnail_id);
+    $orientation_class = 'cover-horizontal'; // Default
+    if ($img_meta && isset($img_meta['width']) && isset($img_meta['height'])) {
+        if ($img_meta['height'] > $img_meta['width']) {
+            $orientation_class = 'cover-vertical';
+        }
+    }
+
+    // Navigation URLs
+    $prev_post = get_adjacent_post(false, '', true);
+    $next_post = get_adjacent_post(false, '', false);
+    $prev_post_url = $prev_post ? get_permalink($prev_post->ID) : null;
+    $next_post_url = $next_post ? get_permalink($next_post->ID) : null;
+    
+    // --- START OUTPUT ---
+    ?>
+
+    <div class="progetto-content <?php echo esc_attr($layout_class); ?>"> 
+        <div class="left-column-progetto <?php echo esc_attr($orientation_class); ?>"> 
+          <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
+            <?php echo get_the_post_thumbnail($post_id, 'full'); ?></a> 
+          <div class="left-column-bottom"> 
+                <nav class="foto-navigation"> 
+                        <?php 
+                        if (isset($prev_post_url)) { 
+                        echo '<div class="nav-previous"><a href="' . esc_url($prev_post_url) . '">Previous</a></div>'; 
+                        } 
+                        if (isset($next_post_url)) { 
+                        echo '<div class="nav-next"><a href="' . esc_url($next_post_url) . '">Next</a></div>'; 
+                        } 
+                        ?> 
+                        <?php 
+                $parent_post_id = wp_get_post_parent_id($post_id); 
+                if ($parent_post_id != 0) { // Check if there is a parent post 
+                $parent_post_url = get_permalink($parent_post_id); // Get the permalink of the parent post 
+                echo '<a class="back" href="' . esc_url($parent_post_url) . '">Back</a>'; // Create the link to the parent post 
+                } else { 
+                    echo '<a class="back" href="javascript:history.back()">Back</a>'; // Fallback to javascript back if no parent post 
+                } 
+                ?> 
+                    </nav> 
+          </div> 
+        </div> 
+        <div class="right-column-progetto"> 
+          <div class="right-column-progetto-top"> 
+            <h1 class="progetto-title"><?php echo get_the_title( $post_id ); ?></h1> 
+            <div class="progetto-year"><?php echo esc_html( $year ); ?></div> 
+            <div class="progetto-description"><?php echo do_shortcode( wpautop( $description ) ); ?> </div> 
+          </div> 
+            <div class="related-fotos gallery"> 
+    <?php 
+    $hiddenImages = [];
+    if (is_array($items)) { 
+        foreach ($items as $foto_id) { 
+            // Get the alignment for this item 
+            $alignment = get_post_meta($foto_id, 'prj_item_alignment', true); 
+            // Check if the item should link to a single page 
+            $single_page_true = get_post_meta($foto_id, 'has_single_page', true); 
+            // Get the full-size image URL and the large thumbnail URL 
+            $image_url = wp_get_attachment_image_url($foto_id, 'full'); // Changed from full URL to large size
+            $thumbnail = wp_get_attachment_image_url($foto_id, 'full'); 
+            // Determine the link URL and whether to use lightbox 
+            $link_url = $single_page_true ? get_attachment_link($foto_id) : esc_url($image_url); 
+            // $lightbox_attr logic differs slightly in original code between layout types, but mostly consistent
+            // In layout 1: $lightbox_attr = $single_page_true ? '' : 'data-lightbox="gallery"';
+            // In layout 3: $lightbox_attr = $single_page_true ? 'data-single="single-page-true"' : 'data-lightbox="gallery"';
+            // We'll use the layout 3 logic as it's more comprehensive
+            $lightbox_attr = $single_page_true ? 'data-single="single-page-true"' : 'data-lightbox="gallery"'; 
+            
+            $foto_title = get_the_title($foto_id);
+    
+            // if single page true add image to hiddenImages so we can show it in the lightbox anyway 
+            if ($single_page_true) { 
+                $hiddenImages[] = $image_url; 
+            } 
+    
+            ?> 
+            <a class="related-foto-item" href="<?php echo $link_url; ?>" style="color:black;" <?php echo $lightbox_attr; ?>> 
+                <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
+                    <div class="info-overlay">
+                        <div class="year-title">
+                            <span class="title"><?php echo esc_html($foto_title); ?></span>
+                        </div>
+                    </div>
+                    <div class="image-wrapper"> 
+                        <img src="<?php echo esc_url($thumbnail); ?>" alt=""> 
+                    </div> 
+                </div> 
+            </a> 
+            <?php 
+        } 
+    } 
+    ?> 
+        </div> 
+        <div id="hidden-images" style="display: none;"> 
+        <?php 
+        foreach ($hiddenImages as $path) { 
+            echo '<a href="' . esc_url($path) . '" data-lightbox="gallery"><img src="' . esc_url($path) . '" alt="Gallery Image"></a>'; 
+        } 
+        ?> 
+      </div> 
+    </div> 
+    </div>
+    <script> 
+    jQuery(document).ready(function($) { 
+        // Utilizza SimpleLightbox con jQuery su tutti gli elementi che hanno data-lightbox="gallery" 
+        var gallery = jQuery('a[data-lightbox="gallery"]').simpleLightbox({ 
+            className: 'simple-lightbox', // Adds a custom class to the lightbox wrapper 
+            widthRatio: 1, // Sets the maximum width of the image to 80% of the screen width 
+            heightRatio: 1, // Sets the maximum height of the image to 90% of the screen height 
+            scaleImageToRatio: true, // Prevents scaling the image larger than its original size, 
+            animationSpeed: 005, 
+            fadeSpeed: 5, 
+            animationSlide: false, 
+            enableKeyboard: true, 
+            preloading: true, 
+            closeText: '<div class="divclose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 39" width="44" height="39"><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(45 16 16)" /><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(-45 16 16)" /></svg></div>', 
+            navText: ['<','>'], 
+            spinner: <?php echo $layout_3_col ? 'true' : 'false'; ?>, 
+            overlay: false, 
+            docClose: false, 
+        }); 
+
+        // Force hide lightbox wrapper on close
+        gallery.on('close.simplelightbox', function () {
+            setTimeout(function() {
+                jQuery('.sl-wrapper').fadeOut(200, function(){
+                    jQuery(this).hide();
+                });
+            }, 100); // Small delay to allow library's own close animation to start
+        });
+
+        console.log('Progetto caricato: <?php echo $layout_3_col ? "3 colonne" : "1 colonna"; ?>');
+
+        // Read More Functionality
+        var $desc = jQuery('.progetto-description');
+        var maxHeight = jQuery(window).height() * 0.6; // 60% of viewport height
+
+        if ($desc.length && $desc.height() > maxHeight) {
+            $desc.addClass('truncated');
+            jQuery('<div class="read-more-btn">Read More</div>').insertAfter($desc);
+            
+            jQuery('.read-more-btn').on('click', function() {
+                if ($desc.hasClass('truncated')) {
+                    $desc.removeClass('truncated');
+                    jQuery(this).text('Read Less');
+                } else {
+                    $desc.addClass('truncated');
+                    jQuery(this).text('Read More');
+                }
+            });
+        }
+    });
+    </script> 
+
+    <?php 
+    // Conditional check for dynamic styles
+    if (!isset($featuredImageSpacer)){ 
+      $featuredImageSpacer = '2em'; 
+    } 
+    // Check if both conditions are met: 
+    if ( $space && $spaceVert ) { 
+        echo '<style>.related-fotos {row-gap: 2em; column-gap: 2em;}</style>'; 
+        echo '<style>.progetto-content {padding-bottom: '. $featuredImageSpacer .';}</style>'; 
+    } elseif ( $space ) { // Only $space is set 
+        echo '<style>.related-fotos {row-gap: 2em;}</style>'; 
+        echo '<style>.progetto-content {padding-bottom: '. $featuredImageSpacer .';}</style>'; 
+    } elseif ( $spaceVert ) { // Only $spaceVert is set 
+        echo '<style>.related-fotos {column-gap: 2em;}</style>'; 
+        echo '<style>.progetto-content {padding-bottom: '. $featuredImageSpacer .';}</style>'; 
+    } elseif ( $featuredImageSpacer ) { 
+        echo '<style>.progetto-content {padding-bottom: '. $featuredImageSpacer .';}</style>'; 
+    } 
+    ?>
+    <style>.gallery > .related-foto-item:hover{ 
+        /*mix-blend-mode: exclusion; /* Applica il metodo di fusione */ 
+    } 
+    </style>
+    <?php
+
+    return ob_get_clean();
+}
