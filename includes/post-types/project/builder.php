@@ -27,7 +27,7 @@ function prj_meta_box_callback($post) {
     // List of selectable posts
     $selectable_posts = new WP_Query([
         'post_type'      => ['attachment'],
-        'posts_per_page' => 100, // Limit to 100 recent items to avoid crashing the browser/server
+        'posts_per_page' => -1, // No limit
         'post_status'    => 'inherit', // Attachments usually have 'inherit' status
         'post_mime_type' => 'image', // Only images
         'orderby'        => 'date',
@@ -53,8 +53,8 @@ function prj_meta_box_callback($post) {
         // Remove inline display:none so CSS can control visibility via classes
         echo '<li value="' . esc_attr($post_id) . '">';
         if ($thumbnail_url) {
-            // Remove inline styles, let CSS handle it
-            echo '<img src="' . esc_url($thumbnail_url) . '" alt="">';
+            // Use lazy loading to prevent connection overload
+            echo '<img src="" data-src="' . esc_url($thumbnail_url) . '" class="lazy-thumb" alt="">';
         }
         echo get_the_title();
         echo ' - ';
@@ -257,7 +257,21 @@ function prj_enqueue_admin_styles() {
                 // Toggle dropdown on click
                 $('#add-prj-item').on('click', '.dropdown-toggle', function(event) {
                     // Toggle class 'active' on parent ul to show/hide items via CSS
-                    $(this).parent().toggleClass('active');
+                    var $parent = $(this).parent();
+                    $parent.toggleClass('active');
+                    
+                    // Trigger lazy loading when dropdown opens
+                    if ($parent.hasClass('active')) {
+                         // Load images that are in viewport or just load all of them once opened
+                         // Simple approach: load all when opened to avoid complexity with scroll detection inside overflow div
+                         $('.lazy-thumb').each(function() {
+                             var $img = $(this);
+                             if ($img.attr('src') === '') {
+                                 $img.attr('src', $img.data('src'));
+                             }
+                         });
+                    }
+                    
                     event.stopPropagation(); 
                 });
     
