@@ -150,6 +150,36 @@
     border-radius: 3px;
 }
 
+/* Controls Overlay in Grid Item */
+.item-controls-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 5px;
+    box-sizing: border-box;
+    z-index: 5;
+    border-top: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.item-controls-overlay select {
+    width: 100%;
+    font-size: 11px;
+    margin-bottom: 2px;
+    height: 24px;
+    min-height: 24px;
+}
+
+.item-controls-overlay span, 
+.item-controls-overlay div {
+    font-size: 10px;
+    line-height: 1.2;
+}
+
 /* Style for the image wrapper */
 .image-container {
 display: flex; /* Use flexbox for alignment */

@@ -105,6 +105,10 @@ function portfolio_render_grid_item($post_id) {
         $output .= get_the_post_thumbnail($post_id, 'medium');
     }
     $output .= '</div>'; // End of image container
+    
+    // Controls Overlay
+    $output .= '<div class="item-controls-overlay">';
+    
     // Aggiunta di una select per l'allineamento
     $output .= '<select class="item-alignment" name="item_alignment[' . esc_attr($post_id) . ']">';
     if ($image_orientation === 'horizontal') {
@@ -115,11 +119,16 @@ function portfolio_render_grid_item($post_id) {
         $output .= '<option value="destra"' . selected($alignment, 'destra', false) . '>Destra</option>';
     }
     $output .= '</select>';
+    
     if ($post_type === 'attachment' && $has_single) {
         $output .= '<span style="color: green; display: block; font-size: 10px; margin-top: 2px;">&#10004; Pagina Singola</span>';
     }
+    
+    $output .= '<div style="color: deeppink;">'. $post_type .'</div>';
+    
+    $output .= '</div>'; // End overlay
+
     $output .= '<button type="button" class="remove-item">Remove</button>';
-    $output .= '<div style="color: deeppink;">  '. $post_type .'</div>';
     $output .= '</div>';
 
     return $output;
@@ -365,12 +374,29 @@ function portfolio_admin_scripts() {
                             '<button type="button" class="remove-item">Remove</button>' +
                             '<p>' + item.title + '</p>';
                         
+                        // We assume horizontal orientation for new items as we don't have metadata readily available in JS without an AJAX call
+                        // But we can default to horizontal options
+                        
+                        gridItemHTML += '<div class="item-controls-overlay">';
+                        gridItemHTML += '<select class="item-alignment" name="item_alignment[' + item.id + ']">';
+                        gridItemHTML += '<option value="alto">Alto</option>';
+                        gridItemHTML += '<option value="basso">Basso</option>';
+                        gridItemHTML += '</select>';
+
                         // Check if the item in dropdown had the single page indicator
-                        // We can check the DOM of the selected item in the dropdown
                         var $dropdownItem = $('#add-portfolio-item li[value="' + item.id + '"]');
                         if ($dropdownItem.find('span:contains("Pagina Singola")').length > 0) {
                              gridItemHTML += '<span style="color: green; font-size: 10px; display: block; margin-top: 2px;">&#10004; Pagina Singola</span>';
                         }
+                        
+                        // Try to get type from dropdown class
+                        var typeClass = $dropdownItem.find('.item-type').attr('class') || '';
+                        var typeLabel = $dropdownItem.find('.item-type').text() || '';
+                        if(typeLabel) {
+                             gridItemHTML += '<div style="color: deeppink;">' + typeLabel + '</div>';
+                        }
+
+                        gridItemHTML += '</div>'; // End overlay
                             
                         gridItemHTML += '</div>';
 
