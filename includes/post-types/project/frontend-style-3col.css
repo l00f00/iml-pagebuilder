@@ -26,15 +26,14 @@
     top:0; 
     left:0; 
     object-fit: cover; 
-     object-position: left center; 
+    object-position: left center; 
     /*object-fit: cover; 
     object-position: left center;*/ 
     /*width:auto;*test test test*/ 
     position: relative; 
-    width: -webkit-fill-available; 
-    position: relative; 
+    width: 100%; /* Changed from -webkit-fill-available to ensure full width */
     box-sizing: border-box; 
-    display: inline; 
+    display: block; /* Changed from inline to block */
 } 
 .left-column-progetto .left-column-top > *{ 
   padding: 28px 0 28px 0; 
