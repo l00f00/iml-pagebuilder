@@ -52,7 +52,8 @@ function homepage_meta_box_callback($post) {
             }
             echo '<div class="item-info">';
             echo '<span class="item-title">' . get_the_title() . '</span>';
-            echo '<span class="item-type">' . ($post_type === 'attachment' ? 'Foto' : $post_type) . '</span>';
+            $type_label = ($post_type === 'attachment' ? 'Foto' : $post_type);
+            echo '<span class="item-type type-' . esc_attr($post_type) . '">' . $type_label . '</span>';
             echo '</div>';
             echo '</div>';
         }

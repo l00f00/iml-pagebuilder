@@ -44,12 +44,15 @@
 }
 /* Dropdown improvements */
 .prj-dropdown {
-    max-height: 400px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid lightgray;
+    position: relative; /* Parent container for absolute positioning */
+    width: auto; /* Adjust width as needed */
+    cursor: pointer;
+    max-height: 750px; /* Increased to show ~3 rows */
     overflow-y: auto;
-    display: flex;
-    flex-wrap: wrap;
-    background: #fff;
-    z-index: 100;
 }
 
 .prj-dropdown li {

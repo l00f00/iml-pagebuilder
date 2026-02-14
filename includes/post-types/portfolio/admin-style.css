@@ -60,7 +60,7 @@
 }
 
 .portfolio-dropdown {
-    max-height: 400px;
+    max-height: 750px; /* Increased to show ~3 rows */
     overflow-y: auto;
     display: flex;
     flex-wrap: wrap;
