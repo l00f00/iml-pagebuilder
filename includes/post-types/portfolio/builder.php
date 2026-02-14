@@ -87,6 +87,7 @@ function portfolio_meta_box_callback($post) {
 function portfolio_render_grid_item($post_id) {
     $post_type = get_post_type($post_id);
     $alignment = get_post_meta($post_id, 'portfolio_item_alignment', true) ?: 'square';
+    $has_single = get_post_meta($post_id, 'has_single_page', true);
     $image_orientation = 'horizontal'; // Default orientation
     $image_id = ('attachment' === $post_type) ? $post_id : get_post_thumbnail_id($post_id);
     if ($image_id) {
