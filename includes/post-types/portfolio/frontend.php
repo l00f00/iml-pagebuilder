@@ -29,8 +29,24 @@ function iml_render_portfolio_grid($atts) {
         if ($post_obj) {
             $post_type = get_post_type($portfolio_single_item_id);
             setup_postdata($post_obj);
-
-            if ($post_type === 'progetto' || $post_type === 'serie') {
+            if ($post_type === 'portfolio') {
+                $categories = get_the_terms( $portfolio_single_item_id, 'category' );
+                $tags = get_the_terms( $portfolio_single_item_id, 'post_tag' );
+                $year = rwmb_meta('anno', '', $portfolio_single_item_id);
+                $title = get_the_title($portfolio_single_item_id);
+                $the_thumb = get_the_post_thumbnail($portfolio_single_item_id, 'full');
+                
+                echo '<a href="' . esc_url(get_permalink($portfolio_single_item_id)) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($portfolio_single_item_id) . '"> 
+                      <div class="info-overlay">  
+                        <div class="year-title"> 
+                          <span class="title">' . esc_html($title) . '</span> 
+                        </div> 
+                      </div> 
+                      <div class="image-wrapper">' . $the_thumb . '</div> 
+                      </a>';
+            
+            }
+            elseif ($post_type === 'progetto' || $post_type === 'serie') {
                 $categories = get_the_terms( $portfolio_single_item_id, 'category' );
                 $tags = get_the_terms( $portfolio_single_item_id, 'post_tag' );
                 $year = rwmb_meta('anno', '', $portfolio_single_item_id);
