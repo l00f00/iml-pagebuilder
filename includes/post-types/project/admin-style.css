@@ -86,8 +86,8 @@
 .prj-dropdown img {
     display: block;
     margin: 0 auto 5px;
-    width: 50px !important;
-    height: 50px !important;
+    width: 150px !important; /* Increased from 50px */
+    height: 150px !important; /* Increased from 50px */
     object-fit: cover;
 }
 
