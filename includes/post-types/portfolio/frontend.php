@@ -54,8 +54,7 @@ function iml_render_portfolio_grid($atts) {
                 $the_thumb = get_the_post_thumbnail($portfolio_single_item_id, 'full');
                 
                 echo '<a href="' . esc_url(get_permalink($portfolio_single_item_id)) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($portfolio_single_item_id) . '"> 
-                      <div class="info-overlay"> 
-                        <div class="categories-tags">';
+                      <div class="info-overlay">';
                 echo '<ul>';
                 // Categories loop (commented out in original, can be uncommented if needed)
                 /*
@@ -98,11 +97,11 @@ function iml_render_portfolio_grid($atts) {
                 
                 // Categories and Tags - Only show for non-attachments
                 if ($post_type !== 'attachment') {
-                    echo '<div class="categories-tags">';
-                    echo '<ul>';
-                    // Tags and cats logic
-                    echo '</ul>';
-                    echo '</div>';
+                    // echo '<div class="categories-tags">';
+                    // echo '<ul>';
+                    // // Tags and cats logic
+                    // echo '</ul>';
+                    // echo '</div>';
                 }
                 
                 echo '<div class="year-title">';
@@ -111,9 +110,9 @@ function iml_render_portfolio_grid($atts) {
                 }
                 echo '<span class="title">' . esc_html($title) . '</span>';
                 
-                if ($single_page_true) {
-                    echo '<span class="single-page-icon" style="margin-left:5px; font-size:12px;">❐</span>';
-                }
+                // if ($single_page_true) {
+                //     echo '<span class="single-page-icon" style="margin-left:5px; font-size:12px;">❐</span>';
+                // }
                 
                 echo '</div>';
                 echo '</div>';
