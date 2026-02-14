@@ -25,7 +25,10 @@
     height: -webkit-fill-available;
     top:0;
     left:0;
-    /*object-fit: contain;*/
+    object-fit: cover;
+     object-position: left center;
+    /*object-fit: cover;
+    object-position: left center;*/
     /*width:auto;*test test test*/
     position: relative;
     width: -webkit-fill-available;
