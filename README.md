@@ -49,12 +49,16 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 *   [ ] Spazio dal testo presente (Si/No)
 *   [ ] Read More corretto e funzionante (Si/No)
 *   [ ] Spaziature con punta amministratore corrette (Si/No)
+*   [ ] Immagine al click va a singola (Si/No)
+*   [ ] Galleria si chiude bene (Si/No)
 
 **Layout 1 Colonna:**
 *   [ ] Immagine principale corretta (Si/No)
 *   [ ] Spazio dal testo presente (Si/No)
 *   [ ] Read More corretto e funzionante (Si/No)
 *   [ ] Spaziature con punta amministratore corrette (Si/No)
+*   [ ] Immagine al click va a singola (Si/No)
+*   [ ] Galleria si chiude bene (Si/No)
 
 ## Changelog & Status
 
