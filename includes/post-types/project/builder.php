@@ -285,25 +285,27 @@ function prj_enqueue_admin_styles() {
                     if (isLoading) return;
                     
                     isLoading = true;
-                    // Find next batch using a class marker 'loading-started' to be robust
-                    var $imagesToLoad = $('#add-prj-item .lazy-thumb:not(.loading-started)').slice(0, 30);
+                    // Find next batch
+                    var $imagesToLoad = $('#add-prj-item .lazy-thumb:not(.loading-started)').slice(0, 20);
                     
                     if ($imagesToLoad.length > 0) {
-                        console.log('Loading next batch of ' + $imagesToLoad.length + ' images...');
+                        console.log('--- Loading batch of ' + $imagesToLoad.length + ' images ---');
                         
                         var batchLoadedCount = 0;
                         var totalInBatch = $imagesToLoad.length;
                         
-                        // Mark as started immediately to exclude from next selection
+                        // Mark as started
                         $imagesToLoad.addClass('loading-started');
                         
-                        // Safety timeout
+                        // Safety timeout - reduced to 3s to keep things moving
                         var batchTimeout = setTimeout(function() {
                              if (isLoading) {
-                                 console.warn('Batch timeout. Forcing continue.');
+                                 console.warn('Batch timeout (3s). Proceeding to next batch...');
                                  isLoading = false; 
+                                 // Force recursion to keep loading if we are still at the bottom
+                                 triggerNextBatchIfNeeded();
                              }
-                        }, 8000);
+                        }, 3000);
 
                         $imagesToLoad.each(function() {
                             var $img = $(this);
@@ -313,19 +315,21 @@ function prj_enqueue_admin_styles() {
                             
                             $img.on('load', function() {
                                 batchLoadedCount++;
+                                // console.log('Img loaded (' + batchLoadedCount + '/' + totalInBatch + ')');
                                 checkBatchCompletion();
                             });
                             
                             $img.on('error', function() {
-                                if (retryCount < 3) {
+                                if (retryCount < 2) { // Reduce retries to 2
                                     retryCount++;
                                     setTimeout(function() {
                                         var src = $img.data('src');
-                                        $img.attr('src', ''); // Clear to force reload
+                                        $img.attr('src', ''); 
                                         setTimeout(function(){ $img.attr('src', src); }, 50);
-                                    }, 1000 * retryCount);
+                                    }, 500 * retryCount); // Faster retry
                                 } else {
                                     batchLoadedCount++;
+                                    console.warn('Img failed');
                                     checkBatchCompletion();
                                 }
                             });
@@ -342,17 +346,21 @@ function prj_enqueue_admin_styles() {
                                  var totalStarted = $('#add-prj-item .lazy-thumb.loading-started').length;
                                  var totalImages = $('#add-prj-item .lazy-thumb').length;
                                  
-                                 console.log('Progress: ' + totalStarted + ' / ' + totalImages);
+                                 console.log('Batch Done. Total Processed: ' + totalStarted + ' / ' + totalImages);
                                  
                                  if (totalStarted >= totalImages) {
-                                     console.log('ALL IMAGES QUEUED FOR LOADING!');
+                                     console.log('ALL IMAGES QUEUED!');
                                  } else {
-                                     // Check if we need to load more immediately (if screen is not full)
-                                     var $container = $('#add-prj-item');
-                                     if ($container.scrollTop() + $container.innerHeight() >= $container[0].scrollHeight - 600) {
-                                         setTimeout(loadMoreImages, 50);
-                                     }
+                                     triggerNextBatchIfNeeded();
                                  }
+                             }
+                        }
+                        
+                        function triggerNextBatchIfNeeded() {
+                             var $container = $('#add-prj-item');
+                             // Increased threshold to 800px to be very aggressive in preloading
+                             if ($container.scrollTop() + $container.innerHeight() >= $container[0].scrollHeight - 800) {
+                                 setTimeout(loadMoreImages, 50);
                              }
                         }
                         
