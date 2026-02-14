@@ -254,15 +254,19 @@ function prj_admin_scripts() {
 
     // Toggle dropdown on click
     $('#add-prj-item').on('click', '.dropdown-toggle', function(event) {
-        $(this).siblings('li').toggle();
-        event.stopPropagation(); // Prevent this click from being propagated
+        // Toggle class 'active' on parent ul to show/hide items via CSS
+        $(this).parent().toggleClass('active');
+        // Toggle visibility of siblings (the actual list items)
+        // $(this).siblings('li').toggle(); // No longer needed with CSS class approach for grid layout
+        event.stopPropagation(); 
     });
 
     // Handle dropdown item selection
     $('#add-prj-item li:not(.dropdown-toggle)').on('click', function() {
         var postId = $(this).attr('value');
         var selectedTitle = $(this).text();
-
+        // ... rest of logic remains similar but we don't hide immediately to allow multiple selections
+        
         // Check and toggle selection
         var selectedItemIndex = selectedItems.findIndex(item => item.id === postId);
         if (selectedItemIndex > -1) {
@@ -272,12 +276,20 @@ function prj_admin_scripts() {
             selectedItems.push({id: postId, title: selectedTitle}); // Add new item to the selection
             $(this).addClass('selected');
         }
-
-        // Display the selected items
+        
+        // Update toggle text summary
         var displayText = selectedItems.map(function(item) {
-            return item.title;
+             // Simplify title for display
+             return item.title.substring(0, 15) + (item.title.length>15?'...':'');
         }).join(', ');
-        $('#add-prj-item .dropdown-toggle').text(displayText || 'Seleziona un post');
+        $('#add-prj-item .dropdown-toggle').text(displayText || 'Seleziona foto (click to close)');
+    });
+
+    // Close dropdown when clicking outside
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('#add-prj-item').length) {
+            $('#add-prj-item').removeClass('active');
+        }
     });
 
     // Append selected items to grid on button click
@@ -311,7 +323,7 @@ function prj_admin_scripts() {
     // Close dropdown when clicking outside
     $(document).on('click', function(event) {
         if (!$(event.target).closest('#add-prj-item').length) {
-            $('#add-prj-item li').not('.dropdown-toggle').hide();
+            $('#add-prj-item').removeClass('active');
         }
     });
 });
