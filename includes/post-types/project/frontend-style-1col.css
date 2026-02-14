@@ -1,23 +1,14 @@
+
 .progetto-content {
-    display: flex;
-    flex-wrap: wrap;
-    min-height: 99vh;
-    height: 100%; /* Minimum height to fill the screen */
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 99vh;
+  height: 100%; /* Minimum height to fill the screen */
 }
 
-/* Layout specific */
-.layout-3-col .related-fotos {
-    display: grid; /* Using CSS Grid to layout the items */
-    grid-template-columns: repeat(3, 1fr); /* Creates three columns of equal width */
-}
-.layout-1-col .related-fotos {
-    display: block;
-}
-
-/* LEFT COLUMN STYLES - Common */
 .left-column-progetto {
-    width: 65%;
-    max-height:100vh;
+  width: 65%;
+  max-height:100vh;
 }
 .left-column-progetto img {
     max-width: 63%;
@@ -28,12 +19,12 @@
     position:fixed;
     top:0;
     left:0;
-    object-fit: contain;
-    /*background-color:green;*/
-    width:auto;
+  object-fit: contain;
+  /*background-color:green;*/
+  width:auto;
 }
 .left-column-progetto .left-column-top > *{
-    padding: 28px 0 28px 0;
+  padding: 28px 0 28px 0;
 }
 .left-column-bottom {
     height: 15%;
@@ -51,59 +42,55 @@
     /*mix-blend-mode:exclusion;*/
 }
 .foto-navigation {
-    padding-left: 5px;
+ padding-left: 5px;
 }
 
 .left-column-progetto .left-column-top{
-    padding: 28px 0 28px 0;
+  padding: 28px 0 28px 0;
 }
 
-/* RIGHT COLUMN STYLES - Common */
 .right-column-progetto {
-    width: 35%;
-    padding-top:65px;/*era 50px*/
-    padding-right:6px;/*era 0px messo a 6 per leggibilita*/
-    background-color: white; /* Added to prevent image overlap */
-    position: relative;
-    z-index: 10;
+  width: 35%;
+  padding-top:65px;/*era 50 px*/
 }
-.progetto-description {
-    /*text-indent: 1em;*/
-    position: relative;
+.progetto-description{
+  /*text-indent: 1em;*/
 }
 .right-column-progetto-top{
-    padding-bottom:160px;
+  padding-bottom:160px;
 }
 
-/* Grid/List Item Styles */
+.related-fotos{
+  display:block;
+}
+
 .right-column-progetto-top > .related-foto-item{
-    max-width:100%;
+  max-width:100%;
 }
 
 .fotoContainer {
-    max-width:100%;
-    position: relative; /* Ensure relative positioning for overlay */
+  max-width:100%;
 }
 
 /* Style for the image wrapper */
 .image-wrapper {
-    display: flex;
-    max-width:inherit;
-    aspect-ratio: 1 / 1;
-    max-width:100%;
-    width: inherit;
+  display: flex;
+  max-width:inherit;
+  aspect-ratio: 1 / 1;
+  max-width:100%;
+  width: inherit;
 }
 .image-wrapper img{
-    display: flex;
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+  display: flex;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; 
 }
 
 /* Now, we align the image within the image wrapper */
 .fotoContainer.destra .image-wrapper {
-    justify-content: flex-end;
-    width: -webkit-fill-available;
+  justify-content: flex-end;
+  width: -webkit-fill-available;
 }
 .fotoContainer.destra .image-wrapper img{
     height: 100%;
@@ -111,7 +98,7 @@
 }
 
 .fotoContainer.sinistra .image-wrapper {
-    justify-content: flex-start;
+  justify-content: flex-start;
 }
 
 .fotoContainer.sinistra .image-wrapper img {
@@ -120,44 +107,30 @@
 }
 
 .fotoContainer.alto .image-wrapper {
-    align-items: flex-start;
+  align-items: flex-start;
 }
 
 .fotoContainer.alto .image-wrapper img{
     width: 100%;
     height: auto;
-    object-fit:contain;
+  object-fit:contain;
 }
 
 .fotoContainer.basso .image-wrapper {
-    align-items: flex-end; /* Align image to the bottom */
+  align-items: flex-end; /* Align image to the bottom */
 }
 .fotoContainer.basso .image-wrapper img {
-    width: 100%;
-    height: auto;
+  width: 100%;
+  height: auto;
 }
 .back{
-    color: white;
-    background-color: black;
+  color: white;
+  background-color: black;
 }
 .back:hover{
-    color: black;
-    background-color: white;
+  color: black;
+  background-color: white;
 }
-
-/* 3 COL SPECIFIC OVERRIDES from user input */
-.layout-3-col .left-column-progetto img { 
-    /*background-color:green; 
-    max-width: 63%; modificata larghezza massima*/ 
-    max-height:100%; 
-    height: auto; 
-    height: -webkit-fill-available; 
-    top:0; 
-    left:0; 
-    object-fit: contain; 
-    width:auto; 
-} 
-
 /* Mobile styles */
 @media (max-width: 1120px) {
     .left-column-progetto, .right-column-progetto {
@@ -177,23 +150,12 @@
         width: 100%;
     }
 .back{
-    color: white;
-    background-color: black;
+  color: white;
+  background-color: black;
 }
 .back:hover{
-    color: black;
-    background-color: white;
+  color: black;
+  background-color: white;
 }
-}
-/* Responsive adjustments for smaller screens */
-@media (max-width: 768px) {
-    .layout-3-col .related-fotos {
-        grid-template-columns: repeat(2, 1fr); /* Switches to two columns on smaller screens */
-    }
 }
 
-@media (max-width: 480px) {
-    .layout-3-col .related-fotos {
-        grid-template-columns: 1fr; /* Single column layout on very small screens */
-    }
-}
