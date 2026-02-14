@@ -34,6 +34,14 @@
     box-sizing: border-box; 
     display: block; /* Changed from inline to block */
 } 
+.left-column-progetto.is-portrait img {
+    object-fit: contain;
+}
+
+.left-column-progetto.is-landscape img {
+    object-fit: cover;
+}
+
 .left-column-progetto .left-column-top > *{ 
   padding: 28px 0 28px 0; 
 } 

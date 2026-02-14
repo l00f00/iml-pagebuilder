@@ -53,9 +53,22 @@ function iml_render_project_single($atts) {
         $thumbnail_url = $has_single_page ? get_permalink($thumbnail_id) : get_the_post_thumbnail_url($post_id, 'full'); 
         $lightbox_attr = $has_single_page ? '' : 'data-lightbox="gallery"'; 
         $featured_image_url = get_the_post_thumbnail_url($post_id, 'full'); 
+        
+        // Determine image orientation
+        $thumb_meta = wp_get_attachment_metadata($thumbnail_id);
+        $orientation_class = '';
+        if ($thumb_meta) {
+            $width = $thumb_meta['width'];
+            $height = $thumb_meta['height'];
+            if ($width > $height) {
+                $orientation_class = 'is-landscape';
+            } else {
+                $orientation_class = 'is-portrait';
+            }
+        }
         ?> 
         <div class="progetto-content layout-3-col"> 
-            <div class="left-column-progetto"> 
+            <div class="left-column-progetto <?php echo $orientation_class; ?>"> 
             <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
                 <?php echo get_the_post_thumbnail($post_id, 'full'); ?></a> 
             <div class="left-column-bottom"> 
