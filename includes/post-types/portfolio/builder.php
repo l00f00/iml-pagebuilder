@@ -52,7 +52,8 @@ function portfolio_meta_box_callback($post) {
         }
         echo get_the_title();
         echo ' - ';
-        if($post_type === 'attachment'){echo 'Foto';} else {echo $post_type;}
+        $type_label = ($post_type === 'attachment' ? 'Foto' : $post_type);
+        echo '<span class="item-type type-' . esc_attr($post_type) . '">' . $type_label . '</span>';
         echo '</li>';
     }
     }
@@ -104,6 +105,9 @@ function portfolio_render_grid_item($post_id) {
         $output .= '<option value="destra"' . selected($alignment, 'destra', false) . '>Destra</option>';
     }
     $output .= '</select>';
+    if ($post_type === 'attachment' && $has_single) {
+        $output .= '<span style="color: green; display: block; font-size: 10px; margin-top: 2px;">&#10004; Pagina Singola</span>';
+    }
     $output .= '<button type="button" class="remove-item">Remove</button>';
     $output .= '<div style="color: deeppink;">  '. $post_type .'</div>';
     $output .= '</div>';

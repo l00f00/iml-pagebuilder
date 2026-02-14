@@ -126,6 +126,30 @@
     background-color: #cce5ff;
     border-color: #007cba;
 }
+/* Post Type Colors - Match Homepage Style */
+.item-type {
+    display: block; 
+    font-size: 10px; 
+    text-transform: uppercase; 
+    margin-top: 2px;
+    font-weight: bold;
+    color: #666; /* Default */
+}
+
+.item-type.type-progetto {
+    color: #007cba; /* WordPress Blue */
+    background: #e5f5fa;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.item-type.type-serie {
+    color: #46b450; /* Green */
+    background: #ecf7ed;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
 /* Style for the image wrapper */
 .image-container {
 display: flex; /* Use flexbox for alignment */
