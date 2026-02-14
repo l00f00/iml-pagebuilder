@@ -102,6 +102,10 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 *   [v] **Home Intro:** Animazione nome in INTRO — (In attesa file da cartella drive).
 *   [v] **Home Preloading:** Inserimento animazione preloading pagina.
 *   [v] **Fix Dropdown Caricamento:** Risolto problema connessione chiusa nel caricamento immagini builder. Implementato sistema di caricamento concorrente a coda (batch da 30, max 6 connessioni parallele) con barra di progresso e auto-riempimento intelligente. (Si/Done)
+*   [v] **Portfolio Builder Update:**
+    1.  **Salvataggio Allineamento:** Ora l'allineamento degli elementi (es. sinistra/destra per immagini verticali) viene salvato correttamente anche nel meta campo principale `portfolio_items_alignment`, garantendo la persistenza delle scelte e la retrocompatibilità.
+    2.  **Live Preview Allineamento:** Aggiunto script JS che aggiorna visivamente la posizione dell'immagine nella griglia non appena si cambia l'opzione nel menu a tendina (es. da sinistra a destra), senza dover ricaricare la pagina.
+    3.  **Rilevamento Orientamento:** Affinata la logica per determinare se un'immagine è verticale, assicurando il controllo corretto di larghezza e altezza.
 *   [v] Da rivedere **Foto Cover Contain:** Applicare regola: fit orizzontale foto cover progetto  in left column non si deve sovrapporre al testo.
     ```css
     .left-column-progetto a img { 
