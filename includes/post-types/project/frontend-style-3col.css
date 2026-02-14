@@ -25,6 +25,7 @@
     left:0;
     object-fit: contain;
     width:auto;
+    position: relative;
 }
 .left-column-progetto .left-column-top > *{
   padding: 28px 0 28px 0;
