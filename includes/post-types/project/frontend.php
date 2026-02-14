@@ -223,7 +223,7 @@ function iml_render_project_single($atts) {
                 gallery.close();
             }); 
             
-            console.log('Image orientation: <?php echo $orientation_class; ?>');
+            console.log('Feautured image orientation : <?php echo $orientation_class; ?>');
         }); 
         console.log('PROGETTO CARICATO 3 colonne'); 
         </script>
