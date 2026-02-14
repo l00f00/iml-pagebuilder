@@ -103,9 +103,23 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 *   [v] **Home Preloading:** Inserimento animazione preloading pagina.
 *   [v] **Fix Dropdown Caricamento:** Risolto problema connessione chiusa nel caricamento immagini builder. Implementato sistema di caricamento concorrente a coda (batch da 30, max 6 connessioni parallele) con barra di progresso e auto-riempimento intelligente. (Si/Done)
 *   [v] **Portfolio Builder Update:**
-    1.  **Salvataggio Allineamento:** Ora l'allineamento degli elementi (es. sinistra/destra per immagini verticali) viene salvato correttamente anche nel meta campo principale `portfolio_items_alignment`, garantendo la persistenza delle scelte e la retrocompatibilità.
-    2.  **Live Preview Allineamento:** Aggiunto script JS che aggiorna visivamente la posizione dell'immagine nella griglia non appena si cambia l'opzione nel menu a tendina (es. da sinistra a destra), senza dover ricaricare la pagina.
-    3.  **Rilevamento Orientamento:** Affinata la logica per determinare se un'immagine è verticale, assicurando il controllo corretto di larghezza e altezza.
+    1.  **Overlay Controlli Griglia:** Aggiunto un overlay semi-trasparente in basso a sinistra su ogni elemento della griglia. Include:
+        *   Dropdown Allineamento (Alto/Basso o Sinistra/Destra).
+        *   Indicatore "Pagina Singola" (spunta verde) se attivo.
+        *   Etichetta del tipo di post.
+    2.  **Indicatore Pagina Singola:** Implementato anche per Project e Homepage Builder (visualizzazione stato "Pagina Singola" nella griglia).
+    3.  **Salvataggio Allineamento:** Ora l'allineamento degli elementi (es. sinistra/destra per immagini verticali) viene salvato correttamente anche nel meta campo principale `portfolio_items_alignment`, garantendo la persistenza delle scelte e la retrocompatibilità.
+    4.  **Live Preview Allineamento:** Aggiunto script JS che aggiorna visivamente la posizione dell'immagine nella griglia non appena si cambia l'opzione nel menu a tendina (es. da sinistra a destra), senza dover ricaricare la pagina.
+    5.  **Rilevamento Orientamento:** Affinata la logica per determinare se un'immagine è verticale, assicurando il controllo corretto di larghezza e altezza.
+*   [v] **Frontend Grids Fix:**
+    1.  **Pulizia Attachment:** Rimosse le chiamate non necessarie a categorie, tag e anno per gli elementi di tipo `attachment` nelle griglie di Homepage, Portfolio e Project (prevenzione errori PHP).
+    2.  **Indicatore Frontend:** Aggiunto un indicatore visivo ("❐") nell'overlay delle immagini che hanno una "Pagina Singola" attiva, per segnalare la cliccabilità.
+*   [v] **Attachment Single Page:**
+    1.  **Lightbox Fix:** Aggiornata la configurazione della Lightbox (`simpleLightbox`) per replicare quella della pagina Progetto:
+        *   Overlay attivo (`overlay: true`).
+        *   Chiusura al click sull'overlay (`docClose: true` + event handler custom).
+        *   Disabilitata la modifica della cronologia del browser (`history: false`).
+    2.  **Allineamento:** Verificata e confermata l'applicazione della classe di allineamento (Alto/Basso/Sinistra/Destra) al container dell'immagine.
 *   [v] Da rivedere **Foto Cover Contain:** Applicare regola: fit orizzontale foto cover progetto  in left column non si deve sovrapporre al testo.
     ```css
     .left-column-progetto a img { 
