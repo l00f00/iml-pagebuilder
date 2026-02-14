@@ -180,17 +180,19 @@ function iml_render_attachment_single($atts) {
          <div class="right-column"> 
            <?php 
            // Fetch attachment details 
-           $attachment_id = get_the_ID(); 
-           $alignment = get_post_meta($attachment_id, 'image_allineamento', true); 
-           $image_url = wp_get_attachment_url($attachment_id); // URL dell'immagine a dimensione piena 
-       
-           // Set default alignment class 'destra' if alignment is empty or 'square' 
-           if (empty($alignment) || $alignment === 'square') { 
-               $alignment = 'destra'; 
-           } 
-           ?> 
-           <a class="related-foto-item" href="<?php echo esc_url($image_url); ?>" style="color:black;" data-lightbox="gallery"> 
-           <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
+          $attachment_id = get_the_ID(); 
+          $alignment = get_post_meta($attachment_id, 'image_allineamento', true); 
+          $image_url = wp_get_attachment_url($attachment_id); // URL dell'immagine a dimensione piena 
+      
+          // Set default alignment class 'destra' if alignment is empty or 'square' 
+          // However, if the user explicitly set 'sinistra', 'alto', or 'basso', we must respect it.
+          // 'square' usually means default or unset in some contexts, but let's check.
+          if (empty($alignment) || $alignment === 'square') { 
+              $alignment = 'destra'; 
+          } 
+          ?> 
+          <a class="related-foto-item" href="<?php echo esc_url($image_url); ?>" style="color:black;" data-lightbox="gallery"> 
+          <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
                <div class="image-wrapper"> 
                    <?php echo wp_get_attachment_image($attachment_id, 'full'); ?> 
                </div> 

@@ -74,10 +74,11 @@ function iml_render_homepage_grid($atts) {
             
             echo '<a href="' . esc_url($href) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . ' ' . esc_attr($post_type) . ' ' . esc_attr($parent_type) . '" data-id="' . esc_attr($post_id) . '">';
             echo '<div class="info-overlay">';
-            echo '<div class="categories-tags">';
-            echo '</div>';
             echo '<div class="year-title">';
             echo '<span class="title">' . esc_html($title) . '</span>';
+            if ($single_page_true) {
+                echo '<span class="single-page-icon" style="margin-left:5px; font-size:12px;">❐</span>';
+            }
             echo '</div>';
             echo '</div>';
             echo '<div class="image-wrapper">' . $the_thumb . '</div>';

@@ -79,14 +79,26 @@ function iml_render_portfolio_grid($atts) {
                 }
                 
                 echo '<div class="info-overlay">';
-                echo '<div class="categories-tags">';
-                echo '<ul>';
-                // Tags and cats logic
-                echo '</ul>';
-                echo '</div>';
+                
+                // Categories and Tags - Only show for non-attachments
+                if ($post_type !== 'attachment') {
+                    echo '<div class="categories-tags">';
+                    echo '<ul>';
+                    // Tags and cats logic
+                    echo '</ul>';
+                    echo '</div>';
+                }
+                
                 echo '<div class="year-title">';
-                echo '<span class="year">' . esc_html($year) . '</span>';
+                if ($post_type !== 'attachment') {
+                    echo '<span class="year">' . esc_html($year) . '</span>';
+                }
                 echo '<span class="title">' . esc_html($title) . '</span>';
+                
+                if ($single_page_true) {
+                    echo '<span class="single-page-icon" style="margin-left:5px; font-size:12px;">❐</span>';
+                }
+                
                 echo '</div>';
                 echo '</div>';
                 echo '<div class="image-wrapper">';

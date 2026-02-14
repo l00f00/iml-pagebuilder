@@ -134,6 +134,9 @@ function iml_render_project_single($atts) {
                     <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
                         <div class="image-wrapper"> 
                             <img src="<?php echo esc_url($thumbnail); ?>" alt=""> 
+                            <?php if($single_page_true): ?>
+                                <span class="single-page-indicator" style="position: absolute; bottom: 5px; right: 5px; color: white; background: rgba(0,0,0,0.5); padding: 2px 5px; font-size: 10px; border-radius: 3px;">❐</span>
+                            <?php endif; ?>
                         </div> 
                     </div> 
                 </a> 
@@ -293,6 +296,9 @@ function iml_render_project_single($atts) {
                                 <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
                                     <div class="image-wrapper"> 
                                         <img src="<?php echo esc_url($thumbnail); ?>" alt=""> 
+                                        <?php if($single_page_true): ?>
+                                            <span class="single-page-indicator" style="position: absolute; bottom: 5px; right: 5px; color: white; background: rgba(0,0,0,0.5); padding: 2px 5px; font-size: 10px; border-radius: 3px;">❐</span>
+                                        <?php endif; ?>
                                     </div> 
                                 </div> 
                             </a> 

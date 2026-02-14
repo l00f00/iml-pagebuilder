@@ -358,14 +358,23 @@ function portfolio_admin_scripts() {
             });
             
             // Append selected items to grid on button click
-            $('#add-item').on('click', function() {
-                selectedItems.forEach(function(item) {
-                    var gridItemHTML = '<div class="grid-item" data-id="' + item.id + '">' +
-                        '<button type="button" class="remove-item">Remove</button>' +
-                        '<p>' + item.title + '</p></div>';
+                $('#add-item').on('click', function() {
+                    selectedItems.forEach(function(item) {
+                        var gridItemHTML = '<div class="grid-item" data-id="' + item.id + '">' +
+                            '<button type="button" class="remove-item">Remove</button>' +
+                            '<p>' + item.title + '</p>';
+                        
+                        // Check if the item in dropdown had the single page indicator
+                        // We can check the DOM of the selected item in the dropdown
+                        var $dropdownItem = $('#add-portfolio-item li[value="' + item.id + '"]');
+                        if ($dropdownItem.find('span:contains("Pagina Singola")').length > 0) {
+                             gridItemHTML += '<span style="color: green; font-size: 10px; display: block; margin-top: 2px;">&#10004; Pagina Singola</span>';
+                        }
+                            
+                        gridItemHTML += '</div>';
 
-                    $('#portfolio-items-list').append(gridItemHTML);
-                });
+                        $('#portfolio-items-list').append(gridItemHTML);
+                    });
 
                 // Update the hidden input field
                 updatePortfolioField();

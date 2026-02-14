@@ -89,6 +89,9 @@ function homepage_render_grid_item($post_id) {
     $output .= '<div class="image-container">'; 
     if ('attachment' === $post_type) { 
         $output .= wp_get_attachment_image($post_id, 'small'); 
+        if ($has_single) {
+            $output .= '<span style="position:absolute; top:2px; left:2px; color: green; font-weight:bold; background:rgba(255,255,255,0.8); padding:2px; border-radius:3px; font-size:10px;">&#10004; Pagina</span>';
+        }
     } else { 
         $output .= get_the_post_thumbnail($post_id, 'small');
     } 
