@@ -14,6 +14,7 @@
 .left-column-progetto {
   width: 65%;
   max-height:100vh;
+  padding:0!important;
 }
 .left-column-progetto img {
     /*background-color:green;
