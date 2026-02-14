@@ -140,6 +140,19 @@ function iml_render_project_single($atts) {
         <script> 
         jQuery(document).ready(function($) { 
             // Read More functionality
+            $('.description-content').each(function() {
+                var content = $(this);
+                var toggle = content.next('.read-more-toggle');
+                
+                // Check if content overflows
+                if (content[0].scrollHeight <= content.outerHeight() + 5) { // +5 buffer
+                     toggle.hide();
+                     content.removeClass('collapsed'); // Remove collapsed class to remove gradient
+                } else {
+                     toggle.show(); // Ensure it's shown if needed
+                }
+            });
+
             $('.read-more-toggle').click(function(e) {
                 e.preventDefault();
                 var content = $(this).prev('.description-content');
@@ -151,9 +164,9 @@ function iml_render_project_single($atts) {
                     $(this).text('Read More');
                 }
             });
-
+            
+            // 3 Column Layout Specific JS
             // Utilizza SimpleLightbox con jQuery su tutti gli elementi che hanno data-lightbox="gallery" 
-            //jQuery('a[data-lightbox="gallery"]').simpleLightbox(); 
             var gallery = jQuery('a[data-lightbox="gallery"]').simpleLightbox({ 
                 className: 'simple-lightbox', // Adds a custom class to the lightbox wrapper 
                 widthRatio: 1, // Sets the maximum width of the image to 80% of the screen width 
@@ -261,6 +274,33 @@ function iml_render_project_single($atts) {
         
         <script> 
         jQuery(document).ready(function($) { 
+            // Read More functionality
+            $('.description-content').each(function() {
+                var content = $(this);
+                var toggle = content.next('.read-more-toggle');
+                
+                // Check if content overflows
+                if (content[0].scrollHeight <= content.outerHeight() + 5) { // +5 buffer
+                     toggle.hide();
+                     content.removeClass('collapsed'); // Remove collapsed class to remove gradient
+                } else {
+                     toggle.show(); // Ensure it's shown if needed
+                }
+            });
+
+            $('.read-more-toggle').click(function(e) {
+                e.preventDefault();
+                var content = $(this).prev('.description-content');
+                if (content.hasClass('collapsed')) {
+                    content.removeClass('collapsed').addClass('expanded');
+                    $(this).text('Read Less');
+                } else {
+                    content.removeClass('expanded').addClass('collapsed');
+                    $(this).text('Read More');
+                }
+            });
+            
+            // 1 Column Layout Specific JS
             // Utilizza SimpleLightbox con jQuery su tutti gli elementi che hanno data-lightbox="gallery" 
             var gallery = jQuery('a[data-lightbox="gallery"]').simpleLightbox({ 
                 className: 'simple-lightbox', // Adds a custom class to the lightbox wrapper 

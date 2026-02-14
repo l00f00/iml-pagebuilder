@@ -66,6 +66,7 @@
   width: 35%; 
   padding-top:65px;/*era 50px*/ 
   padding-right:6px;/*era 0px messo a 6 per leggibilita*/ 
+  padding-left: 6px;
 } 
 .progetto-description{ 
   /*text-indent: 1em;*/ 
@@ -187,7 +188,7 @@
 }
 
 .description-content.collapsed {
-    max-height: 200px; /* Adjust height as needed */
+    max-height: calc(100vh - 120px); /* Screen height minus title/year/padding approx */
     overflow: hidden;
     position: relative;
 }
