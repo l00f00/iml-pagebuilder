@@ -27,8 +27,11 @@ function prj_meta_box_callback($post) {
     // List of selectable posts
     $selectable_posts = new WP_Query([
         'post_type'      => ['attachment'],
-        'posts_per_page' => -1,
-        'post_status'    => 'any',
+        'posts_per_page' => 100, // Limit to 100 recent items to avoid crashing the browser/server
+        'post_status'    => 'inherit', // Attachments usually have 'inherit' status
+        'post_mime_type' => 'image', // Only images
+        'orderby'        => 'date',
+        'order'          => 'DESC',
     ]);
 
     if ($selectable_posts->have_posts()) {
@@ -47,9 +50,11 @@ function prj_meta_box_callback($post) {
         }
 
         // Output the list item with the thumbnail and title
-        echo '<li value="' . esc_attr($post_id) . '" style="display: none;">';
+        // Remove inline display:none so CSS can control visibility via classes
+        echo '<li value="' . esc_attr($post_id) . '">';
         if ($thumbnail_url) {
-            echo '<img src="' . esc_url($thumbnail_url) . '" alt="" style="width: 100px; height: 100px; margin-right: 10px;">';
+            // Remove inline styles, let CSS handle it
+            echo '<img src="' . esc_url($thumbnail_url) . '" alt="">';
         }
         echo get_the_title();
         echo ' - ';
@@ -215,155 +220,133 @@ function prj_enqueue_admin_styles() {
     // Load only on post edit pages
     $screen = get_current_screen();
     if ($screen->post_type === 'progetto' || $screen->post_type === 'serie') {
-        wp_enqueue_style('prj-admin-style', IML_PLUGIN_URL . 'includes/post-types/project/admin-style.css', array(), '1.0');
+        wp_enqueue_style('prj-admin-style', IML_PLUGIN_URL . 'includes/post-types/project/admin-style.css', array(), '1.1');
     }
 }
 
 // Include lo script JavaScript per rendere la lista "sortable" e gestire l'aggiunta e la rimozione
-add_action('admin_footer', 'prj_admin_scripts');
-function prj_admin_scripts() {
-    ?>
-    <script type="text/javascript">
-        jQuery(document).ready(function($) {
-            var $list = $('#prj-items-list');
-            var $field = $('#prj_items_field');
-            var selectedItems = [];
-
-            // Rendi la lista sortable
-            $list.sortable({
-                placeholder: 'ui-state-highlight',
-                update: function(event, ui) {
-                    updateField();
+    add_action('admin_footer', 'prj_admin_scripts');
+    function prj_admin_scripts() {
+        ?>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                var $list = $('#prj-items-list');
+                var $field = $('#prj_items_field');
+                var selectedItems = [];
+    
+                // Rendi la lista sortable
+                $list.sortable({
+                    placeholder: 'ui-state-highlight',
+                    update: function(event, ui) {
+                        updateField();
+                    }
+                });
+    
+                // Aggiorna il campo nascosto con gli ID correnti dopo il drag-and-drop
+                function updateField() {
+                    var ids = $list.sortable('toArray', { attribute: 'data-id' });
+                    $field.val(ids.join(','));
                 }
-            });
-
-            // Aggiorna il campo nascosto con gli ID correnti dopo il drag-and-drop
-            function updateField() {
-                var ids = $list.sortable('toArray', { attribute: 'data-id' });
-                $field.val(ids.join(','));
-            }
-
-            // Gestisci il click del pulsante di rimozione
-            $list.on('click', '.remove-item', function() {
-                $(this).closest('.grid-item').remove();
-                updateField();
-            });
-
-    jQuery(document).ready(function($) {
-    var selectedItems = [];
-
-    // Toggle dropdown on click
-    $('#add-prj-item').on('click', '.dropdown-toggle', function(event) {
-        // Toggle class 'active' on parent ul to show/hide items via CSS
-        $(this).parent().toggleClass('active');
-        // Toggle visibility of siblings (the actual list items)
-        // $(this).siblings('li').toggle(); // No longer needed with CSS class approach for grid layout
-        event.stopPropagation(); 
-    });
-
-    // Handle dropdown item selection
-    $('#add-prj-item li:not(.dropdown-toggle)').on('click', function() {
-        var postId = $(this).attr('value');
-        var selectedTitle = $(this).text();
-        // ... rest of logic remains similar but we don't hide immediately to allow multiple selections
-        
-        // Check and toggle selection
-        var selectedItemIndex = selectedItems.findIndex(item => item.id === postId);
-        if (selectedItemIndex > -1) {
-            selectedItems.splice(selectedItemIndex, 1); // Remove item if already selected
-            $(this).removeClass('selected');
-        } else {
-            selectedItems.push({id: postId, title: selectedTitle}); // Add new item to the selection
-            $(this).addClass('selected');
-        }
-        
-        // Update toggle text summary
-        var displayText = selectedItems.map(function(item) {
-             // Simplify title for display
-             return item.title.substring(0, 15) + (item.title.length>15?'...':'');
-        }).join(', ');
-        $('#add-prj-item .dropdown-toggle').text(displayText || 'Seleziona foto (click to close)');
-    });
-
-    // Close dropdown when clicking outside
-    $(document).on('click', function(event) {
-        if (!$(event.target).closest('#add-prj-item').length) {
-            $('#add-prj-item').removeClass('active');
-        }
-    });
-
-    // Append selected items to grid on button click
-    $('#add-item').on('click', function() {
-        selectedItems.forEach(function(item) {
-            var gridItemHTML = '<div class="grid-item" data-id="' + item.id + '">' +
-                '<button type="button" class="remove-item">Remove</button>' +
-                '<p>' + item.title + '</p></div>';
-
-            $('#prj-items-list').append(gridItemHTML);
-        });
-
-        // Update the hidden input field
-        updateField();
-
-        // Clear selected items after adding
-        selectedItems = [];
-        $('#add-prj-item .dropdown-toggle').text('Seleziona un post');
-        $('#add-prj-item li').removeClass('selected').hide();
-    });
-
-    // Function to update the hidden field with the current IDs
-    function updateField() {
-        var ids = [];
-        $('#prj-items-list .grid-item').each(function() {
-            ids.push($(this).data('id'));
-        });
-        $('#prj_items_field').val(ids.join(','));
-    }
-
-    // Close dropdown when clicking outside
-    $(document).on('click', function(event) {
-        if (!$(event.target).closest('#add-prj-item').length) {
-            $('#add-prj-item').removeClass('active');
-        }
-    });
-});
-        
-        jQuery(document).ready(function($) {
-            $('#custom_media_upload').click(function(e) {
-                e.preventDefault();
-                var mediaUploader = wp.media({
-                    title: 'Upload Media',
-                    button: {
-                        text: 'Select'
-                    },
-                    multiple: true // Allow multiple file selection
-                }).on('select', function() {
-                    // Get the selected media
-                    var selections = mediaUploader.state().get('selection');
+    
+                // Gestisci il click del pulsante di rimozione
+                $list.on('click', '.remove-item', function() {
+                    $(this).closest('.grid-item').remove();
+                    updateField();
+                });
+    
+                // Toggle dropdown on click
+                $('#add-prj-item').on('click', '.dropdown-toggle', function(event) {
+                    // Toggle class 'active' on parent ul to show/hide items via CSS
+                    $(this).parent().toggleClass('active');
+                    event.stopPropagation(); 
+                });
+    
+                // Handle dropdown item selection
+                $('#add-prj-item li:not(.dropdown-toggle)').on('click', function() {
+                    var postId = $(this).attr('value');
+                    var selectedTitle = $(this).text();
                     
-                    // FIX: Handle empty value correctly to avoid empty string in array
-                    var val = $('#prj_items_field').val();
-                    var existingIds = val ? val.split(',') : [];
-        
-                    selections.each(function(attachment) {
-                        existingIds.push(attachment.id); // Add new attachment IDs to the array
-                        // Optional: Append the new item to the grid
-                        var gridItemHTML = '<div class="grid-item" data-id="' + attachment.id + '">' +
+                    // Check and toggle selection
+                    var selectedItemIndex = selectedItems.findIndex(item => item.id === postId);
+                    if (selectedItemIndex > -1) {
+                        selectedItems.splice(selectedItemIndex, 1); // Remove item if already selected
+                        $(this).removeClass('selected');
+                    } else {
+                        selectedItems.push({id: postId, title: selectedTitle}); // Add new item to the selection
+                        $(this).addClass('selected');
+                    }
+                    
+                    // Update toggle text summary
+                    var displayText = selectedItems.map(function(item) {
+                         // Simplify title for display
+                         return item.title.substring(0, 15) + (item.title.length>15?'...':'');
+                    }).join(', ');
+                    $('#add-prj-item .dropdown-toggle').text(displayText || 'Seleziona foto (click to close)');
+                });
+    
+                // Close dropdown when clicking outside
+                $(document).on('click', function(event) {
+                    if (!$(event.target).closest('#add-prj-item').length) {
+                        $('#add-prj-item').removeClass('active');
+                    }
+                });
+    
+                // Append selected items to grid on button click
+                $('#add-item').on('click', function() {
+                    selectedItems.forEach(function(item) {
+                        var gridItemHTML = '<div class="grid-item" data-id="' + item.id + '">' +
                             '<button type="button" class="remove-item">Remove</button>' +
-                            '<img src="' + attachment.attributes.url + '" alt="" style="max-width: 100%; height: auto;">' +
-                            '</div>';
+                            '<p>' + item.title + '</p></div>';
+            
                         $('#prj-items-list').append(gridItemHTML);
                     });
-        
-                    $('#prj_items_field').val(existingIds.join(',')); // Update the hidden field
+            
+                    // Update the hidden input field
+                    updateField();
+            
+                    // Clear selected items after adding
+                    selectedItems = [];
+                    $('#add-prj-item .dropdown-toggle').text('Seleziona un post');
+                    $('#add-prj-item li').removeClass('selected');
+                    // Close the dropdown
+                    $('#add-prj-item').removeClass('active');
                 });
-                mediaUploader.open();
+                
+                // Custom Media Upload
+                $('#custom_media_upload').click(function(e) {
+                    e.preventDefault();
+                    var mediaUploader = wp.media({
+                        title: 'Upload Media',
+                        button: {
+                            text: 'Select'
+                        },
+                        multiple: true // Allow multiple file selection
+                    }).on('select', function() {
+                        // Get the selected media
+                        var selections = mediaUploader.state().get('selection');
+                        
+                        // FIX: Handle empty value correctly to avoid empty string in array
+                        var val = $('#prj_items_field').val();
+                        var existingIds = val ? val.split(',') : [];
+            
+                        selections.each(function(attachment) {
+                            existingIds.push(attachment.id); // Add new attachment IDs to the array
+                            // Optional: Append the new item to the grid
+                            var gridItemHTML = '<div class="grid-item" data-id="' + attachment.id + '">' +
+                                '<button type="button" class="remove-item">Remove</button>' +
+                                '<img src="' + attachment.attributes.url + '" alt="" style="max-width: 100%; height: auto;">' +
+                                '</div>';
+                            $('#prj-items-list').append(gridItemHTML);
+                        });
+            
+                        $('#prj_items_field').val(existingIds.join(',')); // Update the hidden field
+                    });
+                    mediaUploader.open();
+                });
             });
-        });
-    });
-    </script>
-    <?php
-}
+        </script>
+        <?php
+    }
 function prj_featured_image_metabox_custom_field($content, $post_id) {
     // BUG/TYPO NOTICE: The field read here is '_prj_image_alignment', but the field saved below is '_prj_feautured_image_alignment'.
     // This discrepancy means the alignment setting might not persist correctly.
