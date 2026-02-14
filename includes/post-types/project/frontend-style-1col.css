@@ -209,5 +209,17 @@
       color: black;
       background-color: white;
     }
+    
+    .read-more-toggle {
+        display: none !important;
+    }
+    
+    .description-content.collapsed {
+        max-height: none !important;
+    }
+    
+    .description-content.collapsed::after {
+        display: none !important;
+    }
 }
 
