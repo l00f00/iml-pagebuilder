@@ -65,10 +65,10 @@ function iml_render_project_single($atts) {
           <div class="left-column-bottom"> 
                 <nav class="foto-navigation"> 
                         <?php 
-                        if (isset($prev_post_url)) { 
+                        if (isset($prev_post_url) && !empty($prev_post_url)) { 
                         echo '<div class="nav-previous"><a href="' . esc_url($prev_post_url) . '">Previous</a></div>'; 
                         } 
-                        if (isset($next_post_url)) { 
+                        if (isset($next_post_url) && !empty($next_post_url)) { 
                         echo '<div class="nav-next"><a href="' . esc_url($next_post_url) . '">Next</a></div>'; 
                         } 
                         ?> 
@@ -176,7 +176,10 @@ function iml_render_project_single($atts) {
     </script> 
 
     <?php 
-    // Conditional check for dynamic styles
+    // Conditional check: 
+    $space = rwmb_meta( 'abilitaSpazio' ); 
+    $spaceVert = rwmb_meta( 'abilitaSpazioVert' ); 
+    $featuredImageSpacer = rwmb_meta( 'featuredImageSpacer' ); 
     if (!isset($featuredImageSpacer)){ 
       $featuredImageSpacer = '2em'; 
     } 
@@ -194,9 +197,15 @@ function iml_render_project_single($atts) {
         echo '<style>.progetto-content {padding-bottom: '. $featuredImageSpacer .';}</style>'; 
     } 
     ?>
-    <style>.gallery > .related-foto-item:hover{ 
+    <style>
+    .gallery > .related-foto-item:hover{ 
         /*mix-blend-mode: exclusion; /* Applica il metodo di fusione */ 
     } 
+    
+    .sl-wrapper .simple-lightbox, .sl-wrapper .simple-lightbox > *{ 
+      /*z-index: 30000000000!important;*/ 
+      pointer-events: all; 
+    }
     </style>
     <?php
 
