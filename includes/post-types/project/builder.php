@@ -23,6 +23,7 @@ function prj_meta_box_callback($post) {
     echo '<div style="position:relative;">'; // Wrapper
     echo '<ul id="add-prj-item" class="prj-dropdown">';
     echo '<li class="dropdown-toggle">Seleziona foto</li>';
+    echo '<div id="prj-loader-status" class="prj-loader-status">Caricamento immagini... <span id="prj-loader-count">0</span>%</div>';
 
     // List of selectable posts
     $selectable_posts = new WP_Query([
@@ -266,106 +267,94 @@ function prj_enqueue_admin_styles() {
                     event.stopPropagation(); 
                 });
 
-                // Scroll event handler for lazy loading on the wrapper div
-                var isLoading = false;
-                $('#add-prj-item').on('scroll', function() {
-                    // Check if we are near the bottom (500px threshold)
-                    var scrollTop = $(this).scrollTop();
-                    var innerHeight = $(this).innerHeight();
-                    var scrollHeight = $(this)[0].scrollHeight;
+                // Queue-based Lazy Loader
+                var loadQueue = [];
+                var activeLoads = 0;
+                var maxConcurrent = 6; // Browser typically allows 6 connections per domain
+                var isQueueRunning = false;
+                var totalImages = 0;
+                var loadedCount = 0;
+
+                // Toggle dropdown on click
+                $('#add-prj-item').on('click', '.dropdown-toggle', function(event) {
+                    var $parent = $(this).parent();
+                    $parent.toggleClass('active');
                     
-                    // console.log('Scroll: ' + scrollTop + ' + ' + innerHeight + ' / ' + scrollHeight);
-                    
-                    if (!isLoading && scrollTop + innerHeight >= scrollHeight - 600) {
-                        loadMoreImages();
+                    if ($parent.hasClass('active')) {
+                        startImageLoading();
                     }
+                    event.stopPropagation(); 
                 });
 
-                function loadMoreImages() {
-                    if (isLoading) return;
+                function startImageLoading() {
+                    // Only start if not already running and there are images to load
+                    if (isQueueRunning) return;
                     
-                    isLoading = true;
-                    // Find next batch
-                    var $imagesToLoad = $('#add-prj-item .lazy-thumb:not(.loading-started)').slice(0, 20);
+                    // Initialize queue with all unloaded images
+                    var $unloaded = $('#add-prj-item .lazy-thumb').filter(function() {
+                        return !$(this).attr('src');
+                    });
                     
-                    if ($imagesToLoad.length > 0) {
-                        console.log('--- Loading batch of ' + $imagesToLoad.length + ' images ---');
-                        
-                        var batchLoadedCount = 0;
-                        var totalInBatch = $imagesToLoad.length;
-                        
-                        // Mark as started
-                        $imagesToLoad.addClass('loading-started');
-                        
-                        // Safety timeout - reduced to 3s to keep things moving
-                        var batchTimeout = setTimeout(function() {
-                             if (isLoading) {
-                                 console.warn('Batch timeout (3s). Proceeding to next batch...');
-                                 isLoading = false; 
-                                 // Force recursion to keep loading if we are still at the bottom
-                                 triggerNextBatchIfNeeded();
-                             }
-                        }, 3000);
+                    if ($unloaded.length === 0) return; // All done
+                    
+                    console.log('Starting queue for ' + $unloaded.length + ' images...');
+                    $('#prj-loader-status').addClass('visible');
+                    
+                    // Reset counts for progress bar (based on total in list)
+                    totalImages = $('#add-prj-item .lazy-thumb').length;
+                    loadedCount = $('#add-prj-item .lazy-thumb[src]').length;
+                    updateProgress();
 
-                        $imagesToLoad.each(function() {
-                            var $img = $(this);
-                            var retryCount = 0;
-                            
-                            $img.off('load error');
-                            
-                            $img.on('load', function() {
-                                batchLoadedCount++;
-                                // console.log('Img loaded (' + batchLoadedCount + '/' + totalInBatch + ')');
-                                checkBatchCompletion();
-                            });
-                            
-                            $img.on('error', function() {
-                                if (retryCount < 2) { // Reduce retries to 2
-                                    retryCount++;
-                                    setTimeout(function() {
-                                        var src = $img.data('src');
-                                        $img.attr('src', ''); 
-                                        setTimeout(function(){ $img.attr('src', src); }, 50);
-                                    }, 500 * retryCount); // Faster retry
-                                } else {
-                                    batchLoadedCount++;
-                                    console.warn('Img failed');
-                                    checkBatchCompletion();
-                                }
-                            });
-                            
-                            // Start loading
-                            $img.attr('src', $img.data('src'));
+                    // Convert jQuery object to array for the queue
+                    loadQueue = $unloaded.toArray();
+                    isQueueRunning = true;
+                    
+                    // Kick off the initial batch
+                    processQueue();
+                }
+
+                function processQueue() {
+                    // Stop if queue empty
+                    if (loadQueue.length === 0) {
+                        if (activeLoads === 0) {
+                            isQueueRunning = false;
+                            $('#prj-loader-status').removeClass('visible');
+                            console.log('All images loaded.');
+                        }
+                        return;
+                    }
+
+                    // Fill up the concurrent slots
+                    while (activeLoads < maxConcurrent && loadQueue.length > 0) {
+                        var img = loadQueue.shift();
+                        var $img = $(img);
+                        
+                        activeLoads++;
+                        
+                        $img.off('load error');
+                        
+                        $img.on('load error', function() {
+                            activeLoads--;
+                            loadedCount++;
+                            updateProgress();
+                            // Trigger next immediately
+                            processQueue();
                         });
                         
-                        function checkBatchCompletion() {
-                             if (batchLoadedCount >= totalInBatch) {
-                                 clearTimeout(batchTimeout);
-                                 isLoading = false;
-                                 
-                                 var totalStarted = $('#add-prj-item .lazy-thumb.loading-started').length;
-                                 var totalImages = $('#add-prj-item .lazy-thumb').length;
-                                 
-                                 console.log('Batch Done. Total Processed: ' + totalStarted + ' / ' + totalImages);
-                                 
-                                 if (totalStarted >= totalImages) {
-                                     console.log('ALL IMAGES QUEUED!');
-                                 } else {
-                                     triggerNextBatchIfNeeded();
-                                 }
-                             }
-                        }
-                        
-                        function triggerNextBatchIfNeeded() {
-                             var $container = $('#add-prj-item');
-                             // Increased threshold to 800px to be very aggressive in preloading
-                             if ($container.scrollTop() + $container.innerHeight() >= $container[0].scrollHeight - 800) {
-                                 setTimeout(loadMoreImages, 50);
-                             }
-                        }
-                        
-                    } else {
-                         isLoading = false;
+                        // Start load
+                        $img.attr('src', $img.data('src'));
+                    }
+                }
+                
+                function updateProgress() {
+                    var percent = Math.round((loadedCount / totalImages) * 100);
+                    $('#prj-loader-count').text(percent);
+                    
+                    if (loadedCount >= totalImages) {
+                         $('#prj-loader-status').text('Caricamento completato!');
+                         setTimeout(function() {
+                             $('#prj-loader-status').removeClass('visible');
+                         }, 2000);
                     }
                 }
     

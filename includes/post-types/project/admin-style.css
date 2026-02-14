@@ -111,11 +111,25 @@
     border-color: #007cba;
 }
 
+/* Loading bar */
+.prj-loader-status {
+    position: sticky;
+    top: 40px; /* Below the toggle */
+    background: #e5f5fa;
+    color: #007cba;
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+    border-bottom: 1px solid #b5e1ef;
+    z-index: 99;
+    display: none;
+}
+.prj-loader-status.visible {
+    display: block;
+}
 /* Style for the image wrapper */
 .image-container {
 display: flex; /* Use flexbox for alignment */
-/* width:640px;
-height:640px;*/
 max-width:100%;
 height: -webkit-fill-available;
 }
