@@ -346,7 +346,7 @@ function iml_render_project_single($atts) {
                 history: false, // Disable history URL updates
             }); 
             
-             // Fix: close lightbox when clicking on wrapper (overlay)
+            // Fix: close lightbox when clicking on wrapper (overlay)
             // Use 'document' instead of 'body' for better event delegation
             $(document).on('click', '.sl-wrapper', function(e) {
                  console.log('Clicked on .sl-wrapper (via document delegation)');
