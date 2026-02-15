@@ -2,7 +2,31 @@
 
 Plugin personalizzato per la gestione dei contenuti e del layout del sito IML Photographer.
 
+## Note per lo Sviluppatore (Sistema Misto Oxygen/WordPress)
+
+<details>
+<summary><strong>Architettura e Integrazione</strong></summary>
+
+Questo progetto utilizza un approccio ibrido che combina:
+1.  **Oxygen Builder:** Per la gestione globale del layout (Header, Footer, Template generali).
+2.  **Plugin Custom (IML Page Builder):** Per la gestione specifica di logiche complesse, Custom Post Types (CPT), e rendering avanzato di griglie che Oxygen non può gestire nativamente con la flessibilità richiesta.
+
+**Punti Chiave:**
+*   **Shortcodes:** Il plugin espone shortcodes (`[iml_homepage_grid]`, `[iml_portfolio_grid]`, ecc.) che vengono inseriti all'interno dei blocchi "Code Block" o "Shortcode" di Oxygen.
+*   **Assets:** CSS e JS specifici del plugin sono caricati separatamente (`frontend/style.css`, `frontend/script.js`) e devono coesistere con gli stili di Oxygen.
+*   **Conflitti Potenziali:**
+    *   **Lightbox:** Il sito usa SimpleLightbox caricato dal plugin. Verificare sempre che non vada in conflitto con eventuali lightbox native di Oxygen o altri plugin.
+    *   **Z-Index:** Prestare attenzione ai livelli z-index, specialmente per menu mobile e overlay, dato che Oxygen ha una sua gestione dello stacking context.
+*   **Workflow di Modifica:**
+    *   Per modificare il layout generale (es. menu, footer): Usare **Oxygen**.
+    *   Per modificare la logica delle griglie, i CPT o le funzionalità custom: Modificare il codice del **Plugin**.
+
+</details>
+
 ## Funzionalità Principali
+
+<details>
+<summary><strong>Panoramica delle Funzionalità</strong></summary>
 
 ### 1. Custom Post Types (CPT)
 Registra e gestisce i seguenti tipi di contenuto personalizzati:
@@ -29,6 +53,8 @@ Estende le funzionalità della libreria media di WordPress:
 *   **Gestione Redirect:** Include logiche di redirect personalizzate per utenti loggati/non loggati.
 *   **Integrazione Lightbox:** Carica e configura Simple Lightbox per la visualizzazione delle immagini.
 *   **AJAX:** Gestisce il caricamento asincrono dei post per le griglie dinamiche.
+
+</details>
 
 ## Installazione
 1.  Scaricare o clonare la cartella del plugin in `wp-content/plugins/`.
