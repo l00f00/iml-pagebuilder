@@ -249,11 +249,11 @@ function iml_render_attachment_single($atts) {
      var gallery = jQuery('a[data-lightbox="gallery"]').simpleLightbox({ 
          className: 'simple-lightbox', // Adds a custom class to the lightbox wrapper 
          widthRatio: 1, // Sets the maximum width of the image to 80% of the screen width 
-         heightRatio: 1, // Sets the maximum height of the image to 90% of the screen height 
-         scaleImageToRatio: true, // Prevents scaling the image larger than its original size, 
-         animationSpeed: 005, 
-         fadeSpeed: 5, 
-         animationSlide: false, 
+        heightRatio: 1, // Sets the maximum height of the image to 90% of the screen height 
+        scaleImageToRatio: true, // Prevents scaling the image larger than its original size, 
+        animationSpeed: 5, 
+        fadeSpeed: 5, 
+        animationSlide: false, 
          enableKeyboard: true, 
          preloading: true, 
          closeText: '<div class="divclose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 39" width="44" height="39"><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(45 16 16)" /><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(-45 16 16)" /></svg></div>', 
@@ -332,11 +332,11 @@ function iml_render_attachment_single($atts) {
      // Funzione per gestire lo swipe 
      function handleSwipe() { 
          // Verifica se la lightbox è attiva 
-         const plusIcon = document.querySelector('.absolute-plus-icon'); 
-         if (document.querySelector('.sl-wrapper.simple-lightbox')) { 
-             plusIcon 
-             return; // La lightbox è visibile, ignora lo swipe 
-         } 
+        const plusIcon = document.querySelector('.absolute-plus-icon'); 
+        if (document.querySelector('.sl-wrapper.simple-lightbox')) { 
+            // La lightbox è visibile, ignora lo swipe 
+            return; 
+        } 
 
          // Calcola la direzione dello swipe 
          const swipeDistanceX = touchStartX - touchEndX; 
