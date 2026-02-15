@@ -116,6 +116,19 @@ Affinché le colonne si vedano affiancate, dovrai assicurarti che la classe `.mu
 }
 ```
 
+## Guida: Funzionamento dei Tag
+
+**Come funzionano?**
+Il sistema dei tag è **completamente automatico**. Non c'è bisogno di configurare manualmente le pagine di archivio per ogni tag.
+
+**Cosa viene mostrato?**
+Cliccando su un tag, il sistema genera automaticamente una pagina che raccoglie **tutti i contenuti** (Progetti, Serie, Portfolio o singole Foto/Allegati) a cui è stato assegnato quel tag specifico.
+
+**Layout e Design:**
+La pagina di atterraggio (Landing Page) del tag **rispecchia fedelmente il layout della Homepage**.
+*   Usa la stessa griglia dinamica.
+*   Non è necessario progettare graficamente ogni pagina tag: il sistema si occupa di impaginare i contenuti automaticamente mantenendo la coerenza stilistica del sito.
+
 ## Changelog & Status
 
 ### FATTO (Done)
@@ -185,7 +198,10 @@ Affinché le colonne si vedano affiancate, dovrai assicurarti che la classe `.mu
          object-fit: contain; 
          width: -webkit-fill-available; 
     }
-*   [v] effetto escludi in home – forse levare decidere alla fine (io, Riccardo, lo toglierei)    ```
+*   [v] effetto escludi in home – forse levare decidere alla fine (io, Riccardo, lo toglierei)
+*   [v] **About Press:** Aggiungere in "selected press" 2025:
+    *   **BeTalkZ PODCAST:** [Video YouTube](https://www.youtube.com/watch?v=r7okOw60tDw) + [Spotify](https://open.spotify.com/episode/2kdbP47CNeQWjnjFUgthnZ?si=rW7CtrmgRt2PiuQ2SBr)
+    *   **Visioni (Rai5):** [RaiPlay](https://www.raiplay.it/video/2025/03/Visioni-Ritratto-di-Donne-Prima-Visione-245ce57b-b094-4982-bb09-56ce3713f9e6.html)
 
 ### TODO (Elenco lavorazioni in sospeso)
 
@@ -205,5 +221,4 @@ Affinché le colonne si vedano affiancate, dovrai assicurarti che la classe `.mu
 *   [ ] **Home:** Inserire "curated by -nome-" (attendere layout).
 *   [ ] **Pulsante +:** Valutare se tenere.
 *   [v] **About:** Scrivere breve guida su modifica pagina ABOUT. (Fatto)
-*   [ ] **About Press:** Aggiungere in "selected press" 2025: BeTalkZ PODCAST (YouTube + Spotify) e Visioni (RaiPlay).
 *   [ ] **Tags:** Manca pulsante back e progettazione landing tag.
