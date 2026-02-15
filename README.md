@@ -206,11 +206,14 @@ Il layout è gestito automaticamente tramite CSS Grid e si adatta alla larghezza
     1.  **Pulizia Attachment:** Rimosse le chiamate non necessarie a categorie, tag e anno per gli elementi di tipo `attachment` nelle griglie di Homepage, Portfolio e Project (prevenzione errori PHP).
     2.  **Indicatore Frontend:** Aggiunto un indicatore visivo ("❐") nell'overlay delle immagini che hanno una "Pagina Singola" attiva, per segnalare la cliccabilità.
 *   [v] **Attachment Single Page:**
-    1.  **Lightbox Fix:** Aggiornata la configurazione della Lightbox (`simpleLightbox`) per replicare quella della pagina Progetto:
-        *   Overlay attivo (`overlay: true`).
-        *   Chiusura al click sull'overlay (`docClose: true` + event handler custom).
-        *   Disabilitata la modifica della cronologia del browser (`history: false`).
-    2.  **Allineamento:** Verificata e confermata l'applicazione della classe di allineamento (Alto/Basso/Sinistra/Destra) al container dell'immagine.
+    1.  **Lightbox Navigation:** Ripristinata configurazione semplice (`overlay: false`, `docClose: false`) per risolvere problemi di navigazione (frecce che sparivano).
+    2.  **Chiusura Custom:** Implementato script JS per chiudere la lightbox cliccando sullo sfondo vuoto (`.sl-wrapper` o `.sl-overlay`), evitando chiusure accidentali durante la navigazione.
+    3.  **Supporto Portfolio:** Aggiunta logica PHP per recuperare `portfolio_items` (oltre a `prj_items`) per permettere la navigazione tra allegati anche quando appartengono a un Portfolio padre.
+    4.  **Allineamento:** Verificata e confermata l'applicazione della classe di allineamento (Alto/Basso/Sinistra/Destra) al container dell'immagine.
+*   [v] **Taxonomy Lists:** Creati shortcode `[iml_categories_list]`, `[iml_tags_list]`, `[iml_taxonomies_list]` per visualizzare griglie responsive di categorie e tag.
+*   [v] **Frontend Fixes:**
+    *   **Homepage:** Rimossa icona "Pagina Singola" indesiderata dalla griglia home.
+    *   **Titoli:** Fix allineamento verticale titoli in griglia (aggiunto `margin-top: auto`).
 *   [v] Da rivedere **Foto Cover Contain:** Applicare regola: fit orizzontale foto cover progetto  in left column non si deve sovrapporre al testo.
     ```css
     .left-column-progetto a img { 

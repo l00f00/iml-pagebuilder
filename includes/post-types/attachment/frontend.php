@@ -1,6 +1,25 @@
 <?php
 /**
  * Shortcode: [iml_attachment_single]
+ *
+ * CHECKLIST IMPLEMENTAZIONE:
+ * [ ] Configurazione Lightbox:
+ *     - [ ] overlay: false (Disabilitato nativo per evitare conflitti)
+ *     - [ ] docClose: false (Disabilitato nativo)
+ *     - [ ] Chiusura Custom: JS click su .sl-wrapper/.sl-overlay
+ *     - [ ] Navigazione: Frecce presenti e funzionanti (navText)
+ *     - [ ] Swipe Mobile: Gestione touchstart/touchend
+ * [ ] Logica Post Parent:
+ *     - [ ] Recupero prj_items (Progetti)
+ *     - [ ] Recupero portfolio_items (Portfolio)
+ *     - [ ] Fallback prj_items_alignment
+ * [ ] Layout:
+ *     - [ ] Left Column: Titolo, Descrizione, Categorie, Tag, Navigazione (Prev/Next/Back)
+ *     - [ ] Right Column: Immagine principale con link lightbox
+ *     - [ ] Allineamento: Classi CSS (destra, sinistra, alto, basso) applicate
+ * [ ] Assets:
+ *     - [ ] CSS caricato (frontend-style.css)
+ *     - [ ] JS inline per Lightbox e altezza dinamica
  */
 
 if (!defined('ABSPATH')) {
@@ -260,12 +279,13 @@ function iml_render_attachment_single($atts) {
          navText: ['<','>'], 
         spinner: false, 
         overlay: false, 
-        docClose: false, 
+        docClose: fals, 
     }); 
 
-    // Custom close on wrapper click (fix for overlay closing)
-    $(document).off('click', '.sl-wrapper').on('click', '.sl-wrapper', function(e) {
-        if ($(e.target).hasClass('sl-wrapper')) {
+    // Custom close on wrapper or overlay click
+    $(document).off('click', '.sl-wrapper, .sl-overlay').on('click', '.sl-wrapper, .sl-overlay', function(e) {
+        // Close if clicking directly on wrapper, overlay, or close button (x)
+        if ($(e.target).is('.sl-wrapper, .sl-overlay, .sl-close, .sl-close *')) {
             gallery.close();
         }
     });
