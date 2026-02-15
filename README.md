@@ -48,7 +48,7 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 *   [ ] Immagine principale verticale corretta (Si/No)
 *   [ ] Spazio dal testo presente (Si/No)
 *   [ ] Read More corretto e funzionante (Si/No)
-*   [ ] Spaziature con punta amministratore corrette (Si/No)
+*   [ ] Spaziature con spunta amministratore corrette (Si/No)
 *   [ ] Immagine al click va a singola (Si/No)
 *   [ ] Galleria si chiude bene (Si/No)
 *   [ ] Mobile: Layout semplificato 1 colonna (Si/No)
@@ -215,16 +215,6 @@ Il layout è gestito automaticamente tramite CSS Grid e si adatta alla larghezza
     *   **Homepage:** Rimossa icona "Pagina Singola" indesiderata dalla griglia home.
     *   **Titoli:** Fix allineamento verticale titoli in griglia (aggiunto `margin-top: auto`).
 *   [v] Da rivedere **Foto Cover Contain:** Applicare regola: fit orizzontale foto cover progetto  in left column non si deve sovrapporre al testo.
-    ```css
-    .left-column-progetto a img { 
-         max-height: 100%; 
-         height: auto; 
-         height: -webkit-fill-available; 
-         top: 0; 
-         left: 0; 
-         object-fit: contain; 
-         width: -webkit-fill-available; 
-    }
 *   [v] effetto escludi in home – forse levare decidere alla fine (io, Riccardo, lo toglierei)
 *   [v] **Checklist e Documentazione:** Creata checklist interna per lo sviluppo (`includes/post-types/attachment/frontend.php`) e aggiornato README con stato avanzamento.
 *   [v] **About Press:** Aggiungere in "selected press" 2025:
@@ -235,18 +225,18 @@ Il layout è gestito automaticamente tramite CSS Grid e si adatta alla larghezza
 
 
 #### Formattazione / Layout
-*   [ ] **Cross-browser:** Fare check sui vari browser.
+*   [v] **Cross-browser:** Fare check sui vari browser.
 
 #### Mobile
-*   [ ] **Progetti:** Testo troppo a filo.
-*   [ ] **Tags:** Pulsante TAG non sempre cliccabile, troppo in fondo.
-*   [ ] **Orizzontale:** Verificare visualizzazione schermo orizzontale (logo mangiato, cover gigante).
+*   [v] **Progetti:** Testo troppo a filo.
+*   [v] **Tags:** Pulsante TAG non sempre cliccabile, troppo in fondo.
+*   [v] **Orizzontale:** Verificare visualizzazione schermo orizzontale (logo mangiato, cover gigante).
 
 #### Problemi Strutturali / Backend
 *   (Nessuno attivo)
 
 #### Varie
-*   [ ] **Home:** Inserire "curated by -nome-" (attendere layout).
-*   [ ] **Pulsante +:** Valutare se tenere.
+*   [v] **Home:** Inserire "curated by -nome-" (attendere layout).
+*   [v] **Pulsante +:** Valutare se tenere.(NO)
 *   [v] **About:** Scrivere breve guida su modifica pagina ABOUT. (Fatto)
-*   [ ] **Tags:** Manca pulsante back e progettazione landing tag.
+*   [v] **Tags:** Manca pulsante back e progettazione landing tag.
