@@ -125,7 +125,7 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 Questo sistema permette di impaginare il contenuto della pagina "About" in più colonne dinamicamente, senza dover creare strutture HTML complesse lato editor.
 
 <details>
-<summary><strong>Manuale Utente & Sviluppatore</strong></summary>
+<summary><strong>Manuale Utente</strong></summary>
 
 ### 1. Come funziona (Lato Utente/Editor)
 Quando scrivi il testo nella pagina "About" (o dove è presente la classe `.multi-column-content`), puoi forzare l'inizio di una nuova colonna inserendo semplicemente il testo:
