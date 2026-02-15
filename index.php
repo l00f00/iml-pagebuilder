@@ -46,5 +46,8 @@ require_once IML_PLUGIN_DIR . 'includes/post-types/attachment/frontend.php';
 // Archive
 require_once IML_PLUGIN_DIR . 'includes/post-types/archive/frontend.php';
 
+// Taxonomies Shortcodes (Tags, Categories)
+require_once IML_PLUGIN_DIR . 'includes/frontend/taxonomies.php';
+
 // Include Frontend Logic (Enqueues, Redirects)
 require_once IML_PLUGIN_DIR . 'includes/frontend-logic.php';

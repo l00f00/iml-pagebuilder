@@ -461,6 +461,7 @@
 /* Now, we align the image within the image wrapper */ 
 .fotoContainer.destra .image-wrapper { 
   justify-content: flex-end; /* Align image to the right */ 
+  width: -webkit-fill-available;
 } 
 .fotoContainer.destra .image-wrapper img{ 
     height: 100%; 
@@ -585,5 +586,67 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
+    }
+}
+
+/* --- TAXONOMIES SHORTCODE STYLES --- */
+.iml-taxonomy-wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+.tag-archive-list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    align-content: stretch;
+    justify-content: space-evenly;
+    align-items: left;
+    height: 100%;
+    /* Grid layout */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns > 992px */
+    padding: 0;
+    padding-left: 5px;
+    margin: 0;
+}
+
+.tag-archive-list li {
+    display: inline-flex;
+    justify-content: left; /* Align cell content */
+}
+
+.tag-archive-list a {
+    text-decoration: none;
+    color: #000;
+     text-transform: capitalize;
+}
+
+.tag-archive-list a:hover {
+    color: #000;
+    font-weight: bolder;
+}
+
+.tag-archive-list span {
+    color: #000;
+    font-size: 0.9em;
+    margin-left: 5px;
+}
+.iml-taxonomy-wrapper h3{
+  padding-bottom:28px;
+}
+
+/* Media query for mobile */
+@media (max-width: 992px) {
+    .tag-archive-list {
+        grid-template-columns: 1fr; /* 1 column < 992px */
+    }
+
+    .tag-archive-list li {
+        justify-content: flex-start;
     }
 }
