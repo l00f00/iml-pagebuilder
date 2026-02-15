@@ -264,7 +264,7 @@ function iml_render_attachment_single($atts) {
         history: false, 
         loop: true, 
         alertError: false, 
-        captions: false, 
+        captions: true, // Re-enable captions but use default behavior (title attribute)
     }); 
 
     // Fix: close lightbox when clicking on wrapper (overlay)
