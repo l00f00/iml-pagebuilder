@@ -71,6 +71,30 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 <details>
 <summary><strong>Test Funzionalità Globali (Checklist Sito Completo)</strong></summary>
 
+**Homepage**
+*   [ ] **Intro:** Animazione nome (IML) caricata correttamente.
+*   [ ] **Preloading:** Animazione di caricamento pagina presente.
+*   [ ] **Griglia:** Layout Masonry caricato senza buchi.
+*   [ ] **Filtri:** Filtri (se presenti) funzionanti.
+*   [ ] **Titoli Progetti:** Allineati in basso a sinistra nell'overlay.
+*   [ ] **Icone:** Nessuna icona "Pagina Singola" indesiderata sulle card.
+*   [ ] **Link:** Ogni card porta alla pagina corretta (Progetto, Portfolio, Serie, Attachment).
+*   [ ] **Mobile:** Layout a 1 colonna su schermi piccoli.
+
+**Portfolio (Archivio & Singola)**
+*   [ ] **Griglia Archivio:** Visualizzazione corretta dei portfolio figli.
+*   [ ] **Pagina Singola:** Titolo, descrizione e griglia progetti/foto visibili.
+*   [ ] **Navigazione:** Breadcrumb o link "Back" funzionanti.
+*   [ ] **Meta Dati:** Anno, Categorie e Tag mostrati correttamente.
+*   [ ] **Allegati:** Cliccando su una foto si apre la Lightbox o la pagina attachment (a seconda della config).
+*   [ ] **Ordinamento:** L'ordine degli elementi rispetta quello impostato nel builder.
+
+**Serie (Archivio & Singola)**
+*   [ ] **Griglia:** Visualizzazione corretta degli elementi della serie.
+*   [ ] **Pagina Singola:** Layout coerente con il resto del sito.
+*   [ ] **Navigazione:** Possibilità di tornare all'indice delle serie.
+*   [ ] **Contenuti:** Testi e immagini caricati correttamente.
+
 **Tassonomie (Tag & Categorie)**
 *   [ ] **Griglia Desktop:** Verifica che categorie e tag siano visualizzati in 3 colonne su schermi > 992px.
 *   [ ] **Griglia Mobile:** Verifica che su schermi < 992px la griglia diventi a 1 colonna.
@@ -88,13 +112,9 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 *   [ ] **Layout Colonne:** Colonna sinistra (testi) e destra (foto) ben allineate.
 *   [ ] **Allineamento Foto:** Verifica che le classi (destra, sinistra, alto, basso) influenzino la posizione dell'immagine.
 
-**Homepage & Griglie**
-*   [ ] **Allineamento Titoli:** I titoli dei progetti in griglia devono essere allineati in basso a sinistra.
-*   [ ] **Icone:** Non ci devono essere icone "Pagina Singola" indesiderate sulla griglia home.
-*   [ ] **Caricamento:** Le immagini devono caricarsi correttamente (lazy loading).
-
 **Mobile & Responsiveness**
 *   [ ] **Menu:** Il menu mobile si apre e chiude correttamente (icona hamburger/X).
+*   [ ] **Sottomenu:** I sottomenu si aprono al click (verificare indicatore "V").
 *   [ ] **Padding:** I testi nei progetti non devono essere a filo bordo schermo.
 *   [ ] **Orizzontale (DA CONTROLLARE):** Ruotando il telefono, il layout si adatta senza rompere il design (cover, logo).
 
