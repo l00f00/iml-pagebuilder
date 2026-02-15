@@ -2,70 +2,7 @@
 
 Plugin personalizzato per la gestione dei contenuti e del layout del sito IML Photographer.
 
-## Note per lo Sviluppatore (Sistema Misto Oxygen/WordPress)
 
-<details>
-<summary><strong>Architettura e Integrazione</strong></summary>
-
-Questo progetto utilizza un approccio ibrido che combina:
-1.  **Oxygen Builder:** Per la gestione globale del layout (Header, Footer, Template generali).
-2.  **Plugin Custom (IML Page Builder):** Per la gestione specifica di logiche complesse, Custom Post Types (CPT), e rendering avanzato di griglie che Oxygen non può gestire nativamente con la flessibilità richiesta.
-
-**Punti Chiave:**
-*   **Shortcodes:** Il plugin espone shortcodes (`[iml_homepage_grid]`, `[iml_portfolio_grid]`, ecc.) che vengono inseriti all'interno dei blocchi "Code Block" o "Shortcode" di Oxygen.
-*   **Assets:** CSS e JS specifici del plugin sono caricati separatamente (`frontend/style.css`, `frontend/script.js`) e devono coesistere con gli stili di Oxygen.
-*   **Conflitti Potenziali:**
-    *   **Lightbox:** Il sito usa SimpleLightbox caricato dal plugin. Verificare sempre che non vada in conflitto con eventuali lightbox native di Oxygen o altri plugin.
-    *   **Z-Index:** Prestare attenzione ai livelli z-index, specialmente per menu mobile e overlay, dato che Oxygen ha una sua gestione dello stacking context.
-*   **Workflow di Modifica:**
-    *   Per modificare il layout generale (es. menu, footer): Usare **Oxygen**.
-    *   Per modificare la logica delle griglie, i CPT o le funzionalità custom: Modificare il codice del **Plugin**.
-
-</details>
-
-## Funzionalità Principali
-
-<details>
-<summary><strong>Panoramica delle Funzionalità</strong></summary>
-
-### 1. Custom Post Types (CPT)
-Registra e gestisce i seguenti tipi di contenuto personalizzati:
-*   **Portfolio:** Gerarchico, supporta categorie e tag.
-*   **Serie:** Non gerarchico, supporta categorie e tag.
-*   **Progetti:** Non gerarchico, supporta categorie e tag.
-
-### 2. Page Builder & Meta Boxes
-Implementa un sistema di **Drag & Drop** personalizzato per costruire griglie di contenuti:
-*   **Homepage Builder:** Permette di selezionare Progetti, Portfolio, Serie o Foto e organizzarli in una griglia personalizzata direttamente dalla pagina impostata come Front Page.
-*   **Portfolio & Project Builder:** Permette di associare e ordinare gallerie di immagini o altri post all'interno dei singoli Progetti o Portfolio.
-*   **Opzioni di Layout:** Per ogni elemento della griglia è possibile definire l'allineamento (Alto, Basso, Sinistra, Destra).
-
-### 3. Gestione Allegati (Attachments)
-Estende le funzionalità della libreria media di WordPress:
-*   **Campi Custom:** Aggiunge campi per "Anno", "Allineamento Singolo" e checkbox "Ha Pagina Singola".
-*   **Tag:** Abilita i tag standard di WordPress anche per gli allegati.
-
-### 4. Ottimizzazione Admin
-*   **Pulizia Interfaccia:** Rimuove menu non necessari (es. "Articoli", "Commenti") per semplificare l'esperienza dell'amministratore.
-*   **Disabilitazione Commenti:** Disabilita globalmente i commenti e i trackback.
-
-### 5. Frontend & Utility
-*   **Gestione Redirect:** Include logiche di redirect personalizzate per utenti loggati/non loggati.
-*   **Integrazione Lightbox:** Carica e configura Simple Lightbox per la visualizzazione delle immagini.
-*   **AJAX:** Gestisce il caricamento asincrono dei post per le griglie dinamiche.
-
-</details>
-
-## Installazione
-1.  Scaricare o clonare la cartella del plugin in `wp-content/plugins/`.
-2.  Attivare il plugin "IML Page Builder" dal pannello di amministrazione di WordPress.
-3.  Assicurarsi che il plugin **Meta Box** sia installato e attivo (richiesto per alcune funzionalità).
-
-## Struttura
-*   `index.php`: Entry point.
-*   `includes/`: Contiene tutta la logica divisa in moduli.
-*   `frontend/`: Contiene CSS e JS per il frontend.
-*   `old/`: Archivio del codice legacy.
 
 ## LISTA CONTROLLO E TEST (CHECKLIST)
 Da verificare per ogni nuovo inserimento o modifica ai progetti:
@@ -81,6 +18,8 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 *   [ ] Galleria si chiude bene (Si/No)
 *   [ ] Mobile: Layout semplificato 1 colonna (Si/No)
 </details>
+
+
 
 <details>
 <summary><strong>Layout 1 Colonna</strong></summary>
@@ -272,7 +211,9 @@ Questo progetto utilizza un approccio ibrido che combina:
 
 ## Changelog & Status
 
-### FATTO (Done)
+
+
+### TODO (Elenco lavorazioni in sospeso)
 *   [v] **Migrazione Codice Admin:** Tutto il codice originale (`all_admin_code.php`) è stato migrato in una struttura modulare (`includes/`).
 *   [v] **Integrazione Registrazione Campi:** Le registrazioni dei CPT e Meta Box (`registrazionecampi.php`) sono state integrate in `includes/cpt-registrations.php`.
 *   [v] **Migrazione Frontend:** 
@@ -356,3 +297,75 @@ Questo progetto utilizza un approccio ibrido che combina:
 *   [ ] Togliere i redirect dopo la verifica.
 
 </details>
+
+<details>
+<summary><strong>Documentazione Tecnica & Struttura</strong></summary>
+
+## Note per lo Sviluppatore (Sistema Misto Oxygen/WordPress)
+
+<details>
+<summary><strong>Architettura e Integrazione</strong></summary>
+
+Questo progetto utilizza un approccio ibrido che combina:
+1.  **Oxygen Builder:** Per la gestione globale del layout (Header, Footer, Template generali).
+2.  **Plugin Custom (IML Page Builder):** Per la gestione specifica di logiche complesse, Custom Post Types (CPT), e rendering avanzato di griglie che Oxygen non può gestire nativamente con la flessibilità richiesta.
+
+**Punti Chiave:**
+*   **Shortcodes:** Il plugin espone shortcodes (`[iml_homepage_grid]`, `[iml_portfolio_grid]`, ecc.) che vengono inseriti all'interno dei blocchi "Code Block" o "Shortcode" di Oxygen.
+*   **Assets:** CSS e JS specifici del plugin sono caricati separatamente (`frontend/style.css`, `frontend/script.js`) e devono coesistere con gli stili di Oxygen.
+*   **Conflitti Potenziali:**
+    *   **Lightbox:** Il sito usa SimpleLightbox caricato dal plugin. Verificare sempre che non vada in conflitto con eventuali lightbox native di Oxygen o altri plugin.
+    *   **Z-Index:** Prestare attenzione ai livelli z-index, specialmente per menu mobile e overlay, dato che Oxygen ha una sua gestione dello stacking context.
+*   **Workflow di Modifica:**
+    *   Per modificare il layout generale (es. menu, footer): Usare **Oxygen**.
+    *   Per modificare la logica delle griglie, i CPT o le funzionalità custom: Modificare il codice del **Plugin**.
+
+</details>
+
+## Funzionalità Principali
+
+<details>
+<summary><strong>Panoramica delle Funzionalità</strong></summary>
+
+### 1. Custom Post Types (CPT)
+Registra e gestisce i seguenti tipi di contenuto personalizzati:
+*   **Portfolio:** Gerarchico, supporta categorie e tag.
+*   **Serie:** Non gerarchico, supporta categorie e tag.
+*   **Progetti:** Non gerarchico, supporta categorie e tag.
+
+### 2. Page Builder & Meta Boxes
+Implementa un sistema di **Drag & Drop** personalizzato per costruire griglie di contenuti:
+*   **Homepage Builder:** Permette di selezionare Progetti, Portfolio, Serie o Foto e organizzarli in una griglia personalizzata direttamente dalla pagina impostata come Front Page.
+*   **Portfolio & Project Builder:** Permette di associare e ordinare gallerie di immagini o altri post all'interno dei singoli Progetti o Portfolio.
+*   **Opzioni di Layout:** Per ogni elemento della griglia è possibile definire l'allineamento (Alto, Basso, Sinistra, Destra).
+
+### 3. Gestione Allegati (Attachments)
+Estende le funzionalità della libreria media di WordPress:
+*   **Campi Custom:** Aggiunge campi per "Anno", "Allineamento Singolo" e checkbox "Ha Pagina Singola".
+*   **Tag:** Abilita i tag standard di WordPress anche per gli allegati.
+
+### 4. Ottimizzazione Admin
+*   **Pulizia Interfaccia:** Rimuove menu non necessari (es. "Articoli", "Commenti") per semplificare l'esperienza dell'amministratore.
+*   **Disabilitazione Commenti:** Disabilita globalmente i commenti e i trackback.
+
+### 5. Frontend & Utility
+*   **Gestione Redirect:** Include logiche di redirect personalizzate per utenti loggati/non loggati.
+*   **Integrazione Lightbox:** Carica e configura Simple Lightbox per la visualizzazione delle immagini.
+*   **AJAX:** Gestisce il caricamento asincrono dei post per le griglie dinamiche.
+
+</details>
+
+## Installazione
+1.  Scaricare o clonare la cartella del plugin in `wp-content/plugins/`.
+2.  Attivare il plugin "IML Page Builder" dal pannello di amministrazione di WordPress.
+3.  Assicurarsi che il plugin **Meta Box** sia installato e attivo (richiesto per alcune funzionalità).
+
+## Struttura
+*   `index.php`: Entry point.
+*   `includes/`: Contiene tutta la logica divisa in moduli.
+*   `frontend/`: Contiene CSS e JS per il frontend.
+*   `old/`: Archivio del codice legacy.
+
+</details>
+
+
