@@ -262,6 +262,15 @@ function iml_render_attachment_single($atts) {
         overlay: false, 
         docClose: false, 
     }); 
+
+    // Custom close on wrapper click (fix for overlay closing)
+    $(document).on('click', '.sl-wrapper', function(e) {
+        // Close if clicking outside the image and outside navigation buttons
+        if (!$(e.target).closest('.sl-image').length && !$(e.target).closest('.sl-navigation').length) {
+            gallery.close();
+        }
+    });
+
      // Aggiungi evento per tasti freccia 
      document.addEventListener('keydown', function (event) { 
          // Verifica se la lightbox è attiva controllando la presenza dell'elemento con le classi "sl-wrapper simple-lightbox" 
