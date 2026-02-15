@@ -129,6 +129,30 @@ La pagina di atterraggio (Landing Page) del tag **rispecchia fedelmente il layou
 *   Usa la stessa griglia dinamica.
 *   Non è necessario progettare graficamente ogni pagina tag: il sistema si occupa di impaginare i contenuti automaticamente mantenendo la coerenza stilistica del sito.
 
+## Guida: Shortcodes Liste (Tag & Categorie)
+
+Sono disponibili tre nuovi shortcode per visualizzare liste di tassonomie con un layout a griglia (3 colonne su desktop, 1 colonna su mobile).
+
+### 1. Lista Categorie
+Mostra tutte le categorie utilizzate (escluse quelle vuote) con il conteggio dei post.
+
+**Shortcode:** `[iml_categories_list]`
+
+### 2. Lista Tag
+Mostra tutti i tag utilizzati (esclusi quelli vuoti) con il conteggio dei post.
+
+**Shortcode:** `[iml_tags_list]`
+
+### 3. Lista Completa (Categorie + Tag)
+Mostra prima la lista delle categorie e subito dopo la lista dei tag, mantenendo lo stesso stile.
+
+**Shortcode:** `[iml_taxonomies_list]`
+
+### Note di Stile
+Il layout è gestito automaticamente tramite CSS Grid e si adatta alla larghezza dello schermo.
+*   **Desktop (>992px):** 3 colonne.
+*   **Mobile (<992px):** 1 colonna.
+
 ## Changelog & Status
 
 ### FATTO (Done)
