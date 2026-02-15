@@ -259,26 +259,8 @@ function iml_render_attachment_single($atts) {
          closeText: '<div class="divclose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 39" width="44" height="39"><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(45 16 16)" /><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(-45 16 16)" /></svg></div>', 
          navText: ['<','>'], 
         spinner: false, 
-        overlay: true, 
-        docClose: true, 
-        history: false, 
-        loop: true, 
-        alertError: false, 
-        captions: true, 
-        captionSelector: function(element) {
-            return element.nextElementSibling; 
-        },
-        captionType: 'text',
-        captionPosition: 'bottom',
-        captionDelay: 0,
-        captionHTML: true, 
-    }); 
-
-    // Fix: close lightbox when clicking on wrapper (overlay)
-    $(document).on('click', '.sl-wrapper', function(e) {
-        if (!$(e.target).closest('.sl-image').length) {
-            gallery.close();
-        }
+        overlay: false, 
+        docClose: false, 
     }); 
      // Aggiungi evento per tasti freccia 
      document.addEventListener('keydown', function (event) { 
