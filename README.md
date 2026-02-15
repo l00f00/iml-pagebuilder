@@ -95,9 +95,8 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 
 **Mobile & Responsiveness**
 *   [ ] **Menu:** Il menu mobile si apre e chiude correttamente (icona hamburger/X).
-*   [ ] **Sottomenu:** I sottomenu si aprono al click (verificare indicatore "V").
 *   [ ] **Padding:** I testi nei progetti non devono essere a filo bordo schermo.
-*   [ ] **Orizzontale:** Ruotando il telefono, il layout si adatta senza rompere il design (cover, logo).
+*   [ ] **Orizzontale (DA CONTROLLARE):** Ruotando il telefono, il layout si adatta senza rompere il design (cover, logo).
 
 </details>
 
