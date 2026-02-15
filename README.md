@@ -81,7 +81,22 @@ Bla bla bla...
 Questo testo andrà nella seconda colonna.
 ```
 
-### 2. Analisi Tecnica del Codice
+### 2. Note per lo Sviluppatore (CSS)
+Affinché le colonne si vedano affiancate, dovrai assicurarti che la classe `.multi-column-content` abbia un layout flessibile (es. `display: flex;`) e che `.column-section` abbia le dimensioni corrette.
+
+```css
+/* Esempio CSS consigliato */
+.multi-column-content {
+    display: flex;
+    gap: 20px;
+}
+.column-section {
+    flex: 1; /* Le colonne si divideranno lo spazio equamente */
+}
+```
+
+<details>
+<summary><strong>Analisi Tecnica del Codice</strong></summary>
 
 Il codice agisce automaticamente al caricamento della pagina (`DOMContentLoaded`) seguendo questi passaggi:
 
@@ -102,19 +117,7 @@ Il codice agisce automaticamente al caricamento della pagina (`DOMContentLoaded`
     *   **Pulizia Avanzata (Paragrafi Vuoti):** Cerca tutti i tag `<p>` dentro la nuova colonna e rimuove quelli che non contengono testo. Questo evita spazi bianchi indesiderati causati da "a capo" accidentali nell'editor.
     *   **Inserimento:** Aggiunge il nuovo `div` (colonna) al contenitore principale.
 
-### 3. Note per lo Sviluppatore (CSS)
-Affinché le colonne si vedano affiancate, dovrai assicurarti che la classe `.multi-column-content` abbia un layout flessibile (es. `display: flex;`) e che `.column-section` abbia le dimensioni corrette.
-
-```css
-/* Esempio CSS consigliato */
-.multi-column-content {
-    display: flex;
-    gap: 20px;
-}
-.column-section {
-    flex: 1; /* Le colonne si divideranno lo spazio equamente */
-}
-```
+</details>
 
 ## Guida: Funzionamento dei Tag
 
