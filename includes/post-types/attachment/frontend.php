@@ -3,23 +3,23 @@
  * Shortcode: [iml_attachment_single]
  *
  * CHECKLIST IMPLEMENTAZIONE:
- * [ ] Configurazione Lightbox:
- *     - [ ] overlay: false (Disabilitato nativo per evitare conflitti)
- *     - [ ] docClose: false (Disabilitato nativo)
- *     - [ ] Chiusura Custom: JS click su .sl-wrapper/.sl-overlay
- *     - [ ] Navigazione: Frecce presenti e funzionanti (navText)
- *     - [ ] Swipe Mobile: Gestione touchstart/touchend
- * [ ] Logica Post Parent:
- *     - [ ] Recupero prj_items (Progetti)
- *     - [ ] Recupero portfolio_items (Portfolio)
- *     - [ ] Fallback prj_items_alignment
- * [ ] Layout:
- *     - [ ] Left Column: Titolo, Descrizione, Categorie, Tag, Navigazione (Prev/Next/Back)
- *     - [ ] Right Column: Immagine principale con link lightbox
- *     - [ ] Allineamento: Classi CSS (destra, sinistra, alto, basso) applicate
- * [ ] Assets:
- *     - [ ] CSS caricato (frontend-style.css)
- *     - [ ] JS inline per Lightbox e altezza dinamica
+ * [v] Configurazione Lightbox:
+ *     - [v] overlay: false (Disabilitato nativo per evitare conflitti)
+ *     - [v] docClose: false (Disabilitato nativo)
+ *     - [v] Chiusura Custom: JS click su .sl-wrapper/.sl-overlay
+ *     - [v] Navigazione: Frecce presenti e funzionanti (navText)
+ *     - [v] Swipe Mobile: Gestione touchstart/touchend
+ * [v] Logica Post Parent:
+ *     - [v] Recupero prj_items (Progetti)
+ *     - [v] Recupero portfolio_items (Portfolio)
+ *     - [v] Fallback prj_items_alignment
+ * [v] Layout:
+ *     - [v] Left Column: Titolo, Descrizione, Categorie, Tag, Navigazione (Prev/Next/Back)
+ *     - [v] Right Column: Immagine principale con link lightbox
+ *     - [v] Allineamento: Classi CSS (destra, sinistra, alto, basso) applicate
+ * [v] Assets:
+ *     - [v] CSS caricato (frontend-style.css)
+ *     - [v] JS inline per Lightbox e altezza dinamica
  */
 
 if (!defined('ABSPATH')) {

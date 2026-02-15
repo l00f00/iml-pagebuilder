@@ -226,6 +226,7 @@ Il layout è gestito automaticamente tramite CSS Grid e si adatta alla larghezza
          width: -webkit-fill-available; 
     }
 *   [v] effetto escludi in home – forse levare decidere alla fine (io, Riccardo, lo toglierei)
+*   [v] **Checklist e Documentazione:** Creata checklist interna per lo sviluppo (`includes/post-types/attachment/frontend.php`) e aggiornato README con stato avanzamento.
 *   [v] **About Press:** Aggiungere in "selected press" 2025:
     *   **BeTalkZ PODCAST:** [Video YouTube](https://www.youtube.com/watch?v=r7okOw60tDw) + [Spotify](https://open.spotify.com/episode/2kdbP47CNeQWjnjFUgthnZ?si=rW7CtrmgRt2PiuQ2SBr)
     *   **Visioni (Rai5):** [RaiPlay](https://www.raiplay.it/video/2025/03/Visioni-Ritratto-di-Donne-Prima-Visione-245ce57b-b094-4982-bb09-56ce3713f9e6.html)
