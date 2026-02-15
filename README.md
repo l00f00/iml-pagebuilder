@@ -197,9 +197,9 @@ Il layout è gestito automaticamente tramite CSS Grid e si adatta alla larghezza
 ## Changelog & Status
 
 ### FATTO (Done)
-*   **Migrazione Codice Admin:** Tutto il codice originale (`all_admin_code.php`) è stato migrato in una struttura modulare (`includes/`).
-*   **Integrazione Registrazione Campi:** Le registrazioni dei CPT e Meta Box (`registrazionecampi.php`) sono state integrate in `includes/cpt-registrations.php`.
-*   **Migrazione Frontend:** 
+*   [v] **Migrazione Codice Admin:** Tutto il codice originale (`all_admin_code.php`) è stato migrato in una struttura modulare (`includes/`).
+*   [v] **Integrazione Registrazione Campi:** Le registrazioni dei CPT e Meta Box (`registrazionecampi.php`) sono state integrate in `includes/cpt-registrations.php`.
+*   [v] **Migrazione Frontend:** 
     *   La logica homepage è ora nello shortcode `[iml_homepage_grid]`.
     *   La logica portfolio single è ora nello shortcode `[iml_portfolio_grid]`.
     *   La logica archivio (tag/cat) è ora nello shortcode `[iml_archive_grid]`.
@@ -207,29 +207,29 @@ Il layout è gestito automaticamente tramite CSS Grid e si adatta alla larghezza
     *   La logica serie/progetto single è ora nello shortcode `[iml_project_single]`.
     *   La logica serie/progetto single è ora nello shortcode `[iml_serie_single]`.
     *   La logica attachment single è ora nello shortcode `[iml_attachment_single]`.
-*   **Assets Frontend:** CSS e JS sono stati separati in file dedicati (`frontend/style.css`, `frontend/script.js`) e vengono caricati correttamente.
-*   **Webhook:** Configurazione e test webhook GitHub completato.
-*   **Bug Builder Home:** Risolvere bug builder pagina HOME (spostare builder animazione o soluzione in place, ottimizzazione caricamento).
-*   **Builder Dropdown:** Dividere righe dropdown builder in 3 colonne per esperienza piu' friendly.
-*   **Ottimizzazione Immagini:** Ottimizzazione Immagini che impediscono il caricamento del builder.
-*   **Backend Upload:** Risolto bug upload da Media non funzionante su Portfolio (conflitto ID e inizializzazione array vuoto).
-*   **Safari CSS:** Risolto bug foto "cover" progetti esplode su Safari (aggiunto `width: -webkit-fill-available!important`).
-*   **Foto Cover Contain:** Applicata regola CSS per fit orizzontale con spazietto di 8px.
-*   **Menu Desktop:** Allineare menu titoli con menu tendina (allineare a fine parola, bandiera allineata a fine parola titolo).
-*   **Menu Desktop:** Allineare con testi (valutare fattibilità tecnica).
-*   **Menu Desktop:** Fix Z-Index e posizionamento colonna destra.
-*   **Backend Upload:** Risolto bug upload da Media non funzionante su Portfolio e Progetti (conflitto JS).
-*   **Menu Mobile:** Aggiungere una piccola "V" per segnare apertura sottomenu al click.
-*   **Testi Progetti:** Implementare "Read More" per testi lunghi (desktop e valutare tablet).
-*   **Foto Cover:** Applicare regola: verticale fit 100vh, orizzontale fit container.
-*   **Foto Cover Orizzontale:** Gestione specifica nei progetti (es. Jhalak, Termini Underground).
-*   **Allineamento Foto:** Allineare foto "cover" orizzontale quando a dx c’è foto orizzontale (es. COEZ).
-*   **Menu:** Finisce troppo in basso e diventa non cliccabile.
-*   **Bug Scroll:** Pagina singola progetto cambia da sola allo scroll touch.
-*   **Menu Admin:** Ogni tot crasha.
-*   **Home:** Escludi post (valutare se rimuovere).
-*   **Progetti:** Nome delle foto on hover (come Music Archives).
-*   **Menu Desktop:** Aggiornato stile per allineamento a destra (flex-end) delle voci di menu.
+*   [v] **Assets Frontend:** CSS e JS sono stati separati in file dedicati (`frontend/style.css`, `frontend/script.js`) e vengono caricati correttamente.
+*   [v] **Webhook:** Configurazione e test webhook GitHub completato.
+*   [v] **Bug Builder Home:** Risolvere bug builder pagina HOME (spostare builder animazione o soluzione in place, ottimizzazione caricamento).
+*   [v] **Builder Dropdown:** Dividere righe dropdown builder in 3 colonne per esperienza piu' friendly.
+*   [v] **Ottimizzazione Immagini:** Ottimizzazione Immagini che impediscono il caricamento del builder.
+*   [v] **Backend Upload:** Risolto bug upload da Media non funzionante su Portfolio (conflitto ID e inizializzazione array vuoto).
+*   [v] **Safari CSS:** Risolto bug foto "cover" progetti esplode su Safari (aggiunto `width: -webkit-fill-available!important`).
+*   [v] **Foto Cover Contain:** Applicata regola CSS per fit orizzontale con spazietto di 8px.
+*   [v] **Menu Desktop:** Allineare menu titoli con menu tendina (allineare a fine parola, bandiera allineata a fine parola titolo).
+*   [v] **Menu Desktop:** Allineare con testi (valutare fattibilità tecnica).
+*   [v] **Menu Desktop:** Fix Z-Index e posizionamento colonna destra.
+*   [v] **Backend Upload:** Risolto bug upload da Media non funzionante su Portfolio e Progetti (conflitto JS).
+*   [v] **Menu Mobile:** Aggiungere una piccola "V" per segnare apertura sottomenu al click.
+*   [v] **Testi Progetti:** Implementare "Read More" per testi lunghi (desktop e valutare tablet).
+*   [v] **Foto Cover:** Applicare regola: verticale fit 100vh, orizzontale fit container.
+*   [v] **Foto Cover Orizzontale:** Gestione specifica nei progetti (es. Jhalak, Termini Underground).
+*   [v] **Allineamento Foto:** Allineare foto "cover" orizzontale quando a dx c’è foto orizzontale (es. COEZ).
+*   [v] **Menu:** Finisce troppo in basso e diventa non cliccabile.
+*   [v] **Bug Scroll:** Pagina singola progetto cambia da sola allo scroll touch.
+*   [v] **Menu Admin:** Ogni tot crasha.
+*   [v] **Home:** Escludi post (valutare se rimuovere).
+*   [v] **Progetti:** Nome delle foto on hover (come Music Archives).
+*   [v] **Menu Desktop:** Aggiornato stile per allineamento a destra (flex-end) delle voci di menu.
 *   [v] **Home Builder:** Risolvere bug builder pagina HOME (spostare builder animazione in nuova pagina con label apposito).
 *   [v] **Home Intro:** Animazione nome in INTRO — (In attesa file da cartella drive).
 *   [v] **Home Preloading:** Inserimento animazione preloading pagina.
