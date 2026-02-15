@@ -347,4 +347,6 @@ Questo progetto utilizza un approccio ibrido che combina:
 *   [v] **Tags:** Manca pulsante back e progettazione landing tag.
 
 ### TODO (Elenco lavorazioni in sospeso)
+*Togliere i redirect doopo la verifica*
 *(Nessuna lavorazione attiva)*
+*(ALL BUGS HAVE BEEN SQUASHED)*
