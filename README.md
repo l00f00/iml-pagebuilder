@@ -62,6 +62,60 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 *   [ ] Galleria si chiude bene (Si/No)
 *   [ ] Mobile: Layout semplificato 1 colonna (Si/No)
 
+## Guida: Gestione Colonne Dinamiche (Pagina About)
+
+Questo sistema permette di impaginare il contenuto della pagina "About" in più colonne dinamicamente, senza dover creare strutture HTML complesse lato editor.
+
+**Scopo del codice:**
+Trasformare un unico blocco di testo in più colonne separate ogni volta che viene incontrato il marcatore speciale `[NUOVACOLONNA]`.
+
+### 1. Come funziona (Lato Utente/Editor)
+Quando scrivi il testo nella pagina "About" (o dove è presente la classe `.multi-column-content`), puoi forzare l'inizio di una nuova colonna inserendo semplicemente il testo:
+`[NUOVACOLONNA]`
+
+**Esempio di input:**
+```text
+Questo è il testo della prima colonna.
+Bla bla bla...
+[NUOVACOLONNA]
+Questo testo andrà nella seconda colonna.
+```
+
+### 2. Analisi Tecnica del Codice
+
+Il codice agisce automaticamente al caricamento della pagina (`DOMContentLoaded`) seguendo questi passaggi:
+
+1.  **Selezione del Contenitore:**
+    Cerca l'elemento HTML che ha la classe `.multi-column-content`. Se non lo trova, si ferma.
+
+2.  **Lettura e Divisione:**
+    *   Prende tutto il contenuto HTML interno.
+    *   Usa la funzione `.split("[NUOVACOLONNA]")` per "tagliare" il testo in vari pezzi ogni volta che trova quel marcatore.
+
+3.  **Reset:**
+    Svuota completamente il contenitore originale (`innerHTML = ""`) per prepararlo a ricevere i nuovi blocchi.
+
+4.  **Ricostruzione (Ciclo):**
+    Per ogni pezzo di testo tagliato (ogni colonna):
+    *   **Pulizia Iniziale:** Rimuove spazi vuoti extra all'inizio e alla fine (`trim()`).
+    *   **Creazione Colonna:** Crea un nuovo `div` con classe `column-section`. Questa classe può essere usata nel CSS per dare stile (es. larghezza, float, flex).
+    *   **Pulizia Avanzata (Paragrafi Vuoti):** Cerca tutti i tag `<p>` dentro la nuova colonna e rimuove quelli che non contengono testo. Questo evita spazi bianchi indesiderati causati da "a capo" accidentali nell'editor.
+    *   **Inserimento:** Aggiunge il nuovo `div` (colonna) al contenitore principale.
+
+### 3. Note per lo Sviluppatore (CSS)
+Affinché le colonne si vedano affiancate, dovrai assicurarti che la classe `.multi-column-content` abbia un layout flessibile (es. `display: flex;`) e che `.column-section` abbia le dimensioni corrette.
+
+```css
+/* Esempio CSS consigliato */
+.multi-column-content {
+    display: flex;
+    gap: 20px;
+}
+.column-section {
+    flex: 1; /* Le colonne si divideranno lo spazio equamente */
+}
+```
+
 ## Changelog & Status
 
 ### FATTO (Done)
@@ -150,6 +204,6 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 #### Varie
 *   [ ] **Home:** Inserire "curated by -nome-" (attendere layout).
 *   [ ] **Pulsante +:** Valutare se tenere.
-*   [ ] **About:** Scrivere breve guida su modifica pagina ABOUT.
+*   [v] **About:** Scrivere breve guida su modifica pagina ABOUT. (Fatto)
 *   [ ] **About Press:** Aggiungere in "selected press" 2025: BeTalkZ PODCAST (YouTube + Spotify) e Visioni (RaiPlay).
 *   [ ] **Tags:** Manca pulsante back e progettazione landing tag.
