@@ -264,14 +264,7 @@ function iml_render_attachment_single($atts) {
         history: false, 
         loop: true, 
         alertError: false, 
-        captions: true, 
-        captionSelector: function(element) {
-            return element.nextElementSibling; 
-        },
-        captionType: 'text',
-        captionPosition: 'bottom',
-        captionDelay: 0,
-        captionHTML: true, 
+        captions: false, 
     }); 
 
     // Fix: close lightbox when clicking on wrapper (overlay)
