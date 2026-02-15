@@ -223,23 +223,14 @@ Il layout è gestito automaticamente tramite CSS Grid e si adatta alla larghezza
 *   [v] **About Press:** Aggiungere in "selected press" 2025:
     *   **BeTalkZ PODCAST:** [Video YouTube](https://www.youtube.com/watch?v=r7okOw60tDw) + [Spotify](https://open.spotify.com/episode/2kdbP47CNeQWjnjFUgthnZ?si=rW7CtrmgRt2PiuQ2SBr)
     *   **Visioni (Rai5):** [RaiPlay](https://www.raiplay.it/video/2025/03/Visioni-Ritratto-di-Donne-Prima-Visione-245ce57b-b094-4982-bb09-56ce3713f9e6.html)
-
-### TODO (Elenco lavorazioni in sospeso)
-
-
-#### Formattazione / Layout
 *   [v] **Cross-browser:** Fare check sui vari browser.
-
-#### Mobile
-*   [v] **Progetti:** Testo troppo a filo.
-*   [v] **Tags:** Pulsante TAG non sempre cliccabile, troppo in fondo.
-*   [v] **Orizzontale:** Verificare visualizzazione schermo orizzontale (logo mangiato, cover gigante).
-
-#### Problemi Strutturali / Backend
-*   (Nessuno attivo)
-
-#### Varie
+*   [v] **Progetti (Mobile):** Testo troppo a filo.
+*   [v] **Tags (Mobile):** Pulsante TAG non sempre cliccabile, troppo in fondo.
+*   [v] **Orizzontale (Mobile):** Verificare visualizzazione schermo orizzontale (logo mangiato, cover gigante).
 *   [v] **Home:** Inserire "curated by -nome-" (attendere layout).
 *   [v] **Pulsante +:** Valutare se tenere.(NO)
 *   [v] **About:** Scrivere breve guida su modifica pagina ABOUT. (Fatto)
 *   [v] **Tags:** Manca pulsante back e progettazione landing tag.
+
+### TODO (Elenco lavorazioni in sospeso)
+*(Nessuna lavorazione attiva)*
