@@ -264,9 +264,8 @@ function iml_render_attachment_single($atts) {
     }); 
 
     // Custom close on wrapper click (fix for overlay closing)
-    $(document).on('click', '.sl-wrapper', function(e) {
-        // Close if clicking outside the image and outside navigation buttons
-        if (!$(e.target).closest('.sl-image').length && !$(e.target).closest('.sl-navigation').length) {
+    $(document).off('click', '.sl-wrapper').on('click', '.sl-wrapper', function(e) {
+        if ($(e.target).hasClass('sl-wrapper')) {
             gallery.close();
         }
     });
