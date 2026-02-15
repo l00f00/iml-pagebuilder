@@ -124,8 +124,8 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 
 Questo sistema permette di impaginare il contenuto della pagina "About" in più colonne dinamicamente, senza dover creare strutture HTML complesse lato editor.
 
-**Scopo del codice:**
-Trasformare un unico blocco di testo in più colonne separate ogni volta che viene incontrato il marcatore speciale `[NUOVACOLONNA]`.
+<details>
+<summary><strong>Manuale Utente & Sviluppatore</strong></summary>
 
 ### 1. Come funziona (Lato Utente/Editor)
 Quando scrivi il testo nella pagina "About" (o dove è presente la classe `.multi-column-content`), puoi forzare l'inizio di una nuova colonna inserendo semplicemente il testo:
@@ -153,8 +153,7 @@ Affinché le colonne si vedano affiancate, dovrai assicurarti che la classe `.mu
 }
 ```
 
-<details>
-<summary><strong>Analisi Tecnica del Codice</strong></summary>
+### 3. Analisi Tecnica del Codice
 
 Il codice agisce automaticamente al caricamento della pagina (`DOMContentLoaded`) seguendo questi passaggi:
 
@@ -179,6 +178,9 @@ Il codice agisce automaticamente al caricamento della pagina (`DOMContentLoaded`
 
 ## Guida: Funzionamento dei Tag
 
+<details>
+<summary><strong>Logica e Visualizzazione</strong></summary>
+
 **Come funzionano?**
 Il sistema dei tag è **completamente automatico**. Non c'è bisogno di configurare manualmente le pagine di archivio per ogni tag.
 
@@ -190,7 +192,12 @@ La pagina di atterraggio (Landing Page) del tag **rispecchia fedelmente il layou
 *   Usa la stessa griglia dinamica.
 *   Non è necessario progettare graficamente ogni pagina tag: il sistema si occupa di impaginare i contenuti automaticamente mantenendo la coerenza stilistica del sito.
 
+</details>
+
 ## Guida: Shortcodes Liste (Tag & Categorie)
+
+<details>
+<summary><strong>Lista Shortcode Disponibili</strong></summary>
 
 Sono disponibili tre nuovi shortcode per visualizzare liste di tassonomie con un layout a griglia (3 colonne su desktop, 1 colonna su mobile).
 
@@ -213,6 +220,29 @@ Mostra prima la lista delle categorie e subito dopo la lista dei tag, mantenendo
 Il layout è gestito automaticamente tramite CSS Grid e si adatta alla larghezza dello schermo.
 *   **Desktop (>992px):** 3 colonne.
 *   **Mobile (<992px):** 1 colonna.
+
+</details>
+
+## Note per lo Sviluppatore (Sistema Misto Oxygen/WordPress)
+
+<details>
+<summary><strong>Architettura e Integrazione</strong></summary>
+
+Questo progetto utilizza un approccio ibrido che combina:
+1.  **Oxygen Builder:** Per la gestione globale del layout (Header, Footer, Template generali).
+2.  **Plugin Custom (IML Page Builder):** Per la gestione specifica di logiche complesse, Custom Post Types (CPT), e rendering avanzato di griglie che Oxygen non può gestire nativamente con la flessibilità richiesta.
+
+**Punti Chiave:**
+*   **Shortcodes:** Il plugin espone shortcodes (`[iml_homepage_grid]`, `[iml_portfolio_grid]`, ecc.) che vengono inseriti all'interno dei blocchi "Code Block" o "Shortcode" di Oxygen.
+*   **Assets:** CSS e JS specifici del plugin sono caricati separatamente (`frontend/style.css`, `frontend/script.js`) e devono coesistere con gli stili di Oxygen.
+*   **Conflitti Potenziali:**
+    *   **Lightbox:** Il sito usa SimpleLightbox caricato dal plugin. Verificare sempre che non vada in conflitto con eventuali lightbox native di Oxygen o altri plugin.
+    *   **Z-Index:** Prestare attenzione ai livelli z-index, specialmente per menu mobile e overlay, dato che Oxygen ha una sua gestione dello stacking context.
+*   **Workflow di Modifica:**
+    *   Per modificare il layout generale (es. menu, footer): Usare **Oxygen**.
+    *   Per modificare la logica delle griglie, i CPT o le funzionalità custom: Modificare il codice del **Plugin**.
+
+</details>
 
 ## Changelog & Status
 
