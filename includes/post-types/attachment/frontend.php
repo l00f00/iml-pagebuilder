@@ -34,20 +34,20 @@ function iml_render_attachment_single($atts) {
      
      if (is_array($items)) { 
          foreach ($items as $foto_id) { 
-             // Ottieni l'URL dell'immagine di dimensioni complete 
-             $image_url = wp_get_attachment_image_url($foto_id, 'full'); 
-             //echo $image_url; 
-             if ($image_url) { 
-                 $image_paths[] = stripslashes($image_url); 
-             } 
-         } 
-     } 
-     // cerco l'URL dell'immagine principale del post in diverse dimensioni 
-     // nell' array e la rimuovo per evitare immagini raddoppiate 
-       $main_image_urls = [ 
-           wp_get_attachment_url($post->ID), 
-           wp_get_attachment_image_url($post->ID, 'full') 
-       ]; 
+            // Ottieni l'URL dell'immagine di dimensioni complete 
+            $image_url = wp_get_attachment_image_url($foto_id, 'large'); 
+            //echo $image_url; 
+            if ($image_url) { 
+                $image_paths[] = stripslashes($image_url); 
+            } 
+        } 
+    } 
+    // cerco l'URL dell'immagine principale del post in diverse dimensioni 
+    // nell' array e la rimuovo per evitare immagini raddoppiate 
+      $main_image_urls = [ 
+          wp_get_attachment_url($post->ID), 
+          wp_get_attachment_image_url($post->ID, 'large') 
+      ]; 
        
        // Rimuovi gli URL dell'immagine principale dall'array $image_paths 
        foreach ($main_image_urls as $main_image_url) { 
@@ -227,10 +227,10 @@ function iml_render_attachment_single($atts) {
           ?> 
           <a class="related-foto-item" href="<?php echo esc_url($image_url); ?>" style="color:black;" data-lightbox="gallery"> 
           <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
-               <div class="image-wrapper"> 
-                   <?php echo wp_get_attachment_image($attachment_id, 'full'); ?> 
-               </div> 
-           </div> 
+              <div class="image-wrapper"> 
+                  <?php echo wp_get_attachment_image($attachment_id, 'large'); ?> 
+              </div> 
+          </div> 
            </a> 
        </div> 
      <div id="hidden-images" style="display: none;"> 
@@ -259,12 +259,12 @@ function iml_render_attachment_single($atts) {
          closeText: '<div class="divclose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 39" width="44" height="39"><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(45 16 16)" /><rect x="4" y="14" width="24" height="4" fill="white" transform="rotate(-45 16 16)" /></svg></div>', 
          navText: ['<','>'], 
         spinner: false, 
-        overlay: true, 
-        docClose: true, 
+        overlay: false, 
+        docClose: false, 
         history: false, 
         loop: true, 
         alertError: false, 
-        captions: true, // Re-enable captions but use default behavior (title attribute)
+        captions: false, 
     }); 
 
     // Fix: close lightbox when clicking on wrapper (overlay)
