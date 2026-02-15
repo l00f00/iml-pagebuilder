@@ -44,7 +44,9 @@ Estende le funzionalità della libreria media di WordPress:
 ## LISTA CONTROLLO E TEST (CHECKLIST)
 Da verificare per ogni nuovo inserimento o modifica ai progetti:
 
-**Layout 3 Colonne:**
+<details>
+<summary><strong>Layout 3 Colonne</strong></summary>
+
 *   [ ] Immagine principale verticale corretta (Si/No)
 *   [ ] Spazio dal testo presente (Si/No)
 *   [ ] Read More corretto e funzionante (Si/No)
@@ -52,8 +54,11 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 *   [ ] Immagine al click va a singola (Si/No)
 *   [ ] Galleria si chiude bene (Si/No)
 *   [ ] Mobile: Layout semplificato 1 colonna (Si/No)
+</details>
 
-**Layout 1 Colonna:**
+<details>
+<summary><strong>Layout 1 Colonna</strong></summary>
+
 *   [ ] Immagine principale corretta (Si/No)
 *   [ ] Spazio dal testo presente (Si/No)
 *   [ ] Read More corretto e funzionante (Si/No)
@@ -61,6 +66,40 @@ Da verificare per ogni nuovo inserimento o modifica ai progetti:
 *   [ ] Immagine al click va a singola (Si/No)
 *   [ ] Galleria si chiude bene (Si/No)
 *   [ ] Mobile: Layout semplificato 1 colonna (Si/No)
+</details>
+
+<details>
+<summary><strong>Test Funzionalità Globali (Checklist Sito Completo)</strong></summary>
+
+**Tassonomie (Tag & Categorie)**
+*   [ ] **Griglia Desktop:** Verifica che categorie e tag siano visualizzati in 3 colonne su schermi > 992px.
+*   [ ] **Griglia Mobile:** Verifica che su schermi < 992px la griglia diventi a 1 colonna.
+*   [ ] **Link Funzionanti:** Cliccando su un tag/categoria, si deve aprire la pagina archivio corretta.
+*   [ ] **Conteggio Post:** Verifica che il numero tra parentesi corrisponda ai post effettivi.
+*   [ ] **Layout Archivio:** La pagina di atterraggio del tag deve rispecchiare il layout della Homepage.
+
+**Allegati (Attachment Single Page)**
+*   [ ] **Navigazione:** Frecce "Previous" e "Next" presenti e funzionanti.
+*   [ ] **Pulsante Back:** Il pulsante "Back" deve riportare al progetto/portfolio genitore corretto.
+*   [ ] **Lightbox Apertura:** Cliccando sulla foto principale, si apre la Lightbox.
+*   [ ] **Lightbox Navigazione:** Le frecce dentro la Lightbox permettono di scorrere le immagini.
+*   [ ] **Lightbox Chiusura:** Cliccando sullo sfondo scuro (overlay) o sulla "X", la Lightbox si chiude.
+*   [ ] **Lightbox Swipe (Mobile):** Su mobile, lo swipe destra/sinistra cambia immagine.
+*   [ ] **Layout Colonne:** Colonna sinistra (testi) e destra (foto) ben allineate.
+*   [ ] **Allineamento Foto:** Verifica che le classi (destra, sinistra, alto, basso) influenzino la posizione dell'immagine.
+
+**Homepage & Griglie**
+*   [ ] **Allineamento Titoli:** I titoli dei progetti in griglia devono essere allineati in basso a sinistra.
+*   [ ] **Icone:** Non ci devono essere icone "Pagina Singola" indesiderate sulla griglia home.
+*   [ ] **Caricamento:** Le immagini devono caricarsi correttamente (lazy loading).
+
+**Mobile & Responsiveness**
+*   [ ] **Menu:** Il menu mobile si apre e chiude correttamente (icona hamburger/X).
+*   [ ] **Sottomenu:** I sottomenu si aprono al click (verificare indicatore "V").
+*   [ ] **Padding:** I testi nei progetti non devono essere a filo bordo schermo.
+*   [ ] **Orizzontale:** Ruotando il telefono, il layout si adatta senza rompere il design (cover, logo).
+
+</details>
 
 ## Guida: Gestione Colonne Dinamiche (Pagina About)
 
