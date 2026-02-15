@@ -279,7 +279,7 @@ function iml_render_attachment_single($atts) {
          navText: ['<','>'], 
         spinner: false, 
         overlay: false, 
-        docClose: fals, 
+        docClose: true, 
     }); 
 
     // Custom close on wrapper or overlay click
