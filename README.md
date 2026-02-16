@@ -262,7 +262,7 @@ Questo progetto utilizza un approccio ibrido che combina:
     5.  **Rilevamento Orientamento:** Affinata la logica per determinare se un'immagine è verticale, assicurando il controllo corretto di larghezza e altezza.
 *   [v] **Frontend Grids Fix:**
     1.  **Pulizia Attachment:** Rimosse le chiamate non necessarie a categorie, tag e anno per gli elementi di tipo `attachment` nelle griglie di Homepage, Portfolio e Project (prevenzione errori PHP).
-    2.  **Indicatore Frontend:** Aggiunto un indicatore visivo ("❐") nell'overlay delle immagini che hanno una "Pagina Singola" attiva, per segnalare la cliccabilità.
+    2.  **Indicatore Frontend:** Rimosso indicatore visivo ("❐") nell'overlay delle immagini (richiesta utente: pulizia frontend).
 *   [v] **Attachment Single Page:**
     1.  **Lightbox Navigation:** Ripristinata configurazione semplice (`overlay: false`, `docClose: false`) per risolvere problemi di navigazione (frecce che sparivano).
     2.  **Chiusura Custom:** Implementato script JS per chiudere la lightbox cliccando sullo sfondo vuoto (`.sl-wrapper` o `.sl-overlay`), evitando chiusure accidentali durante la navigazione.
