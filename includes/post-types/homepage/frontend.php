@@ -125,12 +125,12 @@ function iml_homepage_lottie_preloader() {
         #lottie-overlay {
             position: fixed;
             inset: 0;
-            background: #ffffff; /* Sfondo bianco */
+            background: transparent; /* Sfondo trasparente (richiesta utente: "niente sfondo") */
             z-index: 99999999; /* Z-index molto alto */
             display: none; /* Nascosto di default, attivato via JS se desktop */
             align-items: center;
             justify-content: center;
-            pointer-events: all; /* Blocca i click durante il caricamento */
+            pointer-events: none; /* Permetti click sotto (richiesta utente implicita con "niente sfondo") */
             opacity: 1; /* Assicuriamo opacità iniziale */
         }
         #lottie-container {
@@ -138,7 +138,7 @@ function iml_homepage_lottie_preloader() {
             height: 100vh;
         }
         html.lottie-active, body.lottie-active {
-            overflow: hidden !important; /* Blocca lo scroll */
+            /* overflow: hidden !important; */ /* Disabilitato blocco scroll (opzionale se sfondo è trasparente) */
         }
     </style>
     
@@ -162,13 +162,13 @@ function iml_homepage_lottie_preloader() {
             return;
         }
 
-        // Se è desktop, mostra l'overlay e blocca lo scroll
+        // Se è desktop, mostra l'overlay
         if (overlay) {
             overlay.style.display = 'flex';
             overlay.style.opacity = '1'; // Force opacity
         }
-        document.documentElement.classList.add('lottie-active');
-        document.body.classList.add('lottie-active');
+        // document.documentElement.classList.add('lottie-active');
+        // document.body.classList.add('lottie-active');
         
         var container = document.getElementById('lottie-container');
         var done = false;
@@ -180,22 +180,13 @@ function iml_homepage_lottie_preloader() {
             if (done) return;
             done = true;
             
-            // Fade out
+            // Rimozione immediata (richiesta utente: "niente sfumatura")
             if (overlay) {
-                // Imposta la transizione per durare 1 secondo (1000ms)
-                overlay.style.transition = 'opacity 1s ease';
-                overlay.style.opacity = '0';
-                
-                // Rimuovi l'elemento dal DOM dopo che la transizione è completata (1000ms)
-                setTimeout(function() {
-                    overlay.style.display = 'none';
-                    document.documentElement.classList.remove('lottie-active');
-                    document.body.classList.remove('lottie-active');
-                    console.log('🐞 Lottie DOM Removed completely at:', Date.now() - startTime, 'ms');
-                }, 1000);
-            } else {
-                document.documentElement.classList.remove('lottie-active');
-                document.body.classList.remove('lottie-active');
+                overlay.style.display = 'none';
+                overlay.remove(); // Rimuovi completamente dal DOM
+                // document.documentElement.classList.remove('lottie-active');
+                // document.body.classList.remove('lottie-active');
+                console.log('🐞 Lottie DOM Removed completely at:', Date.now() - startTime, 'ms');
             }
         }
 

@@ -248,7 +248,7 @@ Questo progetto utilizza un approccio ibrido che combina:
 *   [v] **Progetti:** Nome delle foto on hover (come Music Archives).
 *   [v] **Menu Desktop:** Aggiornato stile per allineamento a destra (flex-end) delle voci di menu.
 *   [v] **Home Builder:** Risolvere bug builder pagina HOME (spostare builder animazione in nuova pagina con label apposito).
-*   [v] **Home Intro:** Animazione nome in INTRO — (In attesa file da cartella drive).
+*   [v] **Home Intro:** Animazione nome in INTRO — Aggiornata: niente sfondo, niente sfumatura, subito presente.
 *   [v] **Home Preloading:** Inserimento animazione preloading pagina.
 *   [v] **Fix Dropdown Caricamento:** Risolto problema connessione chiusa nel caricamento immagini builder. Implementato sistema di caricamento concorrente a coda (batch da 30, max 6 connessioni parallele) con barra di progresso e auto-riempimento intelligente. (Si/Done)
 *   [v] **Portfolio Builder Update:**
