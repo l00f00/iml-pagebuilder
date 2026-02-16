@@ -70,9 +70,27 @@
      align-items: flex-start; 
  } 
 
- .categories-tags, .year-title { 
-   margin: 0px; 
- } 
+ /* Grid Back Button */
+.grid-back-btn {
+    display: inline-block;
+    color: white;
+    background-color: black;
+    padding: 2px 5px;
+    margin-top: 5px;
+    text-decoration: none;
+    font-size: 0.9em;
+    cursor: pointer;
+    align-self: flex-start;
+    pointer-events: auto; /* Enable clicks */
+}
+.grid-back-btn:hover {
+    color: black;
+    background-color: white;
+}
+
+.categories-tags, .year-title { 
+  margin: 0px; 
+} 
 
  .categories-tags { 
    align-self: flex-start; 
@@ -259,6 +277,11 @@
 /* Mobile styles */
 @media (max-width: 1120px) {
     /* ... existing mobile styles ... */
+    
+    .year-title {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
     
     /* Menu centering and indicator */
     #_nav_menu-21-106 .oxy-nav-menu-list {

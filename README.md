@@ -322,7 +322,8 @@ DESKTOP
 - a seleziona un post per inserire immagini in griglia: visualizzazione sballata, possibile averla come era sempre stata? Immagini più piccole 
 *   [v] **Portfolio Upload:** Ripristinato pulsante "Upload Foto" nel builder Portfolio per caricamento diretto da media library. 
 *   [v] **Media Library Filters:** Abilitato filtro categorie nel pannello "Upload Foto" del Portfolio. Impostato `type: 'image'` nel media frame per forzare la visualizzazione corretta dei filtri standard.
-- pagina TAG: è stato levato il clic intermedio, ma non si va più al progetto, si apre solo la galleria… invece doveva andare al progetto, solo doveva essere levato il clic intermedio con scritto “show progetto” 
+- pagina TAG archivio: Click su immagine deve andare al progetto parent, se non c-[ progetto alla pagina singola dell attachment,
+cliente dice [è stato levato il clic intermedio, ma non si va più al progetto, si apre solo la galleria… invece doveva andare al progetto, solo doveva essere levato il clic intermedio con scritto “show progetto” ]
 - inoltre la galleria non funziona dopo aver visualizzato la foto se clicco X la pagina si frega sul bianco
 
 MOBILE

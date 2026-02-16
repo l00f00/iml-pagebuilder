@@ -335,8 +335,8 @@ function iml_handle_animation_preview() {
                     position: fixed;
                     top: 0;
                     left: 0;
-                    width: 100%;
-                    height: 100%;
+                    width: 100vw;
+                    height: 100vh;
                     z-index: 9999;
                     display: flex;
                     align-items: center;
@@ -345,8 +345,8 @@ function iml_handle_animation_preview() {
                     pointer-events: none;
                 }
                 #lottie-container {
-                    width: 100vw;
-                    height: 100vh;
+                    width: 100%;
+                    height: 100%;
                     /* Will be overridden by JS */
                 }
             </style>
@@ -440,10 +440,29 @@ function iml_handle_animation_preview() {
                 
                 // Dimension Inputs
                 function updateDimensions() {
-                    container.style.width = animW.value;
-                    container.style.height = animH.value;
-                    localStorage.setItem('iml_anim_w', animW.value);
-                    localStorage.setItem('iml_anim_h', animH.value);
+                    // Update all overlays and iframe together
+                    var w = animW.value;
+                    var h = animH.value;
+                    
+                    // Apply to container
+                    container.style.width = w;
+                    container.style.height = h;
+                    
+                    // Apply to overlays and iframe to keep sync
+                    // Note: If values are percentage, they apply to window. If px, they apply directly.
+                    // However, iframe is fixed. If we change iframe size, we simulate window resize for it.
+                    var iframe = document.getElementById('site-preview');
+                    iframe.style.width = w;
+                    iframe.style.height = h;
+                    
+                    // Center the iframe if smaller than screen? 
+                    // User said: "iframe e animazione devono! essere grandi uguali"
+                    // And previously "overlay massimo grande 100vh e 100vw".
+                    // If we resize animation container, we should probably resize the "viewport" (iframe) too.
+                    
+                    localStorage.setItem('iml_anim_w', w);
+                    localStorage.setItem('iml_anim_h', h);
+                    
                     // Trigger resize for Lottie
                     anim.resize();
                 }

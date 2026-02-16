@@ -75,6 +75,7 @@ function iml_render_archive_grid($atts) {
                     echo '<div class="year-title">';
                     echo '<span class="title">' . esc_html($title) . '</span>';
                     echo '</div>';
+                    echo '<a href="' . esc_url($permalink) . '" class="grid-back-btn">Back</a>'; // Add Back button
                     echo '</div>';
                     echo '<div class="image-wrapper">' . $the_thumb . '</div>';
                     echo '</a>';
@@ -85,9 +86,22 @@ function iml_render_archive_grid($atts) {
                 } elseif ($post_type === 'attachment') {
                     $title = get_the_title($post_id);
                     $thumbnail = wp_get_attachment_image_url($post_id, 'full');
-                    $permalink = get_permalink($post_id);
                     
-                    echo '<a href="' . esc_url($thumbnail) .'" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($post_id) . '" data-lightbox="gallery">';
+                    // Logic for linking to parent project or single attachment page
+                    $parent_id = wp_get_post_parent_id($post_id);
+                    $parent_post = get_post($parent_id);
+                    
+                    if ($parent_post && ($parent_post->post_type === 'progetto' || $parent_post->post_type === 'serie')) {
+                        $permalink = get_permalink($parent_id);
+                        $lightbox_attr = ''; // No lightbox, go to parent
+                    } else {
+                         // Fallback: check if single page is enabled (though 'attachment' post type logic here is usually simple)
+                         // User request: "se non c'è progetto alla pagina singola dell attachment"
+                         $permalink = get_permalink($post_id);
+                         $lightbox_attr = ''; // No lightbox, go to single page
+                    }
+                    
+                    echo '<a href="' . esc_url($permalink) .'" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($post_id) . '" ' . $lightbox_attr . '>';
                     echo '<div class="info-overlay">';
                     echo '<div class="categories-tags">';
                     echo '<div class="hidden-html" href="' . esc_url($permalink) . '" data-caption="' . esc_html($title) . '"></div>';
@@ -95,14 +109,13 @@ function iml_render_archive_grid($atts) {
                     echo '<div class="year-title">';
                     echo '<span class="title">' . esc_html($title) . '</span>';
                     echo '</div>';
+                    echo '<span class="grid-back-btn">Back</span>'; // Add Back button (span because wrapper is already <a>)
                     echo '</div>';
                     echo '<div class="image-wrapper">';
                     echo wp_get_attachment_image($post_id, 'full');
                     echo '</div>';
                     echo '</a>';
-                    echo '<div class="hidden-caption" style="display: none;">';
-                    echo '<span class="title">' . esc_html($title) . '</span> - <a href="' . esc_url($permalink) . '" >Show Photo</a>';
-                    echo '</div>';
+                    // Hidden caption not needed if we are linking away
                 }
                 wp_reset_postdata();
             }
