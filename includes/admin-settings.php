@@ -172,6 +172,35 @@ function iml_handle_animation_preview() {
                     opacity: 1;
                 }
                 
+                /* Layer 0.5: White Overlay (Optional) */
+                #white-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(255, 255, 255, 0.5);
+                    z-index: 2;
+                    display: none; /* Hidden by default */
+                    pointer-events: none;
+                }
+                
+                /* Layer 0.6: Grid Overlay (Optional) */
+                #grid-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 3;
+                    display: none; /* Hidden by default */
+                    pointer-events: none;
+                    background-size: 100px 100px;
+                    background-image:
+                        linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+                }
+
                 /* Layer 1: Lottie Animation (Top) */
                 #lottie-overlay {
                     position: fixed;
@@ -184,6 +213,7 @@ function iml_handle_animation_preview() {
                     align-items: center;
                     justify-content: center;
                     background: transparent; /* No background as per recent changes */
+                    pointer-events: none;
                 }
                 
                 #lottie-container {
@@ -197,18 +227,50 @@ function iml_handle_animation_preview() {
                     right: 20px;
                     z-index: 10000;
                     background: rgba(0,0,0,0.8);
-                    padding: 10px;
-                    border-radius: 5px;
+                    padding: 15px;
+                    border-radius: 8px;
                     color: white;
                     font-family: sans-serif;
-                    font-size: 12px;
+                    font-size: 13px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+                }
+                #controls h4 {
+                    margin: 0 0 5px 0;
+                    font-size: 14px;
+                    color: #ddd;
+                }
+                .control-group {
+                    display: flex;
+                    gap: 5px;
+                    flex-wrap: wrap;
                 }
                 button {
                     cursor: pointer;
-                    padding: 5px 10px;
-                    background: #fff;
-                    border: none;
-                    border-radius: 3px;
+                    padding: 6px 12px;
+                    background: #444;
+                    color: #fff;
+                    border: 1px solid #555;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    transition: background 0.2s;
+                }
+                button:hover {
+                    background: #555;
+                }
+                button.active {
+                    background: #0073aa;
+                    border-color: #0073aa;
+                }
+                button#replay-btn {
+                    background: #d63638;
+                    border-color: #d63638;
+                    font-weight: bold;
+                }
+                button#replay-btn:hover {
+                    background: #e04f51;
                 }
             </style>
             <!-- Load Lottie Web from CDN or Local if available -->
@@ -217,22 +279,36 @@ function iml_handle_animation_preview() {
         <body>
             <!-- Background Iframe -->
             <iframe id="site-preview" src="<?php echo home_url(); ?>"></iframe>
+            
+            <!-- Optional Overlays -->
+            <div id="white-overlay"></div>
+            <div id="grid-overlay"></div>
 
             <!-- Animation Overlay -->
             <div id="lottie-overlay">
                 <div id="lottie-container"></div>
             </div>
 
-            <!-- Simple Controls -->
+            <!-- Enhanced Controls -->
             <div id="controls">
-                IML Animation Preview <br><br>
-                <button id="replay-btn">Replay Animation</button>
+                <h4>IML Animation Preview</h4>
+                <div class="control-group">
+                    <button id="replay-btn">Replay</button>
+                    <button id="play-pause-btn">Pause</button>
+                </div>
+                <div class="control-group">
+                    <button id="toggle-white-btn">White Overlay (50%)</button>
+                    <button id="toggle-grid-btn">Grid Overlay</button>
+                </div>
             </div>
 
             <script>
             document.addEventListener('DOMContentLoaded', function() {
                 var container = document.getElementById('lottie-container');
                 var overlay = document.getElementById('lottie-overlay');
+                var whiteOverlay = document.getElementById('white-overlay');
+                var gridOverlay = document.getElementById('grid-overlay');
+                var playPauseBtn = document.getElementById('play-pause-btn');
                 
                 var anim = lottie.loadAnimation({
                     container: container,
@@ -245,19 +321,52 @@ function iml_handle_animation_preview() {
                     }
                 });
 
+                var isPlaying = true;
+
                 // On complete behavior
                 anim.addEventListener('complete', function() {
                     console.log('Animation completed');
-                    // Optional: fade out logic if you want to mimic the site exactly, 
-                    // but user asked for "niente sfumatura subito presente" recently, 
-                    // so we just let it finish.
-                    // If we want to hide it to see the site behind:
                     overlay.style.display = 'none';
+                    playPauseBtn.textContent = 'Play';
+                    isPlaying = false;
                 });
 
+                // Replay
                 document.getElementById('replay-btn').addEventListener('click', function() {
                     overlay.style.display = 'flex';
                     anim.goToAndPlay(0);
+                    playPauseBtn.textContent = 'Pause';
+                    isPlaying = true;
+                });
+
+                // Play/Pause
+                playPauseBtn.addEventListener('click', function() {
+                    if (isPlaying) {
+                        anim.pause();
+                        this.textContent = 'Play';
+                    } else {
+                        // If animation was hidden/finished, show it again first if needed
+                        if (overlay.style.display === 'none') {
+                            overlay.style.display = 'flex';
+                            anim.goToAndPlay(0); // Restart if finished
+                        } else {
+                            anim.play();
+                        }
+                        this.textContent = 'Pause';
+                    }
+                    isPlaying = !isPlaying;
+                });
+
+                // Toggle White Overlay
+                document.getElementById('toggle-white-btn').addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    whiteOverlay.style.display = whiteOverlay.style.display === 'block' ? 'none' : 'block';
+                });
+
+                // Toggle Grid Overlay
+                document.getElementById('toggle-grid-btn').addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    gridOverlay.style.display = gridOverlay.style.display === 'block' ? 'none' : 'block';
                 });
             });
             </script>
