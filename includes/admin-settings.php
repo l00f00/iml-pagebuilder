@@ -195,7 +195,7 @@ function iml_handle_animation_preview() {
                     z-index: 3;
                     display: none; /* Hidden by default */
                     pointer-events: none;
-                    background-size: 100px 100px;
+                    background-size: 20px 20px;
                     background-image:
                         linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
                         linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
@@ -206,8 +206,8 @@ function iml_handle_animation_preview() {
                     position: fixed;
                     top: 0;
                     left: 0;
-                    width: 100%;
-                    height: 100%;
+                    width: 100vw;
+                    height: 100vh;
                     z-index: 9999;
                     display: flex;
                     align-items: center;
@@ -217,8 +217,8 @@ function iml_handle_animation_preview() {
                 }
                 
                 #lottie-container {
-                    width: 100%;
-                    height: 100%;
+                    width: 100vw;
+                    height: 100vh;
                 }
 
                 #controls {
