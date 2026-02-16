@@ -19,6 +19,7 @@ require_once IML_PLUGIN_DIR . 'includes/cpt-registrations.php';
 
 // Include admin cleanup and settings
 require_once IML_PLUGIN_DIR . 'includes/admin-cleanup.php';
+require_once IML_PLUGIN_DIR . 'includes/admin-settings.php'; // IML General Settings
 
 // Include Attachment Custom Fields
 require_once IML_PLUGIN_DIR . 'includes/attachment-fields.php';

@@ -159,6 +159,28 @@ La pagina di atterraggio (Landing Page) del tag **rispecchia fedelmente il layou
 
 </details>
 
+## Guida: Gestione Animazione Intro
+
+<details>
+<summary><strong>Caricamento e Test Animazione</strong></summary>
+
+### 1. Caricamento File JSON
+Per cambiare l'animazione di intro della homepage:
+1.  Vai nel menu di WordPress **IML General**.
+2.  Clicca su **Select/Upload JSON**.
+3.  Carica o seleziona un file `.json` dalla libreria media.
+4.  Clicca su **Save Settings**.
+5.  Se nessun file è selezionato, verrà usato il file di default (`frontend/assets/new.json`).
+
+### 2. Pagina di Test
+Per verificare l'animazione prima di pubblicarla o per debug:
+1.  Crea una nuova pagina in WordPress.
+2.  Inserisci lo shortcode: `[iml_animation_test]`.
+3.  Pubblica la pagina (consigliato slug: `animation-test`).
+4.  Il link diretto alla pagina di test (se lo slug è `animation-test`) è disponibile anche nella pagina delle impostazioni **IML General**.
+
+</details>
+
 ## Guida: Shortcodes Liste (Tag & Categorie)
 
 <details>
@@ -249,6 +271,10 @@ Questo progetto utilizza un approccio ibrido che combina:
 *   [v] **Menu Desktop:** Aggiornato stile per allineamento a destra (flex-end) delle voci di menu.
 *   [v] **Home Builder:** Risolvere bug builder pagina HOME (spostare builder animazione in nuova pagina con label apposito).
 *   [v] **Home Intro:** Animazione nome in INTRO — Aggiornata: niente sfondo, niente sfumatura, subito presente.
+*   [v] **Intro Animation Manager:** Aggiunto menu "IML General" nella dashboard per gestire il file JSON dell'animazione di intro. Include:
+    *   Upload/Selezione file JSON.
+    *   Fallback automatico al file originale.
+    *   Pagina di test accessibile tramite shortcode `[iml_animation_test]` o link diretto nel menu.
 *   [v] **Home Preloading:** Inserimento animazione preloading pagina.
 *   [v] **Fix Dropdown Caricamento:** Risolto problema connessione chiusa nel caricamento immagini builder. Implementato sistema di caricamento concorrente a coda (batch da 30, max 6 connessioni parallele) con barra di progresso e auto-riempimento intelligente. (Si/Done)
 *   [v] **Portfolio Builder Update:**

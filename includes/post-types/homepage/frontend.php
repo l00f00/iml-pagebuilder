@@ -96,7 +96,9 @@ function iml_render_homepage_grid($atts) {
  */
 add_action('wp_head', function() {
     if ( is_front_page() && !is_user_logged_in() ) {
-        $lottie_url = IML_PLUGIN_URL . 'frontend/assets/new.json';
+        $custom_json = get_option('iml_intro_animation_json');
+        $default_json = IML_PLUGIN_URL . 'frontend/assets/new.json';
+        $lottie_url = $custom_json ? $custom_json : $default_json;
         echo '<link rel="preload" href="' . esc_url($lottie_url) . '" as="fetch" crossorigin="anonymous">';
     }
 }, 5);
@@ -113,7 +115,9 @@ function iml_homepage_lottie_preloader() {
     }
     
     // URL del file JSON dell'animazione
-    $lottie_url = IML_PLUGIN_URL . 'frontend/assets/new.json';
+    $custom_json = get_option('iml_intro_animation_json');
+    $default_json = IML_PLUGIN_URL . 'frontend/assets/new.json';
+    $lottie_url = $custom_json ? $custom_json : $default_json;
     ?>
     <!-- Lottie Preloader HTML -->
     <div id="lottie-overlay" aria-hidden="true" style="display:none; opacity: 1;">
