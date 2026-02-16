@@ -164,8 +164,10 @@ function iml_handle_animation_preview() {
                     position: fixed;
                     top: 0;
                     left: 0;
-                    width: 100%;
-                    height: 100%;
+                    width: 100vw;
+                    height: 100vh;
+                    width: 100dvw;
+                    height: 100dvh;
                     border: none;
                     z-index: 1;
                     pointer-events: none; /* Make non-interactive as requested */
@@ -289,6 +291,17 @@ function iml_handle_animation_preview() {
                     font-family: monospace;
                     min-width: 50px;
                     text-align: right;
+                }
+                
+                /* Responsive 100% full screen fix */
+                body, html, #lottie-overlay, #lottie-container, #white-overlay, #grid-overlay {
+                    width: 100vw;
+                    height: 100vh;
+                    width: 100dvw;
+                    height: 100dvh;
+                    margin: 0;
+                    padding: 0;
+                    overflow: hidden;
                 }
             </style>
             <!-- Load Lottie Web from CDN or Local if available -->
