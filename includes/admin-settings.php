@@ -295,6 +295,8 @@ function iml_handle_animation_preview() {
                 <div class="control-group">
                     <button id="replay-btn">Replay</button>
                     <button id="play-pause-btn">Pause</button>
+                    <button id="first-frame-btn">First Frame</button>
+                    <button id="last-frame-btn">Last Frame</button>
                 </div>
                 <div class="control-group">
                     <button id="toggle-white-btn">White Overlay (50%)</button>
@@ -367,6 +369,24 @@ function iml_handle_animation_preview() {
                 document.getElementById('toggle-grid-btn').addEventListener('click', function() {
                     this.classList.toggle('active');
                     gridOverlay.style.display = gridOverlay.style.display === 'block' ? 'none' : 'block';
+                });
+
+                // First Frame
+                document.getElementById('first-frame-btn').addEventListener('click', function() {
+                    overlay.style.display = 'flex';
+                    anim.goToAndStop(0, true);
+                    playPauseBtn.textContent = 'Play';
+                    isPlaying = false;
+                });
+
+                // Last Frame
+                document.getElementById('last-frame-btn').addEventListener('click', function() {
+                    overlay.style.display = 'flex';
+                    // duration (in frames) - 1
+                    var lastFrame = anim.totalFrames - 1; 
+                    anim.goToAndStop(lastFrame, true); 
+                    playPauseBtn.textContent = 'Play';
+                    isPlaying = false;
                 });
             });
             </script>
