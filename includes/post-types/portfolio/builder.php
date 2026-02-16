@@ -16,6 +16,8 @@ function portfolio_meta_box_callback($post) {
     wp_nonce_field('portfolio_save_meta_box_data', 'portfolio_meta_box_nonce');
     $portfolio_items = get_post_meta($post->ID, 'portfolio_items', true) ?: [];
 
+    echo '<button style="margin-bottom:30px;" id="custom_media_upload" class="button">Upload Foto</button>';
+
     echo '<div style="position:relative;">'; // Wrapper
     echo '<ul id="add-portfolio-item" class="portfolio-dropdown">';
     echo '<li class="dropdown-toggle">Seleziona un post</li>';
@@ -412,6 +414,49 @@ function portfolio_admin_scripts() {
                 $('#add-portfolio-item li').removeClass('selected');
                 $('#add-portfolio-item').removeClass('active');
             });
+
+            // Custom Media Upload
+            $('#custom_media_upload').click(function(e) {
+                e.preventDefault();
+                var mediaUploader = wp.media({
+                    title: 'Upload Media',
+                    button: {
+                        text: 'Select'
+                    },
+                    multiple: true // Allow multiple file selection
+                }).on('select', function() {
+                    // Get the selected media
+                    var selections = mediaUploader.state().get('selection');
+                    
+                    // FIX: Handle empty value correctly to avoid empty string in array
+                    var val = $('#portfolio_items_field').val();
+                    var existingIds = val ? val.split(',') : [];
+        
+                    selections.each(function(attachment) {
+                        existingIds.push(attachment.id); // Add new attachment IDs to the array
+                        // Optional: Append the new item to the grid
+                        var gridItemHTML = '<div class="grid-item fotoContainer square" data-id="' + attachment.id + '">' +
+                        '<div class="image-container">' +
+                        '<img src="' + attachment.attributes.url + '" alt="" class="attachment-medium size-medium">' +
+                        '</div>' +
+                        '<div class="item-controls-overlay">' +
+                        '<select class="item-alignment" name="item_alignment[' + attachment.id + ']">' +
+                        '<option value="alto">Alto</option>' +
+                        '<option value="basso">Basso</option>' +
+                        '</select>' +
+                        '<div style="color: deeppink;">attachment</div>' +
+                        '</div>' +
+                        '<button type="button" class="remove-item">Remove</button>' +
+                        '</div>';
+
+                        $('#portfolio-items-list').append(gridItemHTML);
+                    });
+        
+                    $('#portfolio_items_field').val(existingIds.join(',')); // Update the hidden field
+                });
+                mediaUploader.open();
+            });
+
         });
     </script>
     <?php
