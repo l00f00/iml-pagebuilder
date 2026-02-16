@@ -272,6 +272,24 @@ function iml_handle_animation_preview() {
                 button#replay-btn:hover {
                     background: #e04f51;
                 }
+                
+                /* Timeline Slider */
+                .timeline-container {
+                    width: 100%;
+                    margin-bottom: 5px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+                input[type=range] {
+                    flex-grow: 1;
+                    cursor: pointer;
+                }
+                #current-frame-display {
+                    font-family: monospace;
+                    min-width: 50px;
+                    text-align: right;
+                }
             </style>
             <!-- Load Lottie Web from CDN or Local if available -->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
@@ -292,6 +310,10 @@ function iml_handle_animation_preview() {
             <!-- Enhanced Controls -->
             <div id="controls">
                 <h4>IML Animation Preview</h4>
+                <div class="timeline-container">
+                    <input type="range" id="anim-slider" min="0" value="0" step="1">
+                    <span id="current-frame-display">0</span>
+                </div>
                 <div class="control-group">
                     <button id="replay-btn">Replay</button>
                     <button id="play-pause-btn">Pause</button>
@@ -311,6 +333,8 @@ function iml_handle_animation_preview() {
                 var whiteOverlay = document.getElementById('white-overlay');
                 var gridOverlay = document.getElementById('grid-overlay');
                 var playPauseBtn = document.getElementById('play-pause-btn');
+                var slider = document.getElementById('anim-slider');
+                var frameDisplay = document.getElementById('current-frame-display');
                 
                 var anim = lottie.loadAnimation({
                     container: container,
@@ -324,6 +348,33 @@ function iml_handle_animation_preview() {
                 });
 
                 var isPlaying = true;
+                var totalFrames = 0;
+
+                // Initialize Slider when data is ready
+                anim.addEventListener('DOMLoaded', function() {
+                    totalFrames = anim.totalFrames;
+                    slider.max = totalFrames - 1;
+                });
+
+                // Update Slider during playback
+                anim.addEventListener('enterFrame', function(e) {
+                    if (isPlaying) {
+                        slider.value = e.currentTime;
+                        frameDisplay.textContent = Math.round(e.currentTime);
+                    }
+                });
+
+                // Handle Slider Input (Scrubbing)
+                slider.addEventListener('input', function() {
+                    var frame = parseFloat(this.value);
+                    overlay.style.display = 'flex'; // Ensure visible
+                    anim.goToAndStop(frame, true);
+                    frameDisplay.textContent = Math.round(frame);
+                    
+                    // Pause when scrubbing
+                    isPlaying = false;
+                    playPauseBtn.textContent = 'Play';
+                });
 
                 // On complete behavior
                 anim.addEventListener('complete', function() {
@@ -331,6 +382,8 @@ function iml_handle_animation_preview() {
                     overlay.style.display = 'none';
                     playPauseBtn.textContent = 'Play';
                     isPlaying = false;
+                    slider.value = totalFrames - 1;
+                    frameDisplay.textContent = Math.round(totalFrames - 1);
                 });
 
                 // Replay
@@ -377,16 +430,19 @@ function iml_handle_animation_preview() {
                     anim.goToAndStop(0, true);
                     playPauseBtn.textContent = 'Play';
                     isPlaying = false;
+                    slider.value = 0;
+                    frameDisplay.textContent = '0';
                 });
 
                 // Last Frame
                 document.getElementById('last-frame-btn').addEventListener('click', function() {
                     overlay.style.display = 'flex';
-                    // duration (in frames) - 1
                     var lastFrame = anim.totalFrames - 1; 
                     anim.goToAndStop(lastFrame, true); 
                     playPauseBtn.textContent = 'Play';
                     isPlaying = false;
+                    slider.value = lastFrame;
+                    frameDisplay.textContent = Math.round(lastFrame);
                 });
             });
             </script>
