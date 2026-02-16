@@ -330,7 +330,7 @@ MOBILE
 - vista veloce mi pare tutto ok tranne i testi dei progetti che sono rimasti troppo a filo, non è stato dato quel piccolo margine che era in lista. Vedi margine testo descrizione nelle foto singole del progetto stesso, lì è ok.
 
 Builderl
-- qui continua a essere saltata un’immagine (infatti poi l’editing è sballato) non è un grande problema la re-inserisco… pero’ devo sapere quale fosse,  puoi risalire e visualizzare con un backup?
+- DONE ILARIA qui continua a essere saltata un’immagine (infatti poi l’editing è sballato) non è un grande problema la re-inserisco… pero’ devo sapere quale fosse,  puoi risalire e visualizzare con un backup?
 *(Nessuna lavorazione attiva)*
 *(ALL BUGS HAVE BEEN SQUASHED)*
 
