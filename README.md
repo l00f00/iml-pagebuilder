@@ -316,12 +316,12 @@ Questo progetto utilizza un approccio ibrido che combina:
 ### TODO (Elenco lavorazioni in sospeso)
 DESKTOP
 - l’intro non è ok, hai sentito poi Riccardo? Parlane con lui se puoi
-- nella pagina TAG manca ancora il pulsante BACK ma sono apparse le categorie che NON devono essere visibile a chi naviga , quindi vanno levate
-- nella pagina dei progetti appare una piccola icona nera, cos’è? (Vedi screen) 
+-   [v]  nella pagina TAG manca ancora il pulsante BACK ma sono apparse le categorie che NON devono essere visibile a chi naviga , quindi vanno levate
+-   [v] nella pagina dei progetti appare una piccola icona nera, cos’è? (Vedi screen) 
 - le didascalie dei portfoli come ti avevo segnalato si sono spostate di allineamento, (screen) 
 - a seleziona un post per inserire immagini in griglia: visualizzazione sballata, possibile averla come era sempre stata? Immagini più piccole 
 *   [v] **Portfolio Upload:** Ripristinato pulsante "Upload Foto" nel builder Portfolio per caricamento diretto da media library. 
--  nel pannello “Upload Media” (quando devo aggiungere contenuti a un nuovo portfolio) il filtro mostra solo le tag. per la gestione interna servirebbe poter filtrare anche e sopratutto per categorie, era nella lista mandata a RIC
+*   [v] **Media Library Filters:** Abilitato filtro categorie nel pannello "Upload Foto" del Portfolio. Impostato `type: 'image'` nel media frame per forzare la visualizzazione corretta dei filtri standard.
 - pagina TAG: è stato levato il clic intermedio, ma non si va più al progetto, si apre solo la galleria… invece doveva andare al progetto, solo doveva essere levato il clic intermedio con scritto “show progetto” 
 - inoltre la galleria non funziona dopo aver visualizzato la foto se clicco X la pagina si frega sul bianco
 

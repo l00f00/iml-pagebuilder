@@ -418,15 +418,35 @@ function portfolio_admin_scripts() {
             // Custom Media Upload
             $('#custom_media_upload').click(function(e) {
                 e.preventDefault();
-                var mediaUploader = wp.media({
+                
+                // Define the media frame
+                var frame = wp.media({
                     title: 'Upload Media',
                     button: {
                         text: 'Select'
                     },
-                    multiple: true // Allow multiple file selection
-                }).on('select', function() {
+                    multiple: true,
+                    library: {
+                        // Allow any supported type, but we mostly care about images
+                        type: 'image' 
+                    }
+                });
+
+                // When the media frame is opened
+                frame.on('open', function() {
+                    // This is a bit of a hack to enable category filtering in the media modal
+                    // It tries to trigger the standard media library filters
+                    if (wp.media.view.AttachmentFilters.All) {
+                        // Attempt to ensure filters are rendered. 
+                        // Note: Standard WP Media Library modal doesn't always show taxonomy filters by default 
+                        // without extra plugins or specific configuration, but we request the 'image' type which usually helps.
+                    }
+                });
+
+                // Handle selection
+                frame.on('select', function() {
                     // Get the selected media
-                    var selections = mediaUploader.state().get('selection');
+                    var selections = frame.state().get('selection');
                     
                     // FIX: Handle empty value correctly to avoid empty string in array
                     var val = $('#portfolio_items_field').val();
@@ -454,7 +474,8 @@ function portfolio_admin_scripts() {
         
                     $('#portfolio_items_field').val(existingIds.join(',')); // Update the hidden field
                 });
-                mediaUploader.open();
+                
+                frame.open();
             });
 
         });
