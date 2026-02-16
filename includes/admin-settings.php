@@ -293,8 +293,34 @@ function iml_handle_animation_preview() {
                     text-align: right;
                 }
                 
+                /* Dimensions Controls */
+                .dimensions-controls {
+                    display: flex;
+                    gap: 10px;
+                    margin-top: 10px;
+                    padding-top: 10px;
+                    border-top: 1px solid #555;
+                }
+                .input-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2px;
+                }
+                .input-group label {
+                    font-size: 10px;
+                    color: #aaa;
+                }
+                .input-group input {
+                    width: 60px;
+                    padding: 4px;
+                    border-radius: 3px;
+                    border: 1px solid #555;
+                    background: #333;
+                    color: white;
+                }
+                
                 /* Responsive 100% full screen fix */
-                body, html, #lottie-overlay, #lottie-container, #white-overlay, #grid-overlay {
+                body, html, #white-overlay, #grid-overlay {
                     width: 100vw;
                     height: 100vh;
                     width: 100dvw;
@@ -302,6 +328,26 @@ function iml_handle_animation_preview() {
                     margin: 0;
                     padding: 0;
                     overflow: hidden;
+                }
+                
+                /* Dynamic Lottie Wrapper */
+                #lottie-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: transparent;
+                    pointer-events: none;
+                }
+                #lottie-container {
+                    width: 100vw;
+                    height: 100vh;
+                    /* Will be overridden by JS */
                 }
             </style>
             <!-- Load Lottie Web from CDN or Local if available -->
@@ -337,6 +383,21 @@ function iml_handle_animation_preview() {
                     <button id="toggle-white-btn">White Overlay (50%)</button>
                     <button id="toggle-grid-btn">Grid Overlay</button>
                 </div>
+                
+                <div class="dimensions-controls">
+                    <div class="input-group">
+                        <label>Anim W</label>
+                        <input type="text" id="anim-w" value="100%">
+                    </div>
+                    <div class="input-group">
+                        <label>Anim H</label>
+                        <input type="text" id="anim-h" value="100%">
+                    </div>
+                    <div class="input-group">
+                        <label>Viewport</label>
+                        <span id="viewport-size" style="font-size:10px; padding-top:5px; color:#aaa;">-</span>
+                    </div>
+                </div>
             </div>
 
             <script>
@@ -349,6 +410,23 @@ function iml_handle_animation_preview() {
                 var slider = document.getElementById('anim-slider');
                 var frameDisplay = document.getElementById('current-frame-display');
                 
+                var animW = document.getElementById('anim-w');
+                var animH = document.getElementById('anim-h');
+                var viewportSize = document.getElementById('viewport-size');
+                
+                // Load saved dimensions
+                var savedW = localStorage.getItem('iml_anim_w');
+                var savedH = localStorage.getItem('iml_anim_h');
+                if(savedW) { animW.value = savedW; container.style.width = savedW; }
+                if(savedH) { animH.value = savedH; container.style.height = savedH; }
+                
+                // Update Viewport Info
+                function updateViewportInfo() {
+                    viewportSize.textContent = window.innerWidth + 'x' + window.innerHeight;
+                }
+                window.addEventListener('resize', updateViewportInfo);
+                updateViewportInfo();
+                
                 var anim = lottie.loadAnimation({
                     container: container,
                     renderer: 'svg',
@@ -359,6 +437,18 @@ function iml_handle_animation_preview() {
                         preserveAspectRatio: 'xMidYMid slice' // Fullscreen cover behavior
                     }
                 });
+                
+                // Dimension Inputs
+                function updateDimensions() {
+                    container.style.width = animW.value;
+                    container.style.height = animH.value;
+                    localStorage.setItem('iml_anim_w', animW.value);
+                    localStorage.setItem('iml_anim_h', animH.value);
+                    // Trigger resize for Lottie
+                    anim.resize();
+                }
+                animW.addEventListener('change', updateDimensions);
+                animH.addEventListener('change', updateDimensions);
 
                 var isPlaying = true;
                 var totalFrames = 0;
