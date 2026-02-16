@@ -320,7 +320,7 @@ function iml_handle_animation_preview() {
                 }
                 
                 /* Responsive 100% full screen fix */
-                body, html, #white-overlay, #grid-overlay {
+                body, html {
                     width: 100vw;
                     height: 100vh;
                     width: 100dvw;
@@ -329,14 +329,20 @@ function iml_handle_animation_preview() {
                     padding: 0;
                     overflow: hidden;
                 }
+
+                #site-preview, #white-overlay, #grid-overlay {
+                    /* Default to full screen, but can be overridden by JS */
+                    width: 100%;
+                    height: 100%;
+                }
                 
                 /* Dynamic Lottie Wrapper */
                 #lottie-overlay {
                     position: fixed;
                     top: 0;
                     left: 0;
-                    width: 100vw;
-                    height: 100vh;
+                    width: 100%; /* Default full, but overridden by JS via container? No, overlay is the wrapper */
+                    height: 100%;
                     z-index: 9999;
                     display: flex;
                     align-items: center;
@@ -386,12 +392,20 @@ function iml_handle_animation_preview() {
                 
                 <div class="dimensions-controls">
                     <div class="input-group">
-                        <label>Anim W</label>
+                        <label>Anim W (px)</label>
                         <input type="text" id="anim-w" value="100%">
                     </div>
                     <div class="input-group">
-                        <label>Anim H</label>
+                        <label>Anim H (px)</label>
                         <input type="text" id="anim-h" value="100%">
+                    </div>
+                    <div class="input-group">
+                        <label>Iframe W (px)</label>
+                        <input type="text" id="iframe-w" value="100%">
+                    </div>
+                    <div class="input-group">
+                        <label>Iframe H (px)</label>
+                        <input type="text" id="iframe-h" value="100%">
                     </div>
                     <div class="input-group">
                         <label>Viewport</label>
@@ -406,19 +420,28 @@ function iml_handle_animation_preview() {
                 var overlay = document.getElementById('lottie-overlay');
                 var whiteOverlay = document.getElementById('white-overlay');
                 var gridOverlay = document.getElementById('grid-overlay');
+                var iframe = document.getElementById('site-preview');
+                
                 var playPauseBtn = document.getElementById('play-pause-btn');
                 var slider = document.getElementById('anim-slider');
                 var frameDisplay = document.getElementById('current-frame-display');
                 
                 var animW = document.getElementById('anim-w');
                 var animH = document.getElementById('anim-h');
+                var iframeW = document.getElementById('iframe-w');
+                var iframeH = document.getElementById('iframe-h');
                 var viewportSize = document.getElementById('viewport-size');
                 
                 // Load saved dimensions
-                var savedW = localStorage.getItem('iml_anim_w');
-                var savedH = localStorage.getItem('iml_anim_h');
-                if(savedW) { animW.value = savedW; container.style.width = savedW; }
-                if(savedH) { animH.value = savedH; container.style.height = savedH; }
+                var savedAnimW = localStorage.getItem('iml_anim_w');
+                var savedAnimH = localStorage.getItem('iml_anim_h');
+                var savedIframeW = localStorage.getItem('iml_iframe_w');
+                var savedIframeH = localStorage.getItem('iml_iframe_h');
+                
+                if(savedAnimW) { animW.value = savedAnimW; container.style.width = savedAnimW; }
+                if(savedAnimH) { animH.value = savedAnimH; container.style.height = savedAnimH; }
+                if(savedIframeW) { iframeW.value = savedIframeW; iframe.style.width = savedIframeW; }
+                if(savedIframeH) { iframeH.value = savedIframeH; iframe.style.height = savedIframeH; }
                 
                 // Update Viewport Info
                 function updateViewportInfo() {
@@ -440,34 +463,36 @@ function iml_handle_animation_preview() {
                 
                 // Dimension Inputs
                 function updateDimensions() {
-                    // Update all overlays and iframe together
-                    var w = animW.value;
-                    var h = animH.value;
+                    // Update Animation Container
+                    var aw = animW.value;
+                    var ah = animH.value;
+                    container.style.width = aw;
+                    container.style.height = ah;
+                    localStorage.setItem('iml_anim_w', aw);
+                    localStorage.setItem('iml_anim_h', ah);
                     
-                    // Apply to container
-                    container.style.width = w;
-                    container.style.height = h;
+                    // Update Iframe
+                    var iw = iframeW.value;
+                    var ih = iframeH.value;
+                    iframe.style.width = iw;
+                    iframe.style.height = ih;
+                    localStorage.setItem('iml_iframe_w', iw);
+                    localStorage.setItem('iml_iframe_h', ih);
                     
-                    // Apply to overlays and iframe to keep sync
-                    // Note: If values are percentage, they apply to window. If px, they apply directly.
-                    // However, iframe is fixed. If we change iframe size, we simulate window resize for it.
-                    var iframe = document.getElementById('site-preview');
-                    iframe.style.width = w;
-                    iframe.style.height = h;
-                    
-                    // Center the iframe if smaller than screen? 
-                    // User said: "iframe e animazione devono! essere grandi uguali"
-                    // And previously "overlay massimo grande 100vh e 100vw".
-                    // If we resize animation container, we should probably resize the "viewport" (iframe) too.
-                    
-                    localStorage.setItem('iml_anim_w', w);
-                    localStorage.setItem('iml_anim_h', h);
-                    
+                    // Sync overlays with iframe size (optional, but good for testing alignment)
+                    // whiteOverlay.style.width = iw;
+                    // whiteOverlay.style.height = ih;
+                    // gridOverlay.style.width = iw;
+                    // gridOverlay.style.height = ih;
+
                     // Trigger resize for Lottie
                     anim.resize();
                 }
+                
                 animW.addEventListener('change', updateDimensions);
                 animH.addEventListener('change', updateDimensions);
+                iframeW.addEventListener('change', updateDimensions);
+                iframeH.addEventListener('change', updateDimensions);
 
                 var isPlaying = true;
                 var totalFrames = 0;
