@@ -74,8 +74,12 @@ function iml_general_settings_page_html() {
         <hr>
 
         <h2>Animation Test Page</h2>
-        <p>To test the animation, create a page and insert the shortcode <code>[iml_animation_test]</code>.</p>
-        <p>Or visit the test page if already created: <a href="<?php echo site_url('/animation-test/'); ?>" target="_blank">/animation-test/</a> (Ensure a page with slug 'animation-test' exists and contains the shortcode).</p>
+        <p>Click the button below to open a full-screen preview of the animation in a new tab.</p>
+        <p>This preview page is visible only to logged-in users and overlays the animation on the live homepage to simulate the real experience.</p>
+        
+        <a href="<?php echo esc_url(add_query_arg('iml_animation_preview', '1', home_url())); ?>" target="_blank" class="button button-primary button-large">
+            Open Live Animation Preview
+        </a>
     </div>
 
     <script>
@@ -123,44 +127,143 @@ function iml_allow_json_mime($mimes) {
     return $mimes;
 }
 
-// Test Shortcode
-add_shortcode('iml_animation_test', 'iml_render_animation_test');
-function iml_render_animation_test() {
-    $custom_url = get_option('iml_intro_animation_json');
-    $default_url = IML_PLUGIN_URL . 'frontend/assets/new.json';
-    $lottie_url = $custom_url ? $custom_url : $default_url;
-    
-    ob_start();
-    ?>
-    <div style="padding: 20px; background: #eee; text-align: center;">
-        <h3>Testing Animation: <?php echo basename($lottie_url); ?></h3>
-        <p>URL: <?php echo esc_url($lottie_url); ?></p>
-        <div id="test-lottie-container" style="width: 800px; height: 600px; margin: 0 auto; background: #fff; border: 1px solid #ccc;"></div>
-        <button id="replay-animation" style="margin-top: 20px; padding: 10px 20px; font-size: 16px;">Replay</button>
-    </div>
+// Handle Animation Preview Request
+add_action('template_redirect', 'iml_handle_animation_preview');
+function iml_handle_animation_preview() {
+    if (isset($_GET['iml_animation_preview']) && $_GET['iml_animation_preview'] === '1') {
+        // Security Check: Only logged-in users can view this
+        if (!is_user_logged_in()) {
+            wp_die('Access denied. You must be logged in to view the animation preview.', 'Access Denied', array('response' => 403));
+        }
 
-    <!-- Ensure Lottie is loaded -->
-    <?php wp_enqueue_script('lottie-web'); ?>
+        $custom_url = get_option('iml_intro_animation_json');
+        $default_url = IML_PLUGIN_URL . 'frontend/assets/new.json';
+        $lottie_url = $custom_url ? $custom_url : $default_url;
+        
+        // Disable admin bar for cleaner view
+        show_admin_bar(false);
+        ?>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>IML Animation Preview</title>
+            <style>
+                body, html {
+                    margin: 0;
+                    padding: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: hidden;
+                    background: #fff;
+                }
+                
+                /* Layer 0: Homepage Iframe (Bottom) */
+                #site-preview {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    border: none;
+                    z-index: 1;
+                    pointer-events: none; /* Make non-interactive as requested */
+                    opacity: 1;
+                }
+                
+                /* Layer 1: Lottie Animation (Top) */
+                #lottie-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: transparent; /* No background as per recent changes */
+                }
+                
+                #lottie-container {
+                    width: 100%;
+                    height: 100%;
+                }
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var container = document.getElementById('test-lottie-container');
-        var anim = lottie.loadAnimation({
-            container: container,
-            renderer: 'svg',
-            loop: false,
-            autoplay: true,
-            path: '<?php echo esc_url($lottie_url); ?>',
-            rendererSettings: {
-                preserveAspectRatio: 'xMidYMid meet'
-            }
-        });
+                #controls {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                    background: rgba(0,0,0,0.8);
+                    padding: 10px;
+                    border-radius: 5px;
+                    color: white;
+                    font-family: sans-serif;
+                    font-size: 12px;
+                }
+                button {
+                    cursor: pointer;
+                    padding: 5px 10px;
+                    background: #fff;
+                    border: none;
+                    border-radius: 3px;
+                }
+            </style>
+            <!-- Load Lottie Web from CDN or Local if available -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+        </head>
+        <body>
+            <!-- Background Iframe -->
+            <iframe id="site-preview" src="<?php echo home_url(); ?>"></iframe>
 
-        document.getElementById('replay-animation').addEventListener('click', function() {
-            anim.goToAndPlay(0);
-        });
-    });
-    </script>
-    <?php
-    return ob_get_clean();
+            <!-- Animation Overlay -->
+            <div id="lottie-overlay">
+                <div id="lottie-container"></div>
+            </div>
+
+            <!-- Simple Controls -->
+            <div id="controls">
+                IML Animation Preview <br><br>
+                <button id="replay-btn">Replay Animation</button>
+            </div>
+
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var container = document.getElementById('lottie-container');
+                var overlay = document.getElementById('lottie-overlay');
+                
+                var anim = lottie.loadAnimation({
+                    container: container,
+                    renderer: 'svg',
+                    loop: false,
+                    autoplay: true,
+                    path: '<?php echo esc_url($lottie_url); ?>', // Load the JSON
+                    rendererSettings: {
+                        preserveAspectRatio: 'xMidYMid slice' // Fullscreen cover behavior
+                    }
+                });
+
+                // On complete behavior
+                anim.addEventListener('complete', function() {
+                    console.log('Animation completed');
+                    // Optional: fade out logic if you want to mimic the site exactly, 
+                    // but user asked for "niente sfumatura subito presente" recently, 
+                    // so we just let it finish.
+                    // If we want to hide it to see the site behind:
+                    overlay.style.display = 'none';
+                });
+
+                document.getElementById('replay-btn').addEventListener('click', function() {
+                    overlay.style.display = 'flex';
+                    anim.goToAndPlay(0);
+                });
+            });
+            </script>
+        </body>
+        </html>
+        <?php
+        exit;
+    }
 }

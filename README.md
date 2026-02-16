@@ -172,12 +172,12 @@ Per cambiare l'animazione di intro della homepage:
 4.  Clicca su **Save Settings**.
 5.  Se nessun file è selezionato, verrà usato il file di default (`frontend/assets/new.json`).
 
-### 2. Pagina di Test
-Per verificare l'animazione prima di pubblicarla o per debug:
-1.  Crea una nuova pagina in WordPress.
-2.  Inserisci lo shortcode: `[iml_animation_test]`.
-3.  Pubblica la pagina (consigliato slug: `animation-test`).
-4.  Il link diretto alla pagina di test (se lo slug è `animation-test`) è disponibile anche nella pagina delle impostazioni **IML General**.
+### 2. Live Preview (Pagina di Test)
+Per verificare l'animazione in un ambiente reale prima di pubblicarla:
+1.  Dalla stessa pagina **IML General**, clicca sul pulsante **Open Live Animation Preview**.
+2.  Si aprirà una nuova scheda che mostra l'animazione in overlay sopra la homepage attuale.
+3.  Questa anteprima è visibile **solo agli utenti loggati** (admin/editor).
+4.  La pagina di test permette ai designer di provare l'animazione in autonomia senza interventi tecnici.
 
 </details>
 
@@ -274,7 +274,7 @@ Questo progetto utilizza un approccio ibrido che combina:
 *   [v] **Intro Animation Manager:** Aggiunto menu "IML General" nella dashboard per gestire il file JSON dell'animazione di intro. Include:
     *   Upload/Selezione file JSON.
     *   Fallback automatico al file originale.
-    *   Pagina di test accessibile tramite shortcode `[iml_animation_test]` o link diretto nel menu.
+    *   Pagina di test "Live Preview": apre una nuova finestra con l'animazione in overlay sulla homepage reale (visibile solo agli admin).
 *   [v] **Home Preloading:** Inserimento animazione preloading pagina.
 *   [v] **Fix Dropdown Caricamento:** Risolto problema connessione chiusa nel caricamento immagini builder. Implementato sistema di caricamento concorrente a coda (batch da 30, max 6 connessioni parallele) con barra di progresso e auto-riempimento intelligente. (Si/Done)
 *   [v] **Portfolio Builder Update:**
