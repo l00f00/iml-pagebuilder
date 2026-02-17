@@ -193,13 +193,14 @@ function iml_render_generic_archive_grid($atts) {
             $post_type = get_post_type($post_id);
             $alignment = get_post_meta($post_id, 'portfolio_item_alignment', true);
 
-            if ($post_type === 'progetto' || $post_type === 'serie') {
+            if ($post_type === 'progetto' || $post_type === 'serie' || $post_type === 'portfolio') {
                 $categories = get_the_terms($post_id, 'category');
                 $tags = get_the_terms($post_id, 'post_tag');
                 $year = rwmb_meta('anno', '', $post_id);
                 $title = get_the_title($post_id);
                 $the_thumb = get_the_post_thumbnail($post_id, 'full');
                 
+                // Modified to always link to parent single page, disabling lightbox for these post types in generic archive too
                 echo '<a href="' . esc_url(get_permalink($post_id)) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($post_id) . '">
                       <div class="info-overlay">
                         <div class="categories-tags">';
