@@ -216,13 +216,15 @@ function iml_homepage_lottie_preloader() {
                 overlay.style.display = 'flex';
                 overlay.style.opacity = '1';
             }
-            done = false;
+            
+            // IMPORTANT: Prevent 'done' from triggering removal again during debug
+            done = true; // Set to true so normal 'reveal' won't hide it
             
             // Replay from middle (approx 50% frames)
             if (anim) {
                 var total = anim.totalFrames || 100; // Default fallback
                 var midFrame = Math.floor(total / 2);
-                console.log('🐞 Debug: Replaying from frame', midFrame);
+                console.log('🐞 Debug: Replaying from frame', midFrame, 'and keeping overlay visible.');
                 anim.playSegments([midFrame, total], true);
             }
         };
