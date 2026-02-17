@@ -66,12 +66,13 @@ function iml_render_project_single($atts) {
                 $orientation_class = 'is-portrait';
             }
         }
-        ?> 
-        <div class="progetto-content layout-3-col"> 
+        ?>
+        <div class="progetto-content"> 
             <div class="left-column-progetto <?php echo $orientation_class; ?>"> 
-            <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
-                <?php echo get_the_post_thumbnail($post_id, 'full'); ?></a> 
-            <div class="left-column-bottom"> 
+                <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
+                    <?php echo get_the_post_thumbnail($post_id, 'full'); ?>
+                </a> 
+                <div class="left-column-bottom"> 
                     <nav class="foto-navigation"> 
                             <?php 
                             if (isset($prev_post_url)) { 

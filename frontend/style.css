@@ -678,10 +678,9 @@
         padding-left: 6px !important;
         padding-right: 6px !important;
     }
-}
-
 /* Fix for horizontal cover images in 1-column project page */
-.left-column-progetto > a > img {
+.left-column-progetto.is-landscape > a > img {
     object-position: top left;
     width: 100%;
+}   min-width:100%;
 }
