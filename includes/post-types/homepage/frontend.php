@@ -128,20 +128,22 @@ function iml_homepage_lottie_preloader() {
         /* Lottie Preloader CSS */
         #lottie-overlay {
             position: absolute;
-            inset: 0;
-            background: transparent; /* Sfondo trasparente (richiesta utente: "niente sfondo") */
-            z-index: 99999999; /* Z-index molto alto */
-            display: none; /* Nascosto di default, attivato via JS se desktop */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh; /* Usa viewport height per coprire lo schermo iniziale */
+            background: transparent;
+            z-index: 99999999;
+            display: none;
             align-items: center;
             justify-content: center;
-            pointer-events: none; /* Permetti click sotto (richiesta utente implicita con "niente sfondo") */
-            opacity: 1; /* Assicuriamo opacità iniziale */
-            mix-blend-mode: exclusion; /* Richiesta utente: "effetto escludi sul sotto" */
+            pointer-events: none;
+            opacity: 1;
+            mix-blend-mode: exclusion;
         }
         #lottie-container {
-            width: 100vw;
-            height: 100vh;
-            mix-blend-mode: exclusion;
+            width: 100%;
+            height: 100%;
         }
         html.lottie-active, body.lottie-active {
             /* overflow: hidden !important; */ /* Disabilitato blocco scroll (opzionale se sfondo è trasparente) */
