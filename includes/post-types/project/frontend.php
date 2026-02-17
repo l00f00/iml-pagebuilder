@@ -235,9 +235,18 @@ function iml_render_project_single($atts) {
     } else {
         // Load CSS for 1 Column (Standard/Original)
         wp_enqueue_style('iml-project-frontend-style-1col', IML_PLUGIN_URL . 'includes/post-types/project/frontend-style-1col.css', array(), '1.0');
-        // ==========================================
-        // LAYOUT 1 COLONNA
-        // ==========================================
+        // Determine image orientation
+        $thumb_meta = wp_get_attachment_metadata($thumbnail_id);
+        $orientation_class = '';
+        if ($thumb_meta) {
+            $width = $thumb_meta['width'];
+            $height = $thumb_meta['height'];
+            if ($width > $height) {
+                $orientation_class = 'is-landscape';
+            } else {
+                $orientation_class = 'is-portrait';
+            }
+        }
         ?>
         <div class="progetto-content layout-1-col"> 
             <div class="left-column-progetto <?php echo $orientation_class; ?>"> 

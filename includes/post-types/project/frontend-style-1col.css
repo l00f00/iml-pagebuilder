@@ -10,8 +10,21 @@
   width: 65%;
   max-height:100vh;
 }
-.left-column-progetto img {
-    max-width: 63%;
+.left-column-progetto.is-landscape a img {
+    max-width: 100%;
+    width: 100%; /* Larghezza quanto left-column-progetto */
+    height: auto; /* Mantiene proporzioni senza stretcharsi */
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    object-fit: contain;
+    object-position: top left;
+    z-index: 1; /* Assicura che stia sotto se necessario, o sopra */
+}
+
+.left-column-progetto:not(.is-landscape) a img {
+    max-width: 100%;
     max-height:100%;
     /*height: auto;*/
     height: -webkit-fill-available;
@@ -19,9 +32,9 @@
     position:fixed;
     top:0;
     left:0;
-  object-fit: contain;
+    object-fit: contain;
   /*background-color:green;*/
-  width:auto;
+    width:auto;
 }
 .left-column-progetto .left-column-top > *{
   padding: 28px 0 28px 0;
@@ -172,6 +185,14 @@
     
     .left-column-progetto {
         padding: 0 !important;
+    }
+    
+    .left-column-progetto.is-landscape a img {
+        width: 100% !important;
+        height: auto !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
     }
     
     .left-column-progetto img {
