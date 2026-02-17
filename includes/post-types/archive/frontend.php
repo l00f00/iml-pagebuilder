@@ -70,18 +70,21 @@ function iml_render_archive_grid($atts) {
                     $theimageurl = wp_get_attachment_url( get_post_thumbnail_id($post_id), 'large' );
                     $permalink = get_permalink($post_id);
 
-                    echo '<a href="' . esc_url($theimageurl) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($post_id) . '" data-lightbox="gallery">';
+                    // Modified to always link to parent single page, disabling lightbox for these post types
+                    echo '<a href="' . esc_url($permalink) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($post_id) . '">';
+                    // echo '<a href="' . esc_url($theimageurl) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($post_id) . '" data-lightbox="gallery">';
+                    
                     echo '<div class="info-overlay">';
                     echo '<div class="categories-tags"></div>';
                     echo '<div class="year-title">';
                     echo '<span class="title">' . esc_html($title) . '</span>';
                     echo '</div>';
-                    echo '<a href="' . esc_url($permalink) . '" class="grid-back-btn">Back</a>'; // Add Back button
+                    // echo '<a href="' . esc_url($permalink) . '" class="grid-back-btn">Back</a>'; // Removed Back button as the main link now goes there
                     echo '</div>';
                     echo '<div class="image-wrapper">' . $the_thumb . '</div>';
                     echo '</a>';
                     echo '<div class="hidden-caption" style="display: none;">';
-                    echo '<span class="title">' . esc_html($title) . '</span> - <a href="' . esc_url($permalink) . '">Show '. esc_html($post_type) .'</a>';
+                    echo '<span class="title">' . esc_html($title) . '</span>';
                     echo '</div>';
 
                 } elseif ($post_type === 'attachment') {
