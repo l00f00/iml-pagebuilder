@@ -82,6 +82,13 @@
   padding-bottom:160px; 
 } 
 
+/* Style for links inside strong tags within description content */
+.description-content p strong a {
+    color: black !important;
+    font-weight: bold !important;
+    text-decoration: none; /* Optional: remove underline if desired */
+}
+
 .right-column-progetto-top > .related-foto-item{ 
   max-width:100%; 
 } 
