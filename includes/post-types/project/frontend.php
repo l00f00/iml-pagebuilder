@@ -67,7 +67,7 @@ function iml_render_project_single($atts) {
             }
         }
         ?>
-        <div class="progetto-content"> 
+        <div class="progetto-content layout-3-col"> 
             <div class="left-column-progetto <?php echo $orientation_class; ?>"> 
                 <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
                     <?php echo get_the_post_thumbnail($post_id, 'full'); ?>
