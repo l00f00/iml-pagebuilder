@@ -109,7 +109,6 @@ function iml_render_archive_grid($atts) {
                     echo '<div class="year-title">';
                     echo '<span class="title">' . esc_html($title) . '</span>';
                     echo '</div>';
-                    echo '<span class="grid-back-btn">Back</span>'; // Add Back button (span because wrapper is already <a>)
                     echo '</div>';
                     echo '<div class="image-wrapper">';
                     echo wp_get_attachment_image($post_id, 'full');
