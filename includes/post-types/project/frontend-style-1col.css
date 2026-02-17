@@ -12,7 +12,7 @@
 }
 .left-column-progetto.is-landscape a img {
     max-width: 100%;
-    width: 100%; /* Larghezza quanto left-column-progetto */
+    width: 65%; /* Larghezza quanto left-column-progetto */
     height: auto; /* Mantiene proporzioni senza stretcharsi */
     display: block;
     position: fixed;
