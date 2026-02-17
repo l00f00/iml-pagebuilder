@@ -263,7 +263,7 @@ function iml_render_attachment_single($atts) {
                        // fotoContent.style.height = (window.innerHeight - emInPixels) + 'px'; 
                        
                        // New logic requested:
-                       fotoContent.style.height = 'auto';
+                       fotoContent.style.height = '95vh';
                    } 
                }); 
                
