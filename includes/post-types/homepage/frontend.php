@@ -132,7 +132,7 @@ function iml_homepage_lottie_preloader() {
             left: 0;
             width: 100%;
             height: 100vh; /* Usa viewport height per coprire lo schermo iniziale */
-            background: transparent;
+            background: rgba(255, 255, 255, 0.1); /* Richiesta utente: bianco 0.1 */
             z-index: 99999999;
             display: none;
             align-items: center;
@@ -144,6 +144,7 @@ function iml_homepage_lottie_preloader() {
         #lottie-container {
             width: 100%;
             height: 100%;
+            filter: invert(1); /* Richiesta utente: inverti colore lottie */
         }
         html.lottie-active, body.lottie-active {
             /* overflow: hidden !important; */ /* Disabilitato blocco scroll (opzionale se sfondo è trasparente) */
