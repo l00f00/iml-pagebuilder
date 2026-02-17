@@ -204,9 +204,32 @@ function iml_homepage_lottie_preloader() {
             reveal('fallback_timeout_15s');
         }, 15000);
 
+        var anim; // Declare anim here for scope visibility in debugLottie
+
+        // DEBUG FUNCTION: Expose to window to allow manual replay
+        window.debugLottie = function() {
+            // Re-create overlay if removed
+            if (!document.body.contains(overlay)) {
+                document.body.appendChild(overlay);
+            }
+            if (overlay) {
+                overlay.style.display = 'flex';
+                overlay.style.opacity = '1';
+            }
+            done = false;
+            
+            // Replay from middle (approx 50% frames)
+            if (anim) {
+                var total = anim.totalFrames || 100; // Default fallback
+                var midFrame = Math.floor(total / 2);
+                console.log('🐞 Debug: Replaying from frame', midFrame);
+                anim.playSegments([midFrame, total], true);
+            }
+        };
+
         try {
             console.log('Initializing Lottie animation with path:', lottieJSON);
-            var anim = lottie.loadAnimation({
+            anim = lottie.loadAnimation({
                 container: container,
                 renderer: 'svg',
                 loop: false,
