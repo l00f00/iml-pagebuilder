@@ -28,6 +28,16 @@ function iml_register_general_settings() {
     register_setting('iml_general_settings_group', 'iml_intro_animation_json');
 }
 
+// Enqueue media scripts
+add_action('admin_enqueue_scripts', 'iml_enqueue_admin_scripts');
+function iml_enqueue_admin_scripts($hook) {
+    // Check if we are on our settings page
+    // The hook name is usually 'toplevel_page_iml-general-settings'
+    if ($hook === 'toplevel_page_iml-general-settings') {
+        wp_enqueue_media();
+    }
+}
+
 // Render the settings page
 function iml_general_settings_page_html() {
     // Check user capabilities
