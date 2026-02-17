@@ -127,6 +127,23 @@ function iml_allow_json_mime($mimes) {
     return $mimes;
 }
 
+// Fix: Add explicit support for JSON upload via wp_handle_upload_prefilter if needed
+// Sometimes WP checks file type strictly. This ensures real MIME type detection passes.
+add_filter('wp_check_filetype_and_ext', 'iml_check_json_filetype', 10, 4);
+function iml_check_json_filetype($data, $file, $filename, $mimes) {
+    $filetype = wp_check_filetype( $filename, $mimes );
+    $ext = $filetype['ext'];
+    $type = $filetype['type'];
+    $proper_filename = $data['proper_filename'];
+
+    if ( $ext === 'json' ) {
+        $type = 'application/json';
+        $ext = 'json';
+    }
+    
+    return compact( 'ext', 'type', 'proper_filename' );
+}
+
 // Handle Animation Preview Request
 add_action('template_redirect', 'iml_handle_animation_preview');
 function iml_handle_animation_preview() {
