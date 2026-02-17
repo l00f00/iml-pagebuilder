@@ -187,6 +187,12 @@ function iml_render_attachment_single($atts) {
              </div> 
              <div class="left-column-bottom thisTMP"> 
              <nav class="foto-navigation"> 
+             <?php
+             // Check if parent is Portfolio
+             $is_portfolio = ($parent_post_type === 'portfolio');
+             
+             if (!$is_portfolio) : // Show prev/next only if NOT portfolio
+             ?>
              <div class="nav-prev-next"> 
              <?php 
              if (isset($prev_post_url)) { 
@@ -197,6 +203,7 @@ function iml_render_attachment_single($atts) {
              } 
              ?> 
              </div> 
+             <?php endif; ?>
              <?php 
              if ($parent_post_id != 0) { // Check if there is a parent post 
              $parent_post_url = get_permalink($parent_post_id); // Get the permalink of the parent post 
