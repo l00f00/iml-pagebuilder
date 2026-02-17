@@ -276,8 +276,7 @@
 
 /* Mobile styles */
 @media (max-width: 1120px) {
-    /* ... existing mobile styles ... */
-    
+        
     .year-title {
         padding-left: 6px;
         padding-right: 6px;
@@ -337,7 +336,7 @@
         padding-top: 0;
         padding-left: 6px !important;
         padding-right: 6px !important;
-    }
+    } 
 }
 
 /* --- Styles for Attachment Single (Foto Content) --- */
@@ -674,4 +673,15 @@
     .tag-archive-list li {
         justify-content: flex-start;
     }
+    .right-column-progetto {
+        padding-top: 0;
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+    }
+}
+
+/* Fix for horizontal cover images in 1-column project page */
+.left-column-progetto > a > img {
+    object-position: top left;
+    width: 100%;
 }
