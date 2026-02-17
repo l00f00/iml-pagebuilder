@@ -39,7 +39,7 @@
 }
 
 .left-column-progetto.is-landscape img {
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .left-column-progetto .left-column-top > *{ 
