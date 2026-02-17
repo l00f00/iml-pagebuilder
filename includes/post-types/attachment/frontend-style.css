@@ -153,7 +153,7 @@
   
   .left-column .left-column-top > .foto-description { 
     padding: 28px 0 28px 0; 
-    text-indent: 24px; 
+    /*text-indent: 24px;*/ 
   } 
   .right-column { 
     order: -1; /* This will move the image above the text on mobile */ 
