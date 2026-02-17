@@ -104,7 +104,7 @@ function iml_render_archive_grid($atts) {
                     echo '<a href="' . esc_url($permalink) .'" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($post_id) . '" ' . $lightbox_attr . '>';
                     echo '<div class="info-overlay">';
                     echo '<div class="categories-tags">';
-                    echo '<div class="hidden-html" href="' . esc_url($permalink) . '" data-caption="' . esc_html($title) . '"></div>';
+                    // Hidden caption div removed as it's no longer a gallery
                     echo '</div>';
                     echo '<div class="year-title">';
                     echo '<span class="title">' . esc_html($title) . '</span>';
@@ -115,7 +115,6 @@ function iml_render_archive_grid($atts) {
                     echo wp_get_attachment_image($post_id, 'full');
                     echo '</div>';
                     echo '</a>';
-                    // Hidden caption not needed if we are linking away
                 }
                 wp_reset_postdata();
             }
