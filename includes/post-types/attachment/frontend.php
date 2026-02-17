@@ -140,13 +140,22 @@ function iml_render_attachment_single($atts) {
              <?php 
                // Check if description exists 
                  if (!empty($description)) { 
-                     echo $description; 
+                     // Aggiungi la classe read-more-text per gestire il troncamento via CSS/JS se necessario
+                     // Ma per coerenza con il progetto, useremo una struttura simile
+                     echo '<div class="attachment-description-content">';
+                     echo $description;
+                     echo '</div>';
+                     // Aggiungi toggle
+                     echo '<a href="#" class="read-more-toggle">Read More</a>';
                  } else { 
                      // Get the attachment excerpt 
                      $excerpt = get_the_excerpt($attachment_id); 
                      // Check if excerpt exists 
                      if (!empty($excerpt)) { 
-                         echo $excerpt; 
+                         echo '<div class="attachment-description-content">';
+                         echo $excerpt;
+                         echo '</div>';
+                         echo '<a href="#" class="read-more-toggle">Read More</a>';
                      } else { 
                          // Output an empty string if neither description nor excerpt exists 
                          //echo 'no description'; 
@@ -200,6 +209,33 @@ function iml_render_attachment_single($atts) {
              </div> 
              
              <script> 
+               // Read More Toggle Logic
+               document.addEventListener("DOMContentLoaded", function() {
+                   var toggles = document.querySelectorAll('.read-more-toggle');
+                   toggles.forEach(function(toggle) {
+                       var content = toggle.previousElementSibling;
+                       
+                       // Initial check
+                       if (content && content.scrollHeight > content.clientHeight) {
+                           toggle.style.display = 'block';
+                       } else {
+                           toggle.style.display = 'none';
+                       }
+                       
+                       toggle.addEventListener('click', function(e) {
+                           e.preventDefault();
+                           content.classList.toggle('expanded');
+                           if (content.classList.contains('expanded')) {
+                               content.style.maxHeight = content.scrollHeight + 'px';
+                               this.textContent = 'Read Less';
+                           } else {
+                               content.style.maxHeight = '200px'; // Match CSS
+                               this.textContent = 'Read More';
+                           }
+                       });
+                   });
+               });
+
                function emToPixels(em, element) { 
                    return em * parseFloat(getComputedStyle(element).fontSize); 
                } 

@@ -86,8 +86,29 @@
 }
 */
 .left-column .left-column-top > .foto-description {
-  padding: 28px 0 28px 0;
+  /*padding: 28px 0 28px 0;*/
   /*text-indent: 24px;*/
+  position: relative;
+}
+
+.attachment-description-content {
+    max-height: 200px; /* Altezza massima iniziale */
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.3s ease;
+}
+
+.attachment-description-content.expanded {
+    max-height: none; /* Mostra tutto il contenuto quando espanso */
+}
+
+.read-more-toggle {
+    display: block; /* Mostra il link */
+    margin-top: 10px;
+    cursor: pointer;
+    color: black;
+    text-decoration: underline;
+    font-size: 0.9em;
 }
 
 
