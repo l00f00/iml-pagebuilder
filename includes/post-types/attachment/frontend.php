@@ -236,7 +236,7 @@ function iml_render_attachment_single($atts) {
                                content.style.maxHeight = content.scrollHeight + 'px';
                                this.textContent = 'Read Less';
                            } else {
-                               content.style.maxHeight = '600px'; // Match CSS
+                               content.style.maxHeight = '500px'; // Match CSS
                                this.textContent = 'Read More';
                            }
                        });
@@ -263,7 +263,7 @@ function iml_render_attachment_single($atts) {
                        // fotoContent.style.height = (window.innerHeight - emInPixels) + 'px'; 
                        
                        // New logic requested:
-                       fotoContent.style.height = '95vh';
+                       fotoContent.style.height = '93vh';
                    } 
                }); 
                
