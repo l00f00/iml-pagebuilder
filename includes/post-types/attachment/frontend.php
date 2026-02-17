@@ -250,8 +250,20 @@ function iml_render_attachment_single($atts) {
                document.addEventListener("DOMContentLoaded", function() { 
                    var fotoContent = document.querySelector('.foto-content'); 
                    if (fotoContent) { 
-                       var emInPixels = emToPixels(2, document.body); // Convert 1em to pixels 
-                       fotoContent.style.height = (window.innerHeight - emInPixels) + 'px'; 
+                       // Initially set height to calc logic if needed, OR just set to auto if that's what user wants
+                       // User requested: "setta la height di foto content su auto quando la pagina e' stata caricata"
+                       // So we override the previous logic or append this.
+                       
+                       // Let's keep the initial calculation if useful for layout, then switch to auto?
+                       // Or just force auto. The user says "quando la pagina e' stata caricata".
+                       // This event IS DOMContentLoaded.
+                       
+                       // Previous logic:
+                       // var emInPixels = emToPixels(2, document.body); 
+                       // fotoContent.style.height = (window.innerHeight - emInPixels) + 'px'; 
+                       
+                       // New logic requested:
+                       fotoContent.style.height = 'auto';
                    } 
                }); 
                
