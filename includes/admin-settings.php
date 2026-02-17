@@ -92,7 +92,7 @@ function iml_general_settings_page_html() {
                 mediaUploader.open();
                 return;
             }
-            mediaUploader = wp.media.frames.file_frame = wp.media({
+            mediaUploader = wp.media({
                 title: 'Choose Animation JSON',
                 button: {
                     text: 'Choose JSON'
@@ -104,8 +104,11 @@ function iml_general_settings_page_html() {
             });
             
             mediaUploader.on('select', function() {
-                var attachment = mediaUploader.state().get('selection').first().toJSON();
-                $('#iml_intro_animation_json').val(attachment.url);
+                var selection = mediaUploader.state().get('selection');
+                if (selection && selection.first()) {
+                    var attachment = selection.first().toJSON();
+                    $('#iml_intro_animation_json').val(attachment.url);
+                }
             });
             
             mediaUploader.open();
