@@ -141,6 +141,7 @@ function iml_homepage_lottie_preloader() {
         #lottie-container {
             width: 100vw;
             height: 100vh;
+            mix-blend-mode: exclusion;
         }
         html.lottie-active, body.lottie-active {
             /* overflow: hidden !important; */ /* Disabilitato blocco scroll (opzionale se sfondo è trasparente) */
