@@ -48,9 +48,10 @@
   /*didascalia a tutta*/
   flex: 1;
   overflow-y: auto;
+  overflow: visible; /* Modified as per user request */
 }
 
- .left-column .left-column-bottom{
+.left-column .left-column-bottom{
   height:15%;
    display:flex;
    flex-direction: row;
@@ -92,7 +93,7 @@
 }
 
 .attachment-description-content {
-    max-height: calc(100vh - 2em); /* Altezza massima modificata come richiesto */
+    max-height: 500px; /* Altezza massima modificata come richiesto */
     overflow: hidden;
     position: relative;
     transition: max-height 0.3s ease;

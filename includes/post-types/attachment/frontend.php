@@ -236,7 +236,7 @@ function iml_render_attachment_single($atts) {
                                content.style.maxHeight = content.scrollHeight + 'px';
                                this.textContent = 'Read Less';
                            } else {
-                               content.style.maxHeight = '500px'; // Match CSS
+                               content.style.maxHeight = '500px';
                                this.textContent = 'Read More';
                            }
                        });
