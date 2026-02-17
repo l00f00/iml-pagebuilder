@@ -97,17 +97,22 @@ function iml_general_settings_page_html() {
                 button: {
                     text: 'Choose JSON'
                 },
-                multiple: false,
-                library: {
-                    type: 'application/json' // Filter for JSON if WP allows, otherwise usually all files
-                }
+                multiple: false
+                // library: { type: 'application/json' } // REMOVED COMPLETELY
             });
             
             mediaUploader.on('select', function() {
                 var selection = mediaUploader.state().get('selection');
                 if (selection && selection.first()) {
                     var attachment = selection.first().toJSON();
-                    $('#iml_intro_animation_json').val(attachment.url);
+                    // Basic validation
+                    var url = attachment.url || '';
+                    if(url.toLowerCase().indexOf('.json') !== -1 || attachment.mime === 'application/json' || attachment.subtype === 'json') {
+                        $('#iml_intro_animation_json').val(url);
+                    } else {
+                        alert('Warning: The selected file does not appear to be a JSON file.');
+                        $('#iml_intro_animation_json').val(url); // Let them try anyway if they insist
+                    }
                 }
             });
             
