@@ -96,36 +96,40 @@ function wpdude_show_has_single_page_status($column_name, $post_id) {
 
 // Add Taxonomy Filter to Media Library List View
 add_action( 'restrict_manage_posts', 'iml_add_media_taxonomy_filter' );
-function iml_add_media_taxonomy_filter() {
-    $screen = get_current_screen();
-    if ( 'upload' === $screen->id ) {
-        $taxonomy = 'category'; // You can change this to 'post_tag' or other custom taxonomies
-        $term = isset( $_GET[$taxonomy] ) ? $_GET[$taxonomy] : '';
-        
-        wp_dropdown_categories( array(
-            'show_option_all' => 'All Categories',
-            'taxonomy'        => $taxonomy,
-            'name'            => $taxonomy,
-            'orderby'         => 'name',
-            'selected'        => $term,
-            'hierarchical'    => true,
-            'show_count'      => true,
-            'hide_empty'      => false,
-        ) );
-        
-        // Also add Tags filter if needed
-        $taxonomy_tag = 'post_tag';
-        $term_tag = isset( $_GET[$taxonomy_tag] ) ? $_GET[$taxonomy_tag] : '';
-        
-        wp_dropdown_categories( array(
-            'show_option_all' => 'All Tags',
-            'taxonomy'        => $taxonomy_tag,
-            'name'            => $taxonomy_tag,
-            'orderby'         => 'name',
-            'selected'        => $term_tag,
-            'hierarchical'    => false,
-            'show_count'      => true,
-            'hide_empty'      => false,
-        ) );
+function iml_add_media_taxonomy_filter( $post_type ) {
+    // restrict_manage_posts passes $post_type as argument
+    // For media library, $post_type should be 'attachment'
+    
+    if ( 'attachment' !== $post_type ) {
+        return;
     }
+
+    $taxonomy = 'category'; // You can change this to 'post_tag' or other custom taxonomies
+    $term = isset( $_GET[$taxonomy] ) ? $_GET[$taxonomy] : '';
+    
+    wp_dropdown_categories( array(
+        'show_option_all' => 'All Categories',
+        'taxonomy'        => $taxonomy,
+        'name'            => $taxonomy,
+        'orderby'         => 'name',
+        'selected'        => $term,
+        'hierarchical'    => true,
+        'show_count'      => true,
+        'hide_empty'      => false,
+    ) );
+    
+    // Also add Tags filter if needed
+    $taxonomy_tag = 'post_tag';
+    $term_tag = isset( $_GET[$taxonomy_tag] ) ? $_GET[$taxonomy_tag] : '';
+    
+    wp_dropdown_categories( array(
+        'show_option_all' => 'All Tags',
+        'taxonomy'        => $taxonomy_tag,
+        'name'            => $taxonomy_tag,
+        'orderby'         => 'name',
+        'selected'        => $term_tag,
+        'hierarchical'    => false,
+        'show_count'      => true,
+        'hide_empty'      => false,
+    ) );
 }
