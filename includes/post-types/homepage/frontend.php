@@ -136,6 +136,7 @@ function iml_homepage_lottie_preloader() {
             justify-content: center;
             pointer-events: none; /* Permetti click sotto (richiesta utente implicita con "niente sfondo") */
             opacity: 1; /* Assicuriamo opacità iniziale */
+            mix-blend-mode: exclusion; /* Richiesta utente: "effetto escludi sul sotto" */
         }
         #lottie-container {
             width: 100vw;
