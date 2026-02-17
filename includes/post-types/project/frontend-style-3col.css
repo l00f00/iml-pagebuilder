@@ -40,6 +40,7 @@
 
 .left-column-progetto.is-landscape img {
     object-fit: contain;
+    object-position: left top;
 }
 
 .left-column-progetto .left-column-top > *{ 
