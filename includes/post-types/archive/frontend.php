@@ -14,7 +14,8 @@ function iml_render_archive_grid($atts) {
     ob_start();
 
     echo '<div id="grid-wrapper">';
-    echo '<div id="custom-post-grid">';
+    $is_tag_archive_class = (is_tag()) ? 'is-tag-archive' : '';
+    echo '<div id="custom-post-grid" class="' . $is_tag_archive_class . '">';
     
     if (is_tag() || is_category()) {
         // Get the current term object
@@ -91,14 +92,25 @@ function iml_render_archive_grid($atts) {
                     $parent_id = wp_get_post_parent_id($post_id);
                     $parent_post = get_post($parent_id);
                     
-                    if ($parent_post && ($parent_post->post_type === 'progetto' || $parent_post->post_type === 'serie')) {
+                    if ($parent_post && ($parent_post->post_type === 'progetto' || $parent_post->post_type === 'serie' || $parent_post->post_type === 'portfolio')) {
                         $permalink = get_permalink($parent_id);
                         $lightbox_attr = ''; // No lightbox, go to parent
                     } else {
                          // Fallback: check if single page is enabled (though 'attachment' post type logic here is usually simple)
                          // User request: "se non c'è progetto alla pagina singola dell attachment"
-                         $permalink = get_permalink($post_id);
-                         $lightbox_attr = ''; // No lightbox, go to single page
+                         $single_page_true = get_post_meta($post_id, 'has_single_page', true);
+                         if ($single_page_true == '1') {
+                            $permalink = get_permalink($post_id);
+                            $lightbox_attr = ''; // No lightbox, go to single page
+                         } else {
+                             // Default fallback if no parent and no single page: just open image file or do nothing?
+                             // User said: "se non c- progetto alla pagina singola dell attachment"
+                             // Assuming if no single page, we still go to attachment page or maybe file url?
+                             // Let's default to attachment single page (even if not explicitly checked) or file URL if we want lightbox?
+                             // But user said "NON DEVE aprire lightbox". So let's link to attachment page.
+                             $permalink = get_permalink($post_id);
+                             $lightbox_attr = '';
+                         }
                     }
                     
                     echo '<a href="' . esc_url($permalink) .'" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($post_id) . '" ' . $lightbox_attr . '>';
