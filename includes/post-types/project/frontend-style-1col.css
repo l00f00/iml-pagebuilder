@@ -249,5 +249,11 @@
     .description-content.collapsed::after {
         display: none !important;
     }
+    
+    .progetto-title,
+    .progetto-year {
+        margin-left: 6px !important;
+        margin-right: 6px !important;
+    }
 }
 
