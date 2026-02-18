@@ -20,7 +20,7 @@ function iml_render_portfolio_grid($atts) {
     }
 
     echo '<div id="grid-wrapper">';
-    echo '<div id="custom-post-grid" class="gallery">';
+    echo '<div id="custom-post-grid" class="gallery is-portfolio">';
 
     foreach ($portfolio_items as $portfolio_single_item_id) {
         $alignment = get_post_meta($portfolio_single_item_id, 'portfolio_item_alignment', true);
@@ -38,7 +38,7 @@ function iml_render_portfolio_grid($atts) {
                 
                 echo '<a href="' . esc_url(get_permalink($portfolio_single_item_id)) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($portfolio_single_item_id) . '"> 
                       <div class="info-overlay"> 
-                        <div class="year-title">
+                        <div class="year-title" style="position:absolute; bottom:20px; left:20px; width:auto; text-align:left;">
                           <span class="title">' . esc_html($title) . '</span> 
                         </div> 
                       </div> 

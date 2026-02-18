@@ -116,6 +116,7 @@ function iml_add_media_taxonomy_filter( $post_type ) {
         'hierarchical'    => true,
         'show_count'      => true,
         'hide_empty'      => false,
+        'value_field'     => 'slug', // Use slug for filtering
     ) );
     
     // Also add Tags filter if needed
@@ -131,5 +132,6 @@ function iml_add_media_taxonomy_filter( $post_type ) {
         'hierarchical'    => false,
         'show_count'      => true,
         'hide_empty'      => false,
+        'value_field'     => 'slug', // Use slug for filtering
     ) );
 }

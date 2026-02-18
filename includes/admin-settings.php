@@ -31,11 +31,39 @@ function iml_register_general_settings() {
 // Enqueue media scripts
 add_action('admin_enqueue_scripts', 'iml_enqueue_admin_scripts');
 function iml_enqueue_admin_scripts($hook) {
-    // Check if we are on our settings page
+    // Enqueue media scripts globally or on specific pages where needed
     // The hook name is usually 'toplevel_page_iml-general-settings'
     if ($hook === 'toplevel_page_iml-general-settings') {
         wp_enqueue_media();
     }
+    
+    // Enqueue custom admin JS for media library modifications (e.g. filters in grid view)
+    if ( $hook === 'upload.php' || $hook === 'post.php' || $hook === 'post-new.php' ) {
+        wp_enqueue_script('iml-admin-script', IML_PLUGIN_URL . 'includes/admin-script.js', array('jquery', 'media-views'), '1.0', true);
+        
+        // Localize script to pass data or ajax url if needed (though ajaxurl is global in admin)
+        // wp_localize_script('iml-admin-script', 'iml_admin_vars', array( 'ajaxurl' => admin_url('admin-ajax.php') ));
+    }
+}
+
+// Add AJAX handler for fetching categories
+add_action('wp_ajax_iml_get_media_categories', 'iml_get_media_categories_callback');
+function iml_get_media_categories_callback() {
+    $categories = get_categories(array(
+        'taxonomy'   => 'category',
+        'hide_empty' => false, // Show all categories even if empty
+    ));
+    
+    $data = array();
+    foreach ($categories as $cat) {
+        $data[] = array(
+            'term_id' => $cat->term_id,
+            'name'    => $cat->name,
+            'slug'    => $cat->slug,
+        );
+    }
+    
+    wp_send_json_success($data);
 }
 
 // Render the settings page
