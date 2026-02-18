@@ -142,7 +142,7 @@ function iml_render_attachment_single($atts) {
                  if (!empty($description)) { 
                      // Aggiungi la classe read-more-text per gestire il troncamento via CSS/JS se necessario
                      // Ma per coerenza con il progetto, useremo una struttura simile
-                     echo '<div class="attachment-description-content">';
+                     echo '<div class="attachment-description-content description">';
                      echo $description;
                      echo '</div>';
                      // Aggiungi toggle
@@ -152,7 +152,7 @@ function iml_render_attachment_single($atts) {
                      $excerpt = get_the_excerpt($attachment_id); 
                      // Check if excerpt exists 
                      if (!empty($excerpt)) { 
-                         echo '<div class="attachment-description-content">';
+                         echo '<div class="attachment-description-content excerpt">';
                          echo $excerpt;
                          echo '</div>';
                          //echo '<a href="#" class="read-more-toggle">Read More</a>';
