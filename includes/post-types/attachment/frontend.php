@@ -155,7 +155,7 @@ function iml_render_attachment_single($atts) {
                          echo '<div class="attachment-description-content">';
                          echo $excerpt;
                          echo '</div>';
-                         echo '<a href="#" class="read-more-toggle">Read More</a>';
+                         //echo '<a href="#" class="read-more-toggle">Read More</a>';
                      } else { 
                          // Output an empty string if neither description nor excerpt exists 
                          //echo 'no description'; 
