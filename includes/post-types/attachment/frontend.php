@@ -146,7 +146,7 @@ function iml_render_attachment_single($atts) {
                      echo $description;
                      echo '</div>';
                      // Aggiungi toggle
-                     echo '<a href="#" class="read-more-toggle">Read More</a>';
+                     echo '<a href="#" class="read-more-toggle" style="display:none;">Read More</a>';
                  } else { 
                      // Get the attachment excerpt 
                      $excerpt = get_the_excerpt($attachment_id); 
@@ -155,7 +155,7 @@ function iml_render_attachment_single($atts) {
                          echo '<div class="attachment-description-content excerpt">';
                          echo $excerpt;
                          echo '</div>';
-                         //echo '<a href="#" class="read-more-toggle">Read More</a>';
+                         echo '<a href="#" class="read-more-toggle" style="display:none;">Read More</a>';
                      } else { 
                          // Output an empty string if neither description nor excerpt exists 
                          //echo 'no description'; 
@@ -218,19 +218,36 @@ function iml_render_attachment_single($atts) {
              <script> 
                // Read More Toggle Logic
                document.addEventListener("DOMContentLoaded", function() {
+                   
+                   function checkReadMoreVisibility() {
+                       var toggles = document.querySelectorAll('.read-more-toggle');
+                       toggles.forEach(function(toggle) {
+                           var content = toggle.previousElementSibling;
+                           
+                           // Initial check: if content scrollHeight > 500 (max-height set in CSS/JS logic)
+                           // Note: CSS sets max-height: 500px for non-expanded state.
+                           // But if we want to know if it overflows 500px, we should check if scrollHeight > 500.
+                           
+                           if (content && content.scrollHeight > 500) {
+                               toggle.style.display = 'block';
+                           } else {
+                               toggle.style.display = 'none';
+                           }
+                       });
+                   }
+
+                   // Run on load
+                   checkReadMoreVisibility();
+                   
+                   // Run on resize
+                   window.addEventListener('resize', checkReadMoreVisibility);
+                   
+                   // Click handler (delegated or direct)
                    var toggles = document.querySelectorAll('.read-more-toggle');
                    toggles.forEach(function(toggle) {
-                       var content = toggle.previousElementSibling;
-                       
-                       // Initial check
-                       if (content && content.scrollHeight > content.clientHeight) {
-                           toggle.style.display = 'block';
-                       } else {
-                           toggle.style.display = 'none';
-                       }
-                       
                        toggle.addEventListener('click', function(e) {
                            e.preventDefault();
+                           var content = this.previousElementSibling;
                            content.classList.toggle('expanded');
                            if (content.classList.contains('expanded')) {
                                content.style.maxHeight = content.scrollHeight + 'px';
