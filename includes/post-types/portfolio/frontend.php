@@ -38,7 +38,7 @@ function iml_render_portfolio_grid($atts) {
                 
                 echo '<a href="' . esc_url(get_permalink($portfolio_single_item_id)) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($portfolio_single_item_id) . '"> 
                       <div class="info-overlay"> 
-                        <div class="year-title" style="position:absolute; bottom:20px; left:20px; width:auto; text-align:left;">
+                        <div class="year-title">
                           <span class="title">' . esc_html($title) . '</span> 
                         </div> 
                       </div> 

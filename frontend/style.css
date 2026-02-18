@@ -686,3 +686,15 @@
 }
 
 }
+
+/* Portfolio Grid specific styles */
+.is-portfolio .grid-item .info-overlay {
+    justify-content: flex-end !important; /* Align content to bottom */
+    align-items: flex-start !important; /* Align content to left */
+    padding: 20px; /* Add some padding so it's not sticking to the edge */
+}
+
+.is-portfolio .grid-item .info-overlay .year-title {
+    width: auto;
+    text-align: left;
+}
