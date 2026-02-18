@@ -223,7 +223,15 @@ function iml_homepage_lottie_preloader() {
 
         var anim; // Declare anim here for scope visibility in debugLottie
         
-        // Sync Logic
+        // --- SYNC LOGIC CONFIGURATION ---
+        // Imposta a true per attivare il riposizionamento forzato dei layer Lottie
+        // affinché coincidano con gli elementi statici HTML.
+        var enableSync = true; 
+        var debugSync = false; // Logga avvisi in console se false
+
+        // Mappa di corrispondenza: NOME LAYER LOTTIE => SELETTORE HTML STATICO
+        // Assicurati che il JSON Lottie sia stato esportato con l'opzione "Include Layer Names" (Bodymovin/LottieFiles)
+        // in modo che i gruppi <g> abbiano id="NOME" o class="NOME".
         const map = [
            { lottie: "ILARIA", html: "#staticIlaria" },
            { lottie: "MAGLIOCCHETTI", html: "#staticMagliocchetti" },
@@ -231,115 +239,100 @@ function iml_homepage_lottie_preloader() {
            { lottie: "LOGO", html: "#staticLogoAlCentro" }
         ];
 
+        /**
+         * Funzione che sincronizza la posizione dei layer Lottie con gli elementi HTML statici.
+         * Viene chiamata ad ogni frame dell'animazione per correggere la posizione in tempo reale.
+         */
         function syncElements() {
-           // We need to find the SVG elements inside the Lottie container
-           // Lottie 'renderer: svg' creates <g> elements. If names are exported from AE, 
-           // they might be in 'aria-label' or 'id' or data attributes depending on export settings.
-           // Standard Lottie-web often puts layer name in 'id' or 'class' if configured, 
-           // or we can search by hierarchy if names are missing.
-           // However, let's assume standard behavior or attempt to find by ID first.
-           
-           const lottieSVG = container.querySelector('svg');
+           if (!enableSync) return;
+
+           // Trova l'elemento SVG generato da Lottie
+           var lottieSVG = container.querySelector('svg');
            if (!lottieSVG) return;
 
-           map.forEach(item => {
-             // Try to find the Lottie layer. 
-             // Note: In SVG renderer, layer names are often IDs like '#ILARIA' or similar if exported.
-             // Sometimes they are 'g' elements with specific IDs.
-             // We'll try querySelector for ID first.
-             let lottieLayer = lottieSVG.querySelector(`g[id="${item.lottie}"]`);
-             
-             // If not found by ID, try finding by aria-label (sometimes used for accessibility)
-             if (!lottieLayer) {
-                 lottieLayer = lottieSVG.querySelector(`g[aria-label="${item.lottie}"]`);
-             }
-             
-             const htmlEl = document.querySelector(item.html);
-         
-             if (!lottieLayer || !htmlEl) return;
-         
-             const targetBox = htmlEl.getBoundingClientRect();
-             // We want the Lottie layer to match targetBox.
-             // BUT: Lottie layers are inside a viewBox. We can't easily change their screen position 
-             // without calculating the matrix transform relative to the SVG container.
-             
-             // EASIER APPROACH for "Sync":
-             // If the user wants the Lottie parts to END UP exactly where the static parts are,
-             // and we can't easily move the internal Lottie parts without complex matrix math,
-             // we might need to rely on the Animation being created correctly in AE to match the layout.
-             
-             // HOWEVER, the prompt asked to "update lottie layers to match".
-             // Let's try to calculate the scale/translate needed for the *container* or specific group?
-             // No, specific group.
-             
-             // Get current bounding box of the lottie layer
-             const currentBox = lottieLayer.getBoundingClientRect();
-             
-             // Calculate difference
-             const deltaX = targetBox.left - currentBox.left;
-             const deltaY = targetBox.top - currentBox.top;
-             
-             // Note: Applying transform to an element already transformed by Lottie is risky 
-             // because Lottie overwrites transform attributes every frame.
-             // But if we apply it to a wrapper group or modify the DOM, it might flicker.
-             
-             // BETTER STRATEGY:
-             // If the Lottie is "perfect" it should match automatically.
-             // If we must force it, we can try to offset the whole SVG container? No, that moves everything.
-             
-             // Given the complexity of overriding Lottie's internal frame-by-frame transforms,
-             // and the user's instruction "animazione avviene solo una volta",
-             // the most robust "sync" is usually ensuring the Lottie CONTAINER covers the screen 
-             // (which we do with 100vh/100%) and relying on the AE file being correct.
-             
-             // IF we must execute the user's specific request to "update layers":
-             // We can try to apply a CSS transform to the <g> element.
-             // CSS transforms on SVG elements combine with SVG 'transform' attributes in modern browsers.
-             
-             // lottieLayer.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-             // This might work if the scale is correct.
-             
-             // Let's try to apply a corrective transform.
-             // We need to calculate this relative to the SVG coordinate space, not screen pixels, 
-             // unless we use CSS transform which handles pixels?
-             // Yes, CSS transform: translate(px, px) on SVG element works in screen pixels usually?
-             // Actually, on SVG elements, CSS transform origin and units can be tricky.
-             
-             // Let's try a simpler visual debug log first to see if they match?
-             // No, I must implement the logic.
-             
-             // Let's assume we want to force it.
-             // We will try to apply style transform.
-             // lottieLayer.style.transform = `translate(${targetBox.left}px, ${targetBox.top}px)`; 
-             // BUT Lottie layers are positioned relative to the SVG, not the window.
-             
-             // This part of the request is extremely high-risk for breaking the animation.
-             // I will implement the static element reveal logic perfectly (which is safe)
-             // and add a placeholder for the sync logic that attempts to log positions
-             // but maybe not forcefully overwrite them unless we are sure, 
-             // OR I will trust the user's "script type" suggestion and try to implement it 
-             // but reversed (moving Lottie to HTML).
-             
-             // User's previous input: "aggiorni i layer lottie per matchare la posizione degli elementi html"
-             // Let's try to apply it to the DOM node.
-             
-             // lottieLayer.setAttribute('transform', ...); // Lottie will overwrite this.
-             // lottieLayer.style.transform = ... // CSS might override or stack.
-             
-             // Let's stick to the Reveal logic which satisfies "vadano a sovrapporsi... a fine animazione"
-             // if the animation is designed for this layout.
-             // I will add the code to FIND the elements and log if they match, 
-             // which is a safe step towards "sync".
-             
-             // Actually, if I look at the user's provided script:
-             // htmlEl.style.left = box.left + "px";
-             // That script moved HTML to Lottie.
-             // The user then said: "aggiorni i layer lottie per matchare la posizione degli elementi html".
-             // That implies the HTML is the "Master" position.
-             
-             // I will skip the active transformation of Lottie layers because it's technically 
-             // unfeasible to do robustly from outside Lottie without breaking the internal matrix.
-             // I will focus on the "Reveal" part which creates the visual effect of them being there.
+           map.forEach(function(item) {
+               // 1. TROVA IL LAYER LOTTIE
+               // Cerca un gruppo <g> che abbia ID, Classe o Aria-Label uguale al nome mappato.
+               var layerName = item.lottie;
+               var lottieLayer = lottieSVG.querySelector('g[id="' + layerName + '"]') || 
+                                 lottieSVG.querySelector('g[class="' + layerName + '"]') ||
+                                 lottieSVG.querySelector('g[aria-label="' + layerName + '"]');
+
+               if (!lottieLayer) {
+                   if (debugSync) console.warn('Sync: Layer Lottie non trovato:', layerName);
+                   return;
+               }
+
+               // 2. TROVA L'ELEMENTO HTML STATICO
+               var htmlEl = document.querySelector(item.html);
+               if (!htmlEl) {
+                   if (debugSync) console.warn('Sync: Elemento HTML statico non trovato:', item.html);
+                   return;
+               }
+
+               // 3. CALCOLA LE POSIZIONI (BoundingBox)
+               // Ottiene le coordinate e dimensioni attuali in pixel rispetto alla viewport
+               var layerRect = lottieLayer.getBoundingClientRect();
+               var targetRect = htmlEl.getBoundingClientRect();
+
+               // 4. CALCOLA IL DELTA (Differenza)
+               // Calcoliamo quanto dobbiamo spostare il layer Lottie per sovrapporlo al target.
+               // Nota: Se applichiamo la trasformazione, il getBoundingClientRect del layer cambierà al frame successivo.
+               // Per evitare loop o drift, l'ideale è calcolare il delta rispetto alla posizione "senza override" 
+               // oppure resettare il transform prima di misurare (costoso).
+               // APPROCCIO SEMPLIFICATO: 
+               // Se l'animazione Lottie porta il layer VICINO al target, questo script corregge l'errore fine.
+               // Usiamo 'transform' CSS che si applica sopra la trasformazione SVG interna.
+               
+               var dx = targetRect.left - layerRect.left;
+               var dy = targetRect.top - layerRect.top;
+               
+               // Se la differenza è minima (< 0.5px), evitiamo calcoli inutili (jitter fix)
+               if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return;
+
+               // 5. APPLICA LA TRASFORMAZIONE
+               // Usiamo translate3d per performance.
+               // Importante: Questo sposta il layer visivamente.
+               // ATTENZIONE: Se il layer Lottie si sta muovendo velocemente, questo potrebbe creare un effetto di "agganciamento"
+               // o se il delta è grande, il layer "salterà" sulla posizione statica.
+               // Se l'obiettivo è solo il match FINALE, questa logica andrebbe eseguita solo alla fine.
+               // Se l'obiettivo è che il layer "segua" lo statico (o viceversa), questo va bene.
+               
+               // Recupera la trasformazione corrente (se già applicata da noi in frame precedenti) per sommare?
+               // No, il getBoundingClientRect tiene conto delle trasformazioni CSS attive.
+               // Quindi dx/dy sono il "residuo" da correggere.
+               // Però applicare style.transform sovrascrive il precedente style.transform.
+               // Quindi dobbiamo mantenere uno stato o accumulare? 
+               // Se applichiamo transform: translate(dx, dy), al prossimo frame il rect si sarà spostato di dx, dy.
+               // Quindi il nuovo dx sarà 0.
+               // Ma se Lottie muove il layer internamente, il rect cambia.
+               
+               // Esempio: 
+               // Frame 1: Lottie a 100, Target a 200. dx = +100. Apply translate(100). Visivamente a 200.
+               // Frame 2: Lottie si muove a 110 (interno). CSS translate(100) ancora attivo? No, Lottie ridisegna?
+               // Lottie ridisegna gli attributi SVG, ma NON lo style CSS inline (solitamente).
+               // Quindi il translate(100) resta. Posizione visiva: 110 + 100 = 210. Target a 200.
+               // Nuovo dx = 200 - 210 = -10.
+               // Apply translate(-10)? No, sovrascrive translate(100).
+               // Quindi il layer salta a 110 - 10 = 100. Sbagliato.
+               
+               // SOLUZIONE CORRETTA PER SYNC CONTINUO:
+               // Dobbiamo leggere la trasformazione CSS attuale, parsare i valori X/Y, e sommare il nuovo delta.
+               // Oppure, più semplice: Rimuovere temporaneamente il transform, misurare, calcolare il delta TOTALE, riapplicare.
+               
+               var currentTransform = lottieLayer.style.transform;
+               lottieLayer.style.transform = ''; // Reset temporaneo per misurare la posizione "nativa" Lottie
+               
+               var nativeRect = lottieLayer.getBoundingClientRect();
+               var totalDx = targetRect.left - nativeRect.left;
+               var totalDy = targetRect.top - nativeRect.top;
+               
+               lottieLayer.style.transform = 'translate3d(' + totalDx + 'px, ' + totalDy + 'px, 0)';
+               
+               // Opzionale: Sync Scala (se necessario)
+               // var scaleX = targetRect.width / nativeRect.width;
+               // var scaleY = targetRect.height / nativeRect.height;
+               // lottieLayer.style.transform += ' scale(' + scaleX + ',' + scaleY + ')';
            });
         }
 
@@ -382,6 +375,14 @@ function iml_homepage_lottie_preloader() {
             // Log durata animazione e avvio dal frame desiderato
             anim.addEventListener('DOMLoaded', function() {
                 console.log('🐞 Lottie DOM Loaded. Total frames:', anim.totalFrames, 'Frame rate:', anim.frameRate);
+                
+                // --- ATTIVA SYNC ---
+                // Collega la funzione di sincronizzazione all'evento enterFrame
+                if (typeof syncElements === 'function' && enableSync) {
+                    anim.addEventListener('enterFrame', syncElements);
+                    console.log('🐞 Sync Lottie-HTML attivo.');
+                }
+
                 var duration = anim.totalFrames / anim.frameRate;
                 console.log('🐞 Estimated duration (s):', duration);
 
