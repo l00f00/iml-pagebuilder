@@ -246,17 +246,33 @@ function iml_homepage_lottie_preloader() {
         function syncElements() {
            if (!enableSync) return;
 
-           // Apply transform only in the last 2 seconds of the animation
+           // Apply transform only in the last 0.2 seconds of the animation
            // Calculate start frame based on total frames and frame rate
            if (anim && anim.totalFrames && anim.frameRate) {
                var fps = anim.frameRate;
                var totalFrames = anim.totalFrames;
-               var startSyncFrame = totalFrames - (fps * 0.6); // Start 2 seconds before end
+               var durationSync = 0.2; // 0.2 seconds duration
+               var framesSync = fps * durationSync;
+               var startSyncFrame = totalFrames - framesSync; // Start 0.2 seconds before end
                
+               var currentFrame = anim.currentFrame;
+
                // If current frame is before the start threshold, do not apply transform
-               if (anim.currentFrame < startSyncFrame) {
+               if (currentFrame < startSyncFrame) {
                    return;
                }
+
+               // Calculate interpolation progress (0 to 1)
+               // Clamp between 0 and 1 just in case
+               var progress = (currentFrame - startSyncFrame) / framesSync;
+               if (progress < 0) progress = 0;
+               if (progress > 1) progress = 1;
+
+               // Use a simple ease-out for smoother landing? Or Linear?
+               // Linear is safer for short durations.
+               // Let's stick to linear 'progress'.
+           } else {
+               return; 
            }
 
            // Trova l'elemento SVG generato da Lottie
@@ -265,87 +281,56 @@ function iml_homepage_lottie_preloader() {
 
            map.forEach(function(item) {
                // 1. TROVA IL LAYER LOTTIE
-               // Cerca un gruppo <g> che abbia ID, Classe o Aria-Label uguale al nome mappato.
                var layerName = item.lottie;
                var lottieLayer = lottieSVG.querySelector('g[id="' + layerName + '"]') || 
                                  lottieSVG.querySelector('g[class="' + layerName + '"]') ||
                                  lottieSVG.querySelector('g[aria-label="' + layerName + '"]');
 
-               if (!lottieLayer) {
-                   if (debugSync) console.warn('Sync: Layer Lottie non trovato:', layerName);
-                   return;
-               }
+               if (!lottieLayer) return;
 
                // 2. TROVA L'ELEMENTO HTML STATICO
                var htmlEl = document.querySelector(item.html);
-               if (!htmlEl) {
-                   if (debugSync) console.warn('Sync: Elemento HTML statico non trovato:', item.html);
-                   return;
-               }
+               if (!htmlEl) return;
 
                // 3. CALCOLA LE POSIZIONI (BoundingBox)
-               // Ottiene le coordinate e dimensioni attuali in pixel rispetto alla viewport
-               var layerRect = lottieLayer.getBoundingClientRect();
-               var targetRect = htmlEl.getBoundingClientRect();
-
-               // 4. CALCOLA IL DELTA (Differenza)
-               // Calcoliamo quanto dobbiamo spostare il layer Lottie per sovrapporlo al target.
-               // Nota: Se applichiamo la trasformazione, il getBoundingClientRect del layer cambierà al frame successivo.
-               // Per evitare loop o drift, l'ideale è calcolare il delta rispetto alla posizione "senza override" 
-               // oppure resettare il transform prima di misurare (costoso).
-               // APPROCCIO SEMPLIFICATO: 
-               // Se l'animazione Lottie porta il layer VICINO al target, questo script corregge l'errore fine.
-               // Usiamo 'transform' CSS che si applica sopra la trasformazione SVG interna.
-               
-               var dx = targetRect.left - layerRect.left;
-               var dy = targetRect.top - layerRect.top;
-               
-               // Se la differenza è minima (< 0.5px), evitiamo calcoli inutili (jitter fix)
-               if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return;
-
-               // 5. APPLICA LA TRASFORMAZIONE
-               // Usiamo translate3d per performance.
-               // Importante: Questo sposta il layer visivamente.
-               // ATTENZIONE: Se il layer Lottie si sta muovendo velocemente, questo potrebbe creare un effetto di "agganciamento"
-               // o se il delta è grande, il layer "salterà" sulla posizione statica.
-               // Se l'obiettivo è solo il match FINALE, questa logica andrebbe eseguita solo alla fine.
-               // Se l'obiettivo è che il layer "segua" lo statico (o viceversa), questo va bene.
-               
-               // Recupera la trasformazione corrente (se già applicata da noi in frame precedenti) per sommare?
-               // No, il getBoundingClientRect tiene conto delle trasformazioni CSS attive.
-               // Quindi dx/dy sono il "residuo" da correggere.
-               // Però applicare style.transform sovrascrive il precedente style.transform.
-               // Quindi dobbiamo mantenere uno stato o accumulare? 
-               // Se applichiamo transform: translate(dx, dy), al prossimo frame il rect si sarà spostato di dx, dy.
-               // Quindi il nuovo dx sarà 0.
-               // Ma se Lottie muove il layer internamente, il rect cambia.
-               
-               // Esempio: 
-               // Frame 1: Lottie a 100, Target a 200. dx = +100. Apply translate(100). Visivamente a 200.
-               // Frame 2: Lottie si muove a 110 (interno). CSS translate(100) ancora attivo? No, Lottie ridisegna?
-               // Lottie ridisegna gli attributi SVG, ma NON lo style CSS inline (solitamente).
-               // Quindi il translate(100) resta. Posizione visiva: 110 + 100 = 210. Target a 200.
-               // Nuovo dx = 200 - 210 = -10.
-               // Apply translate(-10)? No, sovrascrive translate(100).
-               // Quindi il layer salta a 110 - 10 = 100. Sbagliato.
-               
-               // SOLUZIONE CORRETTA PER SYNC CONTINUO:
-               // Dobbiamo leggere la trasformazione CSS attuale, parsare i valori X/Y, e sommare il nuovo delta.
-               // Oppure, più semplice: Rimuovere temporaneamente il transform, misurare, calcolare il delta TOTALE, riapplicare.
-               
+               // Clear previous transform to get native position
                var currentTransform = lottieLayer.style.transform;
-               lottieLayer.style.transform = ''; // Reset temporaneo per misurare la posizione "nativa" Lottie
+               lottieLayer.style.transform = ''; 
                
                var nativeRect = lottieLayer.getBoundingClientRect();
+               var targetRect = htmlEl.getBoundingClientRect();
+
+               // 4. CALCOLA IL DELTA (Differenza) E SCALE
                var totalDx = targetRect.left - nativeRect.left;
                var totalDy = targetRect.top - nativeRect.top;
                
-               lottieLayer.style.transform = 'translate3d(' + totalDx + 'px, ' + totalDy + 'px, 0)';
+               // Scale calculation
+               // We assume Lottie layer should scale to match target width/height
+               // Note: This assumes aspect ratios are similar or we stretch
+               var scaleX = targetRect.width / nativeRect.width;
+               var scaleY = targetRect.height / nativeRect.height;
                
-               // Opzionale: Sync Scala (se necessario)
-               // var scaleX = targetRect.width / nativeRect.width;
-               // var scaleY = targetRect.height / nativeRect.height;
-               // lottieLayer.style.transform += ' scale(' + scaleX + ',' + scaleY + ')';
+               // 5. APPLICA LA TRASFORMAZIONE INTERPOLATA
+               // Interpolate Translation
+               var currentDx = totalDx * progress;
+               var currentDy = totalDy * progress;
+               
+               // Interpolate Scale (from 1 to targetScale)
+               var currentSx = 1 + (scaleX - 1) * progress;
+               var currentSy = 1 + (scaleY - 1) * progress;
+               
+               lottieLayer.style.transform = 'translate3d(' + currentDx + 'px, ' + currentDy + 'px, 0) scale(' + currentSx + ', ' + currentSy + ')';
+               
+               // Imposta transform-origin al centro o top-left?
+               // Default SVG transform origin is usually 0,0 of the element bbox in some browsers or 0,0 of SVG.
+               // CSS transform on SVG elements uses transform-box: view-box by default in some cases.
+               // To be safe, usually 'center center' or '0 0'.
+               // Given we use getBoundingClientRect (top-left), standard transform origin might shift it.
+               // Let's try forcing transform-origin to 0 0 relative to the element box?
+               // Actually, if we translate based on Top-Left difference, we implicitly assume origin is relevant.
+               // If scale is applied, it scales from center by default in CSS.
+               // We need to set transform-origin to top left (0 0) to make top-left matching work with scale.
+               lottieLayer.style.transformOrigin = '0 0';
            });
         }
         
