@@ -206,6 +206,33 @@ function iml_register_custom_post_types() {
     register_post_type( 'progetto', $args_progetti );
 }
 
+// Aggiungi regole di rewrite per supportare attachments (foto) figlie di Progetti, Portfolio, Serie
+// Pattern: /post-type/parent-slug/attachment-slug/
+add_action('init', function() {
+    add_rewrite_rule(
+        '^progetto/([^/]+)/([^/]+)/?$',
+        'index.php?attachment=$matches[2]',
+        'top'
+    );
+    add_rewrite_rule(
+        '^portfolio/([^/]+)/([^/]+)/?$',
+        'index.php?attachment=$matches[2]',
+        'top'
+    );
+    add_rewrite_rule(
+        '^serie/([^/]+)/([^/]+)/?$',
+        'index.php?attachment=$matches[2]',
+        'top'
+    );
+    
+    // Flush una tantum sicuro (controlla un'opzione nel DB)
+    if ( ! get_option('iml_rewrite_flushed_attachments_v1') ) {
+        flush_rewrite_rules();
+        update_option('iml_rewrite_flushed_attachments_v1', true);
+    }
+});
+
+
 // Registrazione Meta Boxes per Meta Box plugin
 add_filter( 'rwmb_meta_boxes', 'iml_register_meta_boxes' );
 function iml_register_meta_boxes( $meta_boxes ) {
