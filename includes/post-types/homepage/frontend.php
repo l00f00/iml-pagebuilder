@@ -150,7 +150,7 @@ function iml_homepage_lottie_preloader() {
         #svg-container svg, .logoalcentro svg {
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease-in;
+            transition: opacity 0.2s ease-in;
         }
         html.lottie-active, body.lottie-active {
             /* overflow: hidden !important; */ /* Disabilitato blocco scroll (opzionale se sfondo è trasparente) */
