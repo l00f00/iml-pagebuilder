@@ -61,12 +61,19 @@ function iml_render_homepage_grid($atts) {
             $parent_type = $parent_id ? get_post_type($parent_id) : null;
             $href = '';
 
-            if ($parent_id) {
-                $href = get_permalink($parent_id);
-                $title = get_the_title($parent_id);
-            } elseif ($single_page_true == '1' && $parent_id == 0) {
+            // 1. Priority: Single Page (Pretty URL)
+            if ($single_page_true == '1') {
+                // Link to the attachment's single page (uses our new rewrite rules)
                 $href = get_permalink($post_id);
-            } else {
+                // Title remains the attachment title
+            } 
+            // 2. Fallback: Parent Project
+            elseif ($parent_id) {
+                $href = get_permalink($parent_id);
+                $title = get_the_title($parent_id); // Use parent title if linking to parent
+            } 
+            // 3. Last Resort: Image File URL
+            else {
                 $href = wp_get_attachment_url($post_id); 
             }
 
