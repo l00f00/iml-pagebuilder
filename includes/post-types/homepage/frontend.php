@@ -233,10 +233,10 @@ function iml_homepage_lottie_preloader() {
         // Assicurati che il JSON Lottie sia stato esportato con l'opzione "Include Layer Names" (Bodymovin/LottieFiles)
         // in modo che i gruppi <g> abbiano id="NOME" o class="NOME".
         const map = [
-           { lottie: "ILARIA", html: "#staticIlaria" },
-           { lottie: "MAGLIOCCHETTI", html: "#staticMagliocchetti" },
-           { lottie: "LOMBI", html: "#staticLombi" },
-           { lottie: "LOGO", html: "#staticLogoAlCentro" }
+           { lottie: "1072", html: "#staticIlaria" },
+           { lottie: "1069", html: "#staticMagliocchetti" },
+           { lottie: "1070", html: "#staticLombi" },
+           { lottie: "1071", html: "#staticLogoAlCentro" }
         ];
 
         /**
@@ -335,6 +335,18 @@ function iml_homepage_lottie_preloader() {
                // lottieLayer.style.transform += ' scale(' + scaleX + ',' + scaleY + ')';
            });
         }
+        
+        // Helper per testare trasformazioni manuali da console
+        window.testTransform = function(layerId, x, y) {
+            var lottieSVG = container.querySelector('svg');
+            var layer = lottieSVG.querySelector('g[id="' + layerId + '"]');
+            if (layer) {
+                layer.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+                console.log('Applied transform to ' + layerId + ': ' + layer.style.transform);
+            } else {
+                console.warn('Layer ' + layerId + ' not found');
+            }
+        };
 
         // DEBUG FUNCTION: Expose to window to allow manual replay
         window.resyncLottie = function(force) {
