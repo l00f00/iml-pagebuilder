@@ -344,6 +344,96 @@ function iml_homepage_lottie_preloader() {
             syncElements();
             if (force) enableSync = originalEnable;
         };
+
+        // --- TOOL DI POSIZIONAMENTO MANUALE ---
+        // Attiva questa modalità da console con: window.enableManualDrag()
+        // Trascina i layer Lottie ("ILARIA", "LOGO", ecc.) e rilascia per vedere il transform CSS in console.
+        window.enableManualDrag = function() {
+            console.log('🐞 MANUAL DRAG ENABLED: Trascina i layer Lottie per posizionarli.');
+            console.log('Il valore "transform" finale verrà stampato in console al rilascio.');
+            
+            // Disabilita il sync automatico per non interferire
+            enableSync = false;
+            
+            var lottieSVG = container.querySelector('svg');
+            if (!lottieSVG) { console.warn('SVG non trovato'); return; }
+
+            map.forEach(function(item) {
+                var layerName = item.lottie;
+                var layer = lottieSVG.querySelector('g[id="' + layerName + '"]') || 
+                            lottieSVG.querySelector('g[class="' + layerName + '"]') ||
+                            lottieSVG.querySelector('g[aria-label="' + layerName + '"]');
+
+                if (!layer) return;
+
+                // Stile cursore
+                layer.style.cursor = 'move';
+                layer.style.pointerEvents = 'all'; // Assicura che riceva eventi mouse
+
+                // Variabili per drag
+                var isDragging = false;
+                var startX, startY;
+                var initialTransform = layer.style.transform || '';
+                // Parse initial translate if exists (simple check)
+                var currentX = 0, currentY = 0;
+                
+                // Helper per estrarre translate x,y corrente (molto grezzo)
+                var match = initialTransform.match(/translate3d\(([^p]+)px,\s*([^p]+)px/);
+                if (match) {
+                    currentX = parseFloat(match[1]);
+                    currentY = parseFloat(match[2]);
+                }
+
+                layer.addEventListener('mousedown', function(e) {
+                    isDragging = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    // Ricalcola currentX/Y fresco dallo stile
+                    var t = layer.style.transform || '';
+                    var m = t.match(/translate3d\(([^p]+)px,\s*([^p]+)px/);
+                    if (m) {
+                        currentX = parseFloat(m[1]);
+                        currentY = parseFloat(m[2]);
+                    } else {
+                        currentX = 0; 
+                        currentY = 0;
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+
+                window.addEventListener('mousemove', function(e) {
+                    if (!isDragging) return;
+                    var dx = e.clientX - startX;
+                    var dy = e.clientY - startY;
+                    var newX = currentX + dx;
+                    var newY = currentY + dy;
+                    
+                    layer.style.transform = 'translate3d(' + newX + 'px, ' + newY + 'px, 0)';
+                });
+
+                window.addEventListener('mouseup', function(e) {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    console.log('🎯 Layer [' + layerName + '] Final Transform:');
+                    console.log(layer.style.transform);
+                });
+            });
+        };
+
+        // Helper per stampare la posizione degli SVG statici
+        window.logStaticPositions = function() {
+            console.log('--- STATIC ELEMENTS POSITIONS (getBoundingClientRect) ---');
+            map.forEach(function(item) {
+                var el = document.querySelector(item.html);
+                if (el) {
+                    var rect = el.getBoundingClientRect();
+                    console.log(item.html, rect);
+                } else {
+                    console.warn(item.html, 'NOT FOUND');
+                }
+            });
+        };
         
         window.debugLottie = function() {
             // Re-create overlay if removed
