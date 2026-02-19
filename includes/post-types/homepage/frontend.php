@@ -243,27 +243,8 @@ function iml_homepage_lottie_preloader() {
          * Funzione che sincronizza la posizione dei layer Lottie con gli elementi HTML statici.
          * Viene chiamata ad ogni frame dell'animazione per correggere la posizione in tempo reale.
          */
-        function syncElements(e) {
+        function syncElements() {
            if (!enableSync) return;
-           
-           // TIME-BASED SYNC CHECK
-           // Se 'e' è l'evento enterFrame di Lottie, contiene currentFrame e totalFrames.
-           // Se non lo è (chiamata manuale), saltiamo il controllo o forziamo.
-           if (e && e.type === 'enterFrame' && anim) {
-               // Calcola frame rate (fallback a 30 se non disponibile)
-               var fps = anim.frameRate || 30;
-               var totalFrames = anim.totalFrames;
-               var currentFrame = e.currentTime; // enterFrame passa currentTime (frame number)
-               
-               // Soglia: ultimi 3 secondi (o meno se l'animazione è breve)
-               var thresholdFrames = 3 * fps;
-               var startSyncFrame = totalFrames - thresholdFrames;
-               
-               // Se siamo prima degli ultimi 3 secondi, non sincronizzare (lascia l'animazione originale)
-               if (currentFrame < startSyncFrame) {
-                   return; 
-               }
-           }
 
            // Trova l'elemento SVG generato da Lottie
            var lottieSVG = container.querySelector('svg');
@@ -348,18 +329,10 @@ function iml_homepage_lottie_preloader() {
                
                lottieLayer.style.transform = 'translate3d(' + totalDx + 'px, ' + totalDy + 'px, 0)';
                
-               /* SCALE SYNC DISABLED (Richiesta utente: "scale fa casino")
-               // --- SYNC SCALA ---
-               if (nativeRect.width > 0 && nativeRect.height > 0) {
-                   var scaleX = targetRect.width / nativeRect.width;
-                   var scaleY = targetRect.height / nativeRect.height;
-                   
-                   lottieLayer.style.transformOrigin = '0 0';
-                   lottieLayer.style.transform = 
-                       'translate3d(' + totalDx + 'px, ' + totalDy + 'px, 0) ' +
-                       'scale(' + scaleX + ', ' + scaleY + ')';
-               }
-               */
+               // Opzionale: Sync Scala (se necessario)
+               // var scaleX = targetRect.width / nativeRect.width;
+               // var scaleY = targetRect.height / nativeRect.height;
+               // lottieLayer.style.transform += ' scale(' + scaleX + ',' + scaleY + ')';
            });
         }
         
