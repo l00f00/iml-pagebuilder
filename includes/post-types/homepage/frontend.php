@@ -246,6 +246,19 @@ function iml_homepage_lottie_preloader() {
         function syncElements() {
            if (!enableSync) return;
 
+           // Apply transform only in the last 2 seconds of the animation
+           // Calculate start frame based on total frames and frame rate
+           if (anim && anim.totalFrames && anim.frameRate) {
+               var fps = anim.frameRate;
+               var totalFrames = anim.totalFrames;
+               var startSyncFrame = totalFrames - (fps * 2); // Start 2 seconds before end
+               
+               // If current frame is before the start threshold, do not apply transform
+               if (anim.currentFrame < startSyncFrame) {
+                   return;
+               }
+           }
+
            // Trova l'elemento SVG generato da Lottie
            var lottieSVG = container.querySelector('svg');
            if (!lottieSVG) return;
