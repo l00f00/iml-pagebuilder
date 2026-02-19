@@ -251,7 +251,7 @@ function iml_homepage_lottie_preloader() {
            if (anim && anim.totalFrames && anim.frameRate) {
                var fps = anim.frameRate;
                var totalFrames = anim.totalFrames;
-               var durationSync = 0.09; // 0.2 seconds duration
+               var durationSync = 0.08; // 0.2 seconds duration
                var framesSync = fps * durationSync;
                var startSyncFrame = totalFrames - framesSync; // Start 0.2 seconds before end
                
@@ -305,33 +305,34 @@ function iml_homepage_lottie_preloader() {
                var totalDy = targetRect.top - nativeRect.top;
                
                // Scale calculation
-               // We assume Lottie layer should scale to match target width/height
-               // Note: This assumes aspect ratios are similar or we stretch
-               var scaleX = targetRect.width / nativeRect.width;
-               var scaleY = targetRect.height / nativeRect.height;
-               
-               // 5. APPLICA LA TRASFORMAZIONE INTERPOLATA
-               // Interpolate Translation
-               var currentDx = totalDx * progress;
-               var currentDy = totalDy * progress;
-               
-               // Interpolate Scale (from 1 to targetScale)
-               var currentSx = 1 + (scaleX - 1) * progress;
-               var currentSy = 1 + (scaleY - 1) * progress;
-               
-               lottieLayer.style.transform = 'translate3d(' + currentDx + 'px, ' + currentDy + 'px, 0) scale(' + currentSx + ', ' + currentSy + ')';
-               
-               // Imposta transform-origin al centro o top-left?
-               // Default SVG transform origin is usually 0,0 of the element bbox in some browsers or 0,0 of SVG.
-               // CSS transform on SVG elements uses transform-box: view-box by default in some cases.
-               // To be safe, usually 'center center' or '0 0'.
-               // Given we use getBoundingClientRect (top-left), standard transform origin might shift it.
-               // Let's try forcing transform-origin to 0 0 relative to the element box?
-               // Actually, if we translate based on Top-Left difference, we implicitly assume origin is relevant.
-               // If scale is applied, it scales from center by default in CSS.
-               // We need to set transform-origin to top left (0 0) to make top-left matching work with scale.
-               lottieLayer.style.transformOrigin = '0 0';
-           });
+                // We assume Lottie layer should scale to match target width/height
+                // Note: This assumes aspect ratios are similar or we stretch
+                // var scaleX = targetRect.width / nativeRect.width;
+                // var scaleY = targetRect.height / nativeRect.height;
+                
+                // 5. APPLICA LA TRASFORMAZIONE INTERPOLATA
+                // Interpolate Translation
+                var currentDx = totalDx * progress;
+                var currentDy = totalDy * progress;
+                
+                // Interpolate Scale (from 1 to targetScale)
+                // var currentSx = 1 + (scaleX - 1) * progress;
+                // var currentSy = 1 + (scaleY - 1) * progress;
+                
+                // lottieLayer.style.transform = 'translate3d(' + currentDx + 'px, ' + currentDy + 'px, 0) scale(' + currentSx + ', ' + currentSy + ')';
+                lottieLayer.style.transform = 'translate3d(' + currentDx + 'px, ' + currentDy + 'px, 0)';
+                
+                // Imposta transform-origin al centro o top-left?
+                // Default SVG transform origin is usually 0,0 of the element bbox in some browsers or 0,0 of SVG.
+                // CSS transform on SVG elements uses transform-box: view-box by default in some cases.
+                // To be safe, usually 'center center' or '0 0'.
+                // Given we use getBoundingClientRect (top-left), standard transform origin might shift it.
+                // Let's try forcing transform-origin to 0 0 relative to the element box?
+                // Actually, if we translate based on Top-Left difference, we implicitly assume origin is relevant.
+                // If scale is applied, it scales from center by default in CSS.
+                // We need to set transform-origin to top left (0 0) to make top-left matching work with scale.
+                // lottieLayer.style.transformOrigin = '0 0';
+            });
         }
         
         // Helper per testare trasformazioni manuali da console
