@@ -139,7 +139,7 @@ function iml_homepage_lottie_preloader() {
             left: 0;
             width: 100%;
             height: 100vh; /* Usa viewport height per coprire lo schermo iniziale */
-            background: rgba(255, 255, 255, 0.1); /* Richiesta utente: bianco 0.1 */
+            background: rgba(255, 255, 255, 0.00001); /* Richiesta utente: bianco 0.1 */
             z-index: 99999999;
             display: none;
             align-items: center;
