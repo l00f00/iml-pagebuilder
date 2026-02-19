@@ -226,11 +226,31 @@ add_action('init', function() {
     );
     
     // Flush una tantum sicuro (controlla un'opzione nel DB)
-    if ( ! get_option('iml_rewrite_flushed_attachments_v1') ) {
+    if ( ! get_option('iml_rewrite_flushed_attachments_v2') ) {
         flush_rewrite_rules();
-        update_option('iml_rewrite_flushed_attachments_v1', true);
+        update_option('iml_rewrite_flushed_attachments_v2', true);
     }
 });
+
+// Filtro per generare i permalink corretti per gli attachment
+add_filter('attachment_link', function($link, $post_id) {
+    $post = get_post($post_id);
+    // Verifica se l'attachment ha un genitore
+    if ($post && $post->post_parent) {
+        $parent = get_post($post->post_parent);
+        // Verifica se il genitore è uno dei nostri CPT
+        if ($parent && in_array($parent->post_type, ['progetto', 'portfolio', 'serie'])) {
+            // Costruisci il link: /slug-cpt/slug-parent/slug-attachment/
+            // Nota: per 'progetto' lo slug è 'progetto', per 'portfolio' è 'portfolio', ecc.
+            // Controlliamo lo slug registrato per il CPT se diverso dal nome (ma qui coincidono)
+            $post_type_slug = $parent->post_type; // 'progetto', 'portfolio', 'serie'
+            
+            return home_url('/' . $post_type_slug . '/' . $parent->post_name . '/' . $post->post_name . '/');
+        }
+    }
+    return $link;
+}, 10, 2);
+
 
 
 // Registrazione Meta Boxes per Meta Box plugin
