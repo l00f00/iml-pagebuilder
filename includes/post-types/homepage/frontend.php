@@ -251,7 +251,7 @@ function iml_homepage_lottie_preloader() {
            if (anim && anim.totalFrames && anim.frameRate) {
                var fps = anim.frameRate;
                var totalFrames = anim.totalFrames;
-               var durationSync = 0.7; // 0.3 seconds duration
+               var durationSync = 1.5; // 0.3 seconds duration
                var framesSync = fps * durationSync;
                var startSyncFrame = totalFrames - framesSync; // Start 0.3 seconds before end
                
