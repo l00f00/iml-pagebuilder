@@ -61,16 +61,15 @@ function iml_render_homepage_grid($atts) {
             $parent_type = $parent_id ? get_post_type($parent_id) : null;
             $href = '';
 
-            // 1. Priority: Single Page (Pretty URL)
-            if ($single_page_true == '1') {
-                // Link to the attachment's single page (uses our new rewrite rules)
-                $href = get_permalink($post_id);
-                // Title remains the attachment title
-            } 
-            // 2. Fallback: Parent Project
-            elseif ($parent_id) {
+            // 1. Priority: Parent Project/Portfolio
+            if ($parent_id) {
                 $href = get_permalink($parent_id);
                 $title = get_the_title($parent_id); // Use parent title if linking to parent
+            } 
+            // 2. Fallback: Single Page (if enabled and no parent, or parent logic failed/desired otherwise?)
+            // The user requested: "if no parent, go to single page"
+            elseif ($single_page_true == '1') {
+                $href = get_permalink($post_id);
             } 
             // 3. Last Resort: Image File URL
             else {
