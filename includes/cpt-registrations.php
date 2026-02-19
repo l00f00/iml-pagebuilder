@@ -69,6 +69,7 @@ function iml_register_custom_post_types() {
         'supports'            => ['title', 'thumbnail'],
         'taxonomies'          => ['category', 'post_tag'],
         'rewrite'             => [
+            'slug'       => 'portfolio',
             'with_front' => false,
         ],
     ];
@@ -133,6 +134,7 @@ function iml_register_custom_post_types() {
         'supports'            => ['title', 'thumbnail'],
         'taxonomies'          => ['category', 'post_tag'],
         'rewrite'             => [
+            'slug'       => 'serie',
             'with_front' => false,
         ],
     ];
@@ -197,6 +199,7 @@ function iml_register_custom_post_types() {
         'supports'            => ['title', 'thumbnail'],
         'taxonomies'          => ['category', 'post_tag'],
         'rewrite'             => [
+            'slug'       => 'progetto',
             'with_front' => false,
         ],
     ];
