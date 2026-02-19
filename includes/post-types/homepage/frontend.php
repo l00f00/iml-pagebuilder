@@ -337,6 +337,14 @@ function iml_homepage_lottie_preloader() {
         }
 
         // DEBUG FUNCTION: Expose to window to allow manual replay
+        window.resyncLottie = function(force) {
+            console.log('🐞 Manual Resync Triggered');
+            var originalEnable = enableSync;
+            if (force) enableSync = true;
+            syncElements();
+            if (force) enableSync = originalEnable;
+        };
+        
         window.debugLottie = function() {
             // Re-create overlay if removed
             if (!document.body.contains(overlay)) {
