@@ -243,8 +243,27 @@ function iml_homepage_lottie_preloader() {
          * Funzione che sincronizza la posizione dei layer Lottie con gli elementi HTML statici.
          * Viene chiamata ad ogni frame dell'animazione per correggere la posizione in tempo reale.
          */
-        function syncElements() {
+        function syncElements(e) {
            if (!enableSync) return;
+           
+           // TIME-BASED SYNC CHECK
+           // Se 'e' è l'evento enterFrame di Lottie, contiene currentFrame e totalFrames.
+           // Se non lo è (chiamata manuale), saltiamo il controllo o forziamo.
+           if (e && e.type === 'enterFrame' && anim) {
+               // Calcola frame rate (fallback a 30 se non disponibile)
+               var fps = anim.frameRate || 30;
+               var totalFrames = anim.totalFrames;
+               var currentFrame = e.currentTime; // enterFrame passa currentTime (frame number)
+               
+               // Soglia: ultimi 3 secondi (o meno se l'animazione è breve)
+               var thresholdFrames = 3 * fps;
+               var startSyncFrame = totalFrames - thresholdFrames;
+               
+               // Se siamo prima degli ultimi 3 secondi, non sincronizzare (lascia l'animazione originale)
+               if (currentFrame < startSyncFrame) {
+                   return; 
+               }
+           }
 
            // Trova l'elemento SVG generato da Lottie
            var lottieSVG = container.querySelector('svg');
@@ -329,59 +348,18 @@ function iml_homepage_lottie_preloader() {
                
                lottieLayer.style.transform = 'translate3d(' + totalDx + 'px, ' + totalDy + 'px, 0)';
                
+               /* SCALE SYNC DISABLED (Richiesta utente: "scale fa casino")
                // --- SYNC SCALA ---
-               // Calcoliamo il fattore di scala necessario per matchare width/height
-               // Nota: getBoundingClientRect include la scala corrente.
-               // Se il layer è già scalato internamente da Lottie, dobbiamo tenerne conto?
-               // Usiamo nativeRect (senza transform CSS) per calcolare quanto dobbiamo scalare.
-               
-               // Evitiamo divisione per zero
                if (nativeRect.width > 0 && nativeRect.height > 0) {
                    var scaleX = targetRect.width / nativeRect.width;
                    var scaleY = targetRect.height / nativeRect.height;
                    
-                   // Applichiamo scala e traslazione insieme.
-                   // IMPORTANTE: L'ordine è fondamentale. Translate, poi Scale? O Scale poi Translate?
-                   // CSS transform order: right to left per la matrice, ma nella stringa si leggono left to right.
-                   // Solitamente si vuole: Spostare l'origine, Scalare, Spostare a destinazione.
-                   // Ma qui stiamo manipolando il box finale.
-                   
-                   // Se scaliamo, il centro cambia se transform-origin non è top-left.
-                   // Impostiamo l'origine per semplificare il calcolo
-                   lottieLayer.style.transformOrigin = '0 0'; // Top-Left
-                   
-                   // Se scaliamo rispetto a Top-Left (0,0 del layer), allora la traslazione deve portare
-                   // il punto (0,0) del layer scalato al punto (left, top) del target.
-                   
-                   // Ricalcoliamo nativeRect con transformOrigin 0 0? No, nativeRect è il box visivo.
-                   // Se cambiamo transformOrigin, nativeRect cambia posizione visiva ma non dimensioni.
-                   
-                   // Semplificazione:
-                   // 1. Reset transform (fatto sopra)
-                   // 2. Set origin 0 0
-                   // 3. Misura posizione top-left "nativa" (nativeRect.left/top)
-                   // 4. Calcola traslazione necessaria: target.left - native.left
-                   // 5. Applica translate e scale
-                   
-                   // Attenzione: nativeRect è calcolato PRIMA di impostare transformOrigin.
-                   // Se cambiamo origin ora, potrebbe spostarsi visivamente se aveva rotazioni? 
-                   // Lottie usa i suoi origin interni. Noi applichiamo CSS sopra.
-                   
-                   // Proviamo senza forzare origin, usando il centro?
-                   // No, per matchare un rettangolo statico (width/height/top/left), top-left è più sicuro.
-                   
-                   // Fix: Imposta origin PRIMA di misurare nativeRect? No, nativeRect è già stato misurato.
-                   // Proviamo ad applicare e basta.
-                   
                    lottieLayer.style.transformOrigin = '0 0';
-                   
-                   // Ricalcoliamo nativeRect perché transformOrigin potrebbe aver spostato il bounding box?
-                   // No, transformOrigin influenza solo l'effetto delle trasformazioni FUTURE.
-                   
                    lottieLayer.style.transform = 
                        'translate3d(' + totalDx + 'px, ' + totalDy + 'px, 0) ' +
                        'scale(' + scaleX + ', ' + scaleY + ')';
                }
+               */
            });
         }
         
