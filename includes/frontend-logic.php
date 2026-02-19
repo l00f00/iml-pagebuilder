@@ -32,6 +32,7 @@ function iml_enqueue_frontend_scripts() {
 }
 add_action('wp_enqueue_scripts', 'iml_enqueue_frontend_scripts');
 
+/*
 add_action('template_redirect', function() {
     // Controlla se siamo nell'area di login o amministrazione
     if (
@@ -53,3 +54,4 @@ add_action('template_redirect', function() {
         exit;
     }
 });
+*/
