@@ -251,7 +251,7 @@ function iml_homepage_lottie_preloader() {
            if (anim && anim.totalFrames && anim.frameRate) {
                var fps = anim.frameRate;
                var totalFrames = anim.totalFrames;
-               var startSyncFrame = totalFrames - (fps * 0.5); // Start 2 seconds before end
+               var startSyncFrame = totalFrames - (fps * 0.6); // Start 2 seconds before end
                
                // If current frame is before the start threshold, do not apply transform
                if (anim.currentFrame < startSyncFrame) {
