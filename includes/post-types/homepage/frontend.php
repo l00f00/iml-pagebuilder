@@ -151,6 +151,9 @@ function iml_homepage_lottie_preloader() {
             width: 100%;
             height: 100%;
             filter: invert(1); /* Richiesta utente: inverti colore lottie */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         /* Static SVG elements initially hidden */
         #svg-container svg, .logoalcentro svg {
@@ -232,7 +235,7 @@ function iml_homepage_lottie_preloader() {
         // --- SYNC LOGIC CONFIGURATION ---
         // Imposta a true per attivare il riposizionamento forzato dei layer Lottie
         // affinché coincidano con gli elementi statici HTML.
-        var enableSync = true; 
+        var enableSync = false; 
         var debugSync = false; // Logga avvisi in console se false
 
         // Mappa di corrispondenza: NOME LAYER LOTTIE => SELETTORE HTML STATICO
@@ -483,7 +486,7 @@ function iml_homepage_lottie_preloader() {
                 autoplay: false, // Autoplay disabilitato per gestire start manuale
                 path: lottieJSON,
                 rendererSettings: {
-                    preserveAspectRatio: 'none' // STRETCH to fill container
+                    preserveAspectRatio: 'xMidYMid meet' // Mantieni proporzioni originali e centra
                 }
             });
 
