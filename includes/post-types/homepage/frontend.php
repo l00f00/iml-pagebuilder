@@ -578,20 +578,23 @@ function iml_homepage_lottie_preloader() {
         // Utilizziamo un event listener sullo scroll
         var scrollTarget = document.getElementById('image-pair-container');
         if (scrollTarget) {
-            // Aggiungi stili per la transizione se non presenti
-            scrollTarget.style.transition = 'opacity 0.5s ease, visibility 0.5s';
+            // Rimuovi la transizione per rendere la scomparsa immediata (o tienila per l'effetto fade-out, ma display none alla fine)
+            // L'utente vuole display none o blocco. "display none" è la scelta più sicura per rimuoverlo dal flusso.
             
+            var hasHidden = false; // Flag per assicurarsi che non torni visibile
+
             window.addEventListener('scroll', function() {
+                if (hasHidden) return; // Se già nascosto, non fare nulla
+
                 var rect = scrollTarget.getBoundingClientRect();
                 
                 // Se la parte inferiore dell'elemento è sopra la parte superiore della viewport (rect.bottom < 0)
                 // significa che l'abbiamo scrollato via completamente.
                 if (rect.bottom < 0) {
-                     scrollTarget.style.opacity = '0';
-                     scrollTarget.style.visibility = 'hidden';
-                } else {
-                     scrollTarget.style.opacity = '1';
-                     scrollTarget.style.visibility = 'visible';
+                     // Imposta display: none per rimuoverlo dal layout e impedire lo scroll indietro
+                     scrollTarget.style.display = 'none';
+                     hasHidden = true; // Blocca ulteriori controlli
+                     console.log('🐞 Image Pair Container nascosto permanentemente dopo scroll.');
                 }
             });
         }
