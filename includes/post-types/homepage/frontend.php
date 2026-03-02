@@ -160,7 +160,7 @@ function iml_homepage_lottie_preloader() {
             justify-content: center;
         }
         #lottie-container svg {
-             transform: translate3d(6px, 0px, 0px) scale(1.14)!important;
+             transform: translate3d(8px, 0px, 0px) scale(1.14)!important;
              transform-origin: center center;
         }
         /* Debug Markers */
