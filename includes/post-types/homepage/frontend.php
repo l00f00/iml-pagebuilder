@@ -239,61 +239,70 @@ function iml_homepage_lottie_preloader() {
             if (anim) anim.pause();
             
             // 2. Misura Lottie e Forza Statico
-            // Questo sovrappone il logo statico esattamente sopra quello dinamico
-            var snapped = window.matchLogos();
+            // Misuriamo IMMEDIATAMENTE prima di nascondere qualsiasi cosa
+            var lottieRect = window.measureLottieLogo();
             
-            // 3. Nascondi Lottie (ora che lo statico è sopra, non si noterà)
-            // Usa setTimeout brevissimo per garantire che il rendering dello statico sia avvenuto
-            setTimeout(function() {
-                if (overlay) {
-                    overlay.style.opacity = '0'; // Fade out Lottie container (optional, or display none)
-                    overlay.style.display = 'none'; // Rimuovi dal layout
-                }
-                
-                // 4. Anima il logo statico alla sua posizione naturale
-                var staticLogo = document.querySelector('#staticLogoAlCentro svg');
-                if (staticLogo && snapped) {
-                    // Force reflow
-                    void staticLogo.offsetWidth;
-                    
-                    // Imposta transizione
-                    staticLogo.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
-                    
-                    // Rimuovi gli override inline per farlo tornare al CSS originale
-                    // (width, height, top, left, position, transform)
-                    staticLogo.style.position = ''; 
-                    staticLogo.style.top = '';
-                    staticLogo.style.left = '';
-                    staticLogo.style.width = '';
-                    staticLogo.style.height = '';
-                    staticLogo.style.margin = '';
-                    staticLogo.style.transform = '';
-                    // Mantieni visibility e opacity
-                    staticLogo.style.visibility = 'visible';
-                    staticLogo.style.opacity = '1';
-                    
-                    // Dopo la transizione, rimuovi anche z-index elevato se necessario
-                    setTimeout(function() {
-                        staticLogo.style.zIndex = '';
-                        staticLogo.style.transition = ''; // Pulisci transition
-                    }, 800);
-                } else {
-                    // Fallback se matchLogos fallisce: mostra semplicemente gli elementi statici
-                    var statics = document.querySelectorAll('#svg-container svg, .logoalcentro svg');
-                    statics.forEach(function(el) { 
-                        el.style.visibility = 'visible';
-                        el.style.opacity = '1'; 
-                    });
-                }
-                
-                // Rimuovi overlay completamente dopo un po' se non l'abbiamo fatto
-                if (overlay) {
-                    // overlay.remove(); // Opzionale: rimuovi dal DOM
-                }
-                
-                console.log('🐞 Transition completed.');
-                
-            }, 50); // 50ms delay
+            // Se la misura è valida, procedi con il morphing
+            if (lottieRect && lottieRect.width > 0) {
+                 console.log('🐞 Valid Lottie rect found:', lottieRect.width, 'x', lottieRect.height);
+                 
+                 // 3. Applica dimensioni al logo statico (ancora invisibile o nascosto)
+                 window.forceStaticLogo(lottieRect);
+                 
+                 // 4. Rendi visibile il logo statico (che ora è sovrapposto al lottie)
+                 // Nota: forceStaticLogo mette già opacity: 1 e visibility: visible
+                 
+                 // 5. Nascondi Lottie IMMEDIATAMENTE dopo aver posizionato lo statico
+                 // Non usiamo setTimeout per nascondere, per evitare flash
+                 if (overlay) {
+                     // overlay.style.opacity = '0'; // Se vogliamo fade out del container
+                     overlay.style.display = 'none'; // Rimozione netta dal layout
+                 }
+                 
+                 // 6. Avvia transizione verso stato naturale
+                 // Usa un piccolo delay per permettere al browser di renderizzare il frame "forzato"
+                 requestAnimationFrame(function() {
+                     var staticLogo = document.querySelector('#staticLogoAlCentro svg') || 
+                                      document.querySelector('#staticLogoAlCentro img') || 
+                                      document.querySelector('#staticLogoAlCentro');
+                     
+                     if (staticLogo) {
+                         // Force reflow
+                         void staticLogo.offsetWidth;
+                         
+                         // Imposta transizione CSS
+                         staticLogo.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+                         
+                         // Rimuovi gli override inline
+                         staticLogo.style.position = ''; 
+                         staticLogo.style.top = '';
+                         staticLogo.style.left = '';
+                         staticLogo.style.width = '';
+                         staticLogo.style.height = '';
+                         staticLogo.style.margin = '';
+                         staticLogo.style.transform = '';
+                         // Mantieni visibility e opacity
+                         staticLogo.style.visibility = 'visible';
+                         staticLogo.style.opacity = '1';
+                         
+                         // Cleanup dopo transizione
+                         setTimeout(function() {
+                             staticLogo.style.zIndex = '';
+                             staticLogo.style.transition = '';
+                         }, 800);
+                     }
+                 });
+                 
+            } else {
+                 // FALLBACK: Se la misurazione fallisce (0x0), mostra semplicemente gli elementi statici
+                 console.warn('🐞 Transition fallback: measurement failed or zero.');
+                 if (overlay) overlay.style.display = 'none';
+                 var statics = document.querySelectorAll('#svg-container svg, .logoalcentro svg');
+                 statics.forEach(function(el) { 
+                     el.style.visibility = 'visible';
+                     el.style.opacity = '1'; 
+                 });
+            }
         }
 
         // FALLBACK DI SICUREZZA LUNGO: 15 secondi
@@ -323,26 +332,44 @@ function iml_homepage_lottie_preloader() {
             }
             
             // Misura dimensioni e posizione
+            // Forza il reflow per assicurare valori aggiornati
+            void logoLayer.getBoundingClientRect();
             var rect = logoLayer.getBoundingClientRect();
-            console.log('🐞 Measured Lottie Logo:', rect);
             
-            // Calcola anche la trasformazione corrente (scale) se possibile
-            // Ma getBoundingClientRect include già tutte le trasformazioni
+            // Se rect è vuoto, potrebbe essere perché l'elemento è nascosto (display: none)
+            if (rect.width === 0 && rect.height === 0) {
+                 console.warn('🐞 measureLottieLogo found 0 dimensions. Is Lottie hidden?');
+            }
+            
+            // Log solo se utile (evita spam in loop)
+            // console.log('🐞 Measured Lottie Logo:', rect);
+            
             return rect;
         };
 
         window.forceStaticLogo = function(rect) {
-            var staticLogo = document.querySelector('#staticLogoAlCentro svg'); // Assumiamo sia l'SVG dentro il div
-            if (!staticLogo) {
-                console.warn('Static logo #staticLogoAlCentro svg not found');
+            // Se rect non è valido, esci
+            if (!rect || rect.width === 0) {
+                console.warn('🐞 forceStaticLogo called with invalid rect:', rect);
                 return;
+            }
+
+            // Tenta di trovare il logo statico con selettori multipli per sicurezza
+            var staticLogo = document.querySelector('#staticLogoAlCentro svg') || 
+                             document.querySelector('#staticLogoAlCentro img') || 
+                             document.querySelector('#staticLogoAlCentro');
+
+            if (!staticLogo) {
+                console.warn('Static logo #staticLogoAlCentro (svg/img/div) not found in DOM');
+                // Fallback: prova a trovare tramite classe se ID fallisce (opzionale)
+                staticLogo = document.querySelector('.logoalcentro svg');
+                if (!staticLogo) {
+                     console.error('Critical: Static logo element missing entirely.');
+                     return;
+                }
             }
             
             // Applica stili per forzare la sovrapposizione esatta
-            // Poiché rect è relativo al viewport, usiamo position: fixed temporaneamente
-            // o calcoliamo la posizione assoluta se il parent è relativo.
-            // Per massima precisione nel momento di transizione, fixed è meglio.
-            
             staticLogo.style.position = 'fixed';
             staticLogo.style.top = rect.top + 'px';
             staticLogo.style.left = rect.left + 'px';
@@ -354,7 +381,7 @@ function iml_homepage_lottie_preloader() {
             staticLogo.style.visibility = 'visible';
             staticLogo.style.opacity = '1';
             
-            console.log('🐞 Forced Static Logo to match Lottie dimensions');
+            console.log('🐞 Forced Static Logo to match Lottie dimensions:', rect.width, 'x', rect.height);
         };
         
         window.matchLogos = function() {
@@ -363,12 +390,16 @@ function iml_homepage_lottie_preloader() {
             
             // 2. Misura
             var rect = window.measureLottieLogo();
-            if (rect) {
+            
+            // Verifica che la misurazione sia valida (>0)
+            if (rect && rect.width > 0) {
                 // 3. Forza statico
                 window.forceStaticLogo(rect);
                 return true;
+            } else {
+                console.warn('🐞 matchLogos failed: Lottie dimensions are 0 or null.');
+                return false;
             }
-            return false;
         };
 
         // --- PAUSE & ADVANCE FUNCTIONS ---
