@@ -234,78 +234,69 @@ function iml_homepage_lottie_preloader() {
             if (done) return;
             done = true;
             
-            // --- SMOOTH TRANSITION LOGIC (STEP 5) ---
+            // --- SMOOTH TRANSITION LOGIC (SIMPLIFIED OPACITY ONLY) ---
+            // Richiesta utente: "ok non animare la posizione di logo al centro anima l'opacita'"
+            
             // 1. Metti in pausa l'animazione per "congelarla"
             if (anim) anim.pause();
             
-            // 2. Misura Lottie e Forza Statico
-            // Misuriamo IMMEDIATAMENTE prima di nascondere qualsiasi cosa
-            var lottieRect = window.measureLottieLogo();
-            
-            // Se la misura è valida, procedi con il morphing
-            if (lottieRect && lottieRect.width > 0) {
-                 console.log('🐞 Valid Lottie rect found:', lottieRect.width, 'x', lottieRect.height);
-                 
-                 // 3. Applica dimensioni al logo statico (ancora invisibile o nascosto)
-                 window.forceStaticLogo(lottieRect);
-                 
-                 // 4. Rendi visibile il logo statico (che ora è sovrapposto al lottie)
-                 // Nota: forceStaticLogo mette già opacity: 1 e visibility: visible
-                 
-                 // 5. Nascondi Lottie IMMEDIATAMENTE dopo aver posizionato lo statico
-                 // Non usiamo setTimeout per nascondere, per evitare flash
-                 if (overlay) {
-                     // overlay.style.opacity = '0'; // Se vogliamo fade out del container
-                     overlay.style.display = 'none'; // Rimozione netta dal layout
-                 }
-                 
-                 // 6. Avvia transizione verso stato naturale
-                 // Usa un piccolo delay per permettere al browser di renderizzare il frame "forzato"
-                 requestAnimationFrame(function() {
-                     // Tenta di trovare il logo statico con lo stesso criterio di forceStaticLogo
-                     var staticLogo = document.getElementById('staticLogoAlCentro');
-                     if (staticLogo && staticLogo.tagName !== 'svg' && staticLogo.tagName !== 'IMG') {
-                          var innerSVG = staticLogo.querySelector('svg');
-                          if (innerSVG) staticLogo = innerSVG;
-                     }
-
-                     if (staticLogo) {
-                         // Force reflow
-                         void staticLogo.offsetWidth;
-                         
-                         // Imposta transizione CSS
-                         staticLogo.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
-                         
-                         // Rimuovi gli override inline
-                         staticLogo.style.position = ''; 
-                         staticLogo.style.top = '';
-                         staticLogo.style.left = '';
-                         staticLogo.style.width = '';
-                         staticLogo.style.height = '';
-                         staticLogo.style.margin = '';
-                         staticLogo.style.transform = '';
-                         // Mantieni visibility e opacity
-                         staticLogo.style.visibility = 'visible';
-                         staticLogo.style.opacity = '1';
-                         
-                         // Cleanup dopo transizione
-                         setTimeout(function() {
-                             staticLogo.style.zIndex = '';
-                             staticLogo.style.transition = '';
-                         }, 800);
-                     }
-                 });
-                 
-            } else {
-                 // FALLBACK: Se la misurazione fallisce (0x0), mostra semplicemente gli elementi statici
-                 console.warn('🐞 Transition fallback: measurement failed or zero.');
-                 if (overlay) overlay.style.display = 'none';
-                 var statics = document.querySelectorAll('#svg-container svg, .logoalcentro svg');
-                 statics.forEach(function(el) { 
-                     el.style.visibility = 'visible';
-                     el.style.opacity = '1'; 
-                 });
+            // 2. Assicurati che gli elementi statici siano visibili e al loro posto (senza override di posizione)
+            // Tenta di trovare il logo statico con lo stesso criterio
+            var staticLogo = document.getElementById('staticLogoAlCentro');
+            if (staticLogo && staticLogo.tagName !== 'svg' && staticLogo.tagName !== 'IMG') {
+                  var innerSVG = staticLogo.querySelector('svg');
+                  if (innerSVG) staticLogo = innerSVG;
             }
+
+            // Altri elementi statici
+            var statics = document.querySelectorAll('#svg-container svg, .logoalcentro svg');
+            
+            // Imposta opacità iniziale a 0 per la transizione
+            if (staticLogo) {
+                staticLogo.style.opacity = '0';
+                staticLogo.style.visibility = 'visible';
+                // Assicurati che non ci siano trasformazioni residue
+                staticLogo.style.transform = '';
+                staticLogo.style.position = '';
+            }
+            
+            statics.forEach(function(el) { 
+                el.style.opacity = '0';
+                el.style.visibility = 'visible';
+            });
+            
+            // 3. Esegui la transizione di opacità
+            requestAnimationFrame(function() {
+                // Force reflow
+                if (staticLogo) void staticLogo.offsetWidth;
+                
+                // Transizione fade-in elementi statici
+                if (staticLogo) {
+                    staticLogo.style.transition = 'opacity 0.8s ease-in-out';
+                    staticLogo.style.opacity = '1';
+                }
+                
+                statics.forEach(function(el) {
+                    el.style.transition = 'opacity 0.8s ease-in-out';
+                    el.style.opacity = '1';
+                });
+                
+                // Transizione fade-out overlay Lottie
+                if (overlay) {
+                    overlay.style.transition = 'opacity 0.5s ease-out';
+                    overlay.style.opacity = '0';
+                    
+                    // Rimuovi dal layout dopo la transizione
+                    setTimeout(function() {
+                        overlay.style.display = 'none';
+                        
+                        // Pulizia transizioni statiche
+                        if (staticLogo) staticLogo.style.transition = '';
+                        statics.forEach(function(el) { el.style.transition = ''; });
+                        
+                    }, 800);
+                }
+            });
         }
 
         // FALLBACK DI SICUREZZA LUNGO: 15 secondi
