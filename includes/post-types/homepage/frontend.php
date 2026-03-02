@@ -140,6 +140,8 @@ function iml_homepage_lottie_preloader() {
             height: 100vh; /* Usa viewport height per coprire lo schermo iniziale */
             background: rgba(255, 255, 255, 0.00001); /* Richiesta utente: bianco 0.1 */
             z-index: 99999999;
+            margin: 0;
+            padding: 0;
             display: none;
             align-items: center;
             justify-content: center;
@@ -150,6 +152,8 @@ function iml_homepage_lottie_preloader() {
         #lottie-container {
             width: 100%;
             height: 100%;
+            margin: 0;
+            padding: 0;
             filter: invert(1); /* Richiesta utente: inverti colore lottie */
             display: flex;
             align-items: center;
@@ -250,6 +254,44 @@ function iml_homepage_lottie_preloader() {
         }, 15000);
 
         var anim; // Declare anim here for scope visibility in debugLottie
+
+        // --- PAUSE & ADVANCE FUNCTIONS ---
+        // Funzione per mettere in pausa l'animazione da console
+        window.pauseLottie = function() {
+            if (anim) {
+                anim.pause();
+                console.log('🐞 Lottie PAUSED at frame:', anim.currentFrame.toFixed(2));
+            } else {
+                console.warn('Lottie animation not initialized yet.');
+            }
+        };
+
+        // Funzione per avanzare di N frame (default 5)
+        window.advanceLottie = function(frames) {
+            if (!anim) {
+                console.warn('Lottie animation not initialized yet.');
+                return;
+            }
+            // Se frames non è specificato, usa 5
+            var f = (typeof frames === 'number') ? frames : 5;
+            
+            // Assicuriamoci che l'animazione sia in pausa per poter controllare frame per frame
+            anim.pause();
+            
+            var current = anim.currentFrame;
+            var target = current + f;
+            
+            // Non superare il totale dei frame
+            if (target > anim.totalFrames) {
+                target = anim.totalFrames;
+                console.warn('Reached end of animation.');
+            }
+            if (target < 0) target = 0; // Supporto per rewind con valori negativi
+            
+            // goToAndStop(value, isFrame) -> isFrame=true
+            anim.goToAndStop(target, true);
+            console.log('🐞 Advanced to frame:', target.toFixed(2), '(Delta:', f, ')');
+        };
         
         // --- SYNC LOGIC CONFIGURATION ---
         // Imposta a true per attivare il riposizionamento forzato dei layer Lottie
