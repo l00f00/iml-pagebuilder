@@ -188,6 +188,8 @@ function save_portfolio_meta_box_data($post_id) {
 }
 
     // Aggiungi un messaggio alla pagina di amministrazione che mostra il numero di child
+    // NOTA: In project/builder.php c'era logica per child posts. Qui in portfolio non sembra esserci.
+    // Verifichiamo la chiusura corretta di save_portfolio_meta_box_data.
 }
 
 // Aggiungi il campo "Mostra Titolo" nella sidebar anche per Portfolio
