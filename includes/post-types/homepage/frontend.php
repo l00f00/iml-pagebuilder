@@ -312,7 +312,7 @@ function iml_homepage_lottie_preloader() {
                     staticLogo.style.transition = 'opacity 0.8s ease-in-out, transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
                     staticLogo.style.opacity = '1';
                     // Ritorna a scala 1 e posizione originale
-                    staticLogo.style.transform = 'translate(0, 0) scale(1, 1)';
+                    //staticLogo.style.transform = 'translate(0, 0) scale(1, 1)';
                 }
                 
                 statics.forEach(function(el) {
