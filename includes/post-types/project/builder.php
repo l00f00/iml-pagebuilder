@@ -185,39 +185,6 @@ function save_prj_meta_box_data($post_id) {
     });
 }
 
-// Aggiungi il campo "Mostra Titolo" nella sidebar (Publish meta box o nuova meta box)
-// Usiamo una nuova meta box laterale per pulizia
-function add_prj_side_meta_box() {
-    add_meta_box('prj_options_meta_box', 'Opzioni Progetto', 'prj_options_meta_box_callback', ['progetto', 'serie'], 'side', 'default');
-}
-add_action('add_meta_boxes', 'add_prj_side_meta_box');
-
-function prj_options_meta_box_callback($post) {
-    wp_nonce_field('prj_save_options_data', 'prj_options_nonce');
-    $show_title = get_post_meta($post->ID, 'iml_show_title', true);
-    ?>
-    <p>
-        <label>
-            <input type="checkbox" name="iml_show_title" value="1" <?php checked($show_title, '1'); ?> />
-            Mostra Titolo in Frontend
-        </label>
-    </p>
-    <p class="description">Se attivo, il titolo apparirà in basso a sinistra sopra l'immagine principale (testo bianco su sfondo nero).</p>
-    <?php
-}
-
-function save_prj_options_data($post_id) {
-    if (!isset($_POST['prj_options_nonce']) || !wp_verify_nonce($_POST['prj_options_nonce'], 'prj_save_options_data')) return;
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-    
-    if (isset($_POST['iml_show_title'])) {
-        update_post_meta($post_id, 'iml_show_title', '1');
-    } else {
-        delete_post_meta($post_id, 'iml_show_title');
-    }
-}
-add_action('save_post', 'save_prj_options_data');
-
 // Funzione personalizzata per impostare il post_parent
 function set_post_parent($item_id, $post_id) {
     // Recupera l'oggetto post dell'item
