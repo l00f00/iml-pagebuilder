@@ -588,13 +588,23 @@ function iml_homepage_lottie_preloader() {
 
                 var rect = scrollTarget.getBoundingClientRect();
                 
-                // Se la parte inferiore dell'elemento è sopra la parte superiore della viewport (rect.bottom < 0)
-                // significa che l'abbiamo scrollato via completamente.
-                if (rect.bottom < 0) {
+                // Debug log (può essere rimosso in produzione)
+                // console.log('🐞 ImagePairContainer rect.bottom:', rect.bottom, 'Window InnerHeight:', window.innerHeight);
+
+                // Se la parte inferiore dell'elemento è SOPRA la parte superiore della viewport (rect.bottom < 0)
+                // significa che l'abbiamo scrollato via completamente verso l'alto.
+                // Se rect.bottom > 0 ma < window.innerHeight, è ancora visibile.
+                // Se rect.top < 0 e rect.bottom < 0, è uscito sopra.
+                
+                // Modifica richiesta: "viene nascosta prima che io passi oltre il lato basso".
+                // Probabilmente rect.bottom include margin o altro, oppure la logica < 0 è troppo aggressiva se c'è un header sticky?
+                // Aggiungiamo un piccolo buffer di sicurezza negativa, es. -50px, per essere sicuri che sia uscito.
+                
+                if (rect.bottom <= 0) { 
                      // Imposta display: none per rimuoverlo dal layout e impedire lo scroll indietro
                      scrollTarget.style.display = 'none';
                      hasHidden = true; // Blocca ulteriori controlli
-                     console.log('🐞 Image Pair Container nascosto permanentemente dopo scroll.');
+                     console.log('🐞 Image Pair Container nascosto permanentemente dopo scroll (rect.bottom <= 0).');
                 }
             });
         }
