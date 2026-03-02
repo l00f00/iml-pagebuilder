@@ -316,14 +316,11 @@ function iml_homepage_lottie_preloader() {
         function syncElements() {
            if (!enableSync) return;
 
-           // Apply transform only in the last 3 seconds of the animation (Richiesta utente)
-           // Calculate start frame based on total frames and frame rate
+           // Apply transform only in the last 15 FRAMES of the animation (Richiesta utente)
            if (anim && anim.totalFrames && anim.frameRate) {
-               var fps = anim.frameRate;
                var totalFrames = anim.totalFrames;
-               var durationSync = 3.0; // 3.0 seconds duration
-               var framesSync = fps * durationSync;
-               var startSyncFrame = totalFrames - framesSync; // Start 3 seconds before end
+               var framesSync = 15; // Sync last 15 frames
+               var startSyncFrame = totalFrames - framesSync; // Start 15 frames before end
                
                var currentFrame = anim.currentFrame;
 
@@ -337,7 +334,7 @@ function iml_homepage_lottie_preloader() {
                    drawDebugMarkers();
                }
 
-               // Se siamo prima dell'inizio del sync (ultimi 3s), non applichiamo transform
+               // Se siamo prima dell'inizio del sync (ultimi 15 frame), non applichiamo transform
                if (progress === 0) {
                    return;
                }
@@ -603,13 +600,12 @@ function iml_homepage_lottie_preloader() {
                 var duration = anim.totalFrames / anim.frameRate;
                 console.log('🐞 Estimated duration (s):', duration);
 
-                // RICHIESTA UTENTE: Saltare i primi 15 frame
-                // Nota: 15 frame @ 24fps sono circa 0.6 secondi.
-                var startFrame = 15; 
+                // RICHIESTA UTENTE: Iniziare dal frame 1 (o 0)
+                var startFrame = 1; 
                 
-                // Controllo di sicurezza: se 100 è troppo, partiamo da 0 o da un valore più basso (es. 12 frame = 0.5s)
+                // Controllo di sicurezza
                 if (startFrame >= anim.totalFrames) {
-                     console.warn('🐞 Start frame 100 is > total frames. Resetting to 0.');
+                     console.warn('🐞 Start frame is > total frames. Resetting to 0.');
                      startFrame = 0;
                 }
 
