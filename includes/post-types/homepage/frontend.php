@@ -159,6 +159,10 @@ function iml_homepage_lottie_preloader() {
             align-items: center;
             justify-content: center;
         }
+        #lottie-container svg {
+             transform: translate3d(6px, 0px, 0px) scale(1.14);
+             transform-origin: center center;
+        }
         /* Debug Markers */
         .debug-marker {
             position: fixed;
