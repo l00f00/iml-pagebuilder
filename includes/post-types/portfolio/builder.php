@@ -187,6 +187,41 @@ function save_portfolio_meta_box_data($post_id) {
     }
 }
 
+    // Aggiungi un messaggio alla pagina di amministrazione che mostra il numero di child
+}
+
+// Aggiungi il campo "Mostra Titolo" nella sidebar anche per Portfolio
+function add_portfolio_side_meta_box() {
+    add_meta_box('portfolio_options_meta_box', 'Opzioni Portfolio', 'portfolio_options_meta_box_callback', 'portfolio', 'side', 'default');
+}
+add_action('add_meta_boxes', 'add_portfolio_side_meta_box');
+
+function portfolio_options_meta_box_callback($post) {
+    wp_nonce_field('portfolio_save_options_data', 'portfolio_options_nonce');
+    $show_title = get_post_meta($post->ID, 'iml_show_title', true);
+    ?>
+    <p>
+        <label>
+            <input type="checkbox" name="iml_show_title" value="1" <?php checked($show_title, '1'); ?> />
+            Mostra Titolo in Frontend
+        </label>
+    </p>
+    <p class="description">Se attivo, il titolo apparirà in basso a sinistra sopra l'immagine principale (testo bianco su sfondo nero).</p>
+    <?php
+}
+
+function save_portfolio_options_data($post_id) {
+    if (!isset($_POST['portfolio_options_nonce']) || !wp_verify_nonce($_POST['portfolio_options_nonce'], 'portfolio_save_options_data')) return;
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    
+    if (isset($_POST['iml_show_title'])) {
+        update_post_meta($post_id, 'iml_show_title', '1');
+    } else {
+        delete_post_meta($post_id, 'iml_show_title');
+    }
+}
+add_action('save_post', 'save_portfolio_options_data');
+
 add_action('save_post', 'save_portfolio_meta_box_data');
 
 // Include lo stile CSS per gestire l'aspetto della griglia e dei pulsanti

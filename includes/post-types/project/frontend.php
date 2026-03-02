@@ -66,12 +66,22 @@ function iml_render_project_single($atts) {
                 $orientation_class = 'is-portrait';
             }
         }
+        
+        // Check Show Title Option
+        $show_title = get_post_meta($post_id, 'iml_show_title', true);
         ?>
         <div class="progetto-content layout-3-col"> 
             <div class="left-column-progetto <?php echo $orientation_class; ?>"> 
-                <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
-                    <?php echo get_the_post_thumbnail($post_id, 'full'); ?>
-                </a> 
+                <div style="position: relative;">
+                    <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
+                        <?php echo get_the_post_thumbnail($post_id, 'full'); ?>
+                    </a> 
+                    <?php if ($show_title == '1'): ?>
+                        <div class="project-title-overlay" style="position: absolute; bottom: 0; left: 0; background-color: black; color: white; padding: 0; margin: 0; line-height: 1;">
+                            <?php echo get_the_title($post_id); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
                 <div class="left-column-bottom"> 
                     <nav class="foto-navigation"> 
                             <?php 
@@ -247,12 +257,21 @@ function iml_render_project_single($atts) {
                 $orientation_class = 'is-portrait';
             }
         }
+        // Check Show Title Option
+        $show_title = get_post_meta($post_id, 'iml_show_title', true);
         ?>
         <div class="progetto-content layout-1-col"> 
             <div class="left-column-progetto <?php echo $orientation_class; ?>"> 
-                <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
-                    <?php echo get_the_post_thumbnail($post_id, 'full'); ?>
-                </a> 
+                <div style="position: relative;">
+                    <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
+                        <?php echo get_the_post_thumbnail($post_id, 'full'); ?>
+                    </a> 
+                    <?php if ($show_title == '1'): ?>
+                        <div class="project-title-overlay" style="position: absolute; bottom: 0; left: 0; background-color: black; color: white; padding: 0; margin: 0; line-height: 1;">
+                            <?php echo get_the_title($post_id); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
                 <div class="left-column-bottom"> 
                     <nav class="foto-navigation"> 
                         <?php 
