@@ -258,6 +258,25 @@ function iml_homepage_lottie_preloader() {
                 var dY = (lottieRect.top - staticRect.top).toFixed(2);
                 
                 console.log('🐞 DELTA Check: Lottie [' + lottieRect.width.toFixed(2) + 'x' + lottieRect.height.toFixed(2) + '] vs Static [' + staticRect.width.toFixed(2) + 'x' + staticRect.height.toFixed(2) + '] | Diff: [dX=' + dX + ', dY=' + dY + ', dW=' + dW + ', dH=' + dH + ']');
+                
+                // --- APPLICA SCALING IN BASE AL DELTA (Richiesta Utente) ---
+                // Calcola fattore di scala
+                var scaleX = lottieRect.width / staticRect.width;
+                var scaleY = lottieRect.height / staticRect.height;
+                
+                // Calcola fattore di traslazione
+                // Il transform origin è solitamente center, quindi dobbiamo compensare se i centri non sono allineati
+                // Ma per semplicità, usiamo translate basato sulla differenza top/left
+                var translateX = lottieRect.left - staticRect.left;
+                var translateY = lottieRect.top - staticRect.top;
+                
+                // Applica trasformazione iniziale al logo statico per farlo coincidere col Lottie
+                // Nota: Assumiamo che il logo statico non abbia trasformazioni precedenti
+                staticLogo.style.transformOrigin = 'top left'; // Cambia origin per facilitare translate
+                staticLogo.style.transform = 'translate(' + translateX + 'px, ' + translateY + 'px) scale(' + scaleX + ', ' + scaleY + ')';
+                
+                console.log('🐞 Applied initial transform to match Lottie: translate(' + translateX.toFixed(2) + 'px, ' + translateY.toFixed(2) + 'px) scale(' + scaleX.toFixed(4) + ')');
+                
             } else {
                 console.warn('🐞 DELTA Check skipped: LottieRect or StaticLogo missing.');
             }
@@ -269,28 +288,35 @@ function iml_homepage_lottie_preloader() {
             if (staticLogo) {
                 staticLogo.style.opacity = '0';
                 staticLogo.style.visibility = 'visible';
-                // Assicurati che non ci siano trasformazioni residue
-                staticLogo.style.transform = '';
+                // La trasformazione è già stata applicata sopra se il delta check è passato
+                // Se non è passato, resetta
+                if (!lottieRect) staticLogo.style.transform = '';
                 staticLogo.style.position = '';
             }
             
             statics.forEach(function(el) { 
+                // Non toccare il logo centrale se l'abbiamo già gestito
+                if (el === staticLogo) return;
                 el.style.opacity = '0';
                 el.style.visibility = 'visible';
             });
             
-            // 5. Esegui la transizione di opacità
+            // 5. Esegui la transizione di opacità e trasformazione
             requestAnimationFrame(function() {
                 // Force reflow
                 if (staticLogo) void staticLogo.offsetWidth;
                 
                 // Transizione fade-in elementi statici
                 if (staticLogo) {
-                    staticLogo.style.transition = 'opacity 0.8s ease-in-out';
+                    // Anima sia opacità che trasformazione (ritorno allo stato naturale)
+                    staticLogo.style.transition = 'opacity 0.8s ease-in-out, transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
                     staticLogo.style.opacity = '1';
+                    // Ritorna a scala 1 e posizione originale
+                    staticLogo.style.transform = 'translate(0, 0) scale(1, 1)';
                 }
                 
                 statics.forEach(function(el) {
+                    if (el === staticLogo) return;
                     el.style.transition = 'opacity 0.8s ease-in-out';
                     el.style.opacity = '1';
                 });
@@ -304,8 +330,11 @@ function iml_homepage_lottie_preloader() {
                     setTimeout(function() {
                         overlay.style.display = 'none';
                         
-                        // Pulizia transizioni statiche
-                        if (staticLogo) staticLogo.style.transition = '';
+                        // Pulizia transizioni statiche e reset transform origin
+                        if (staticLogo) {
+                            staticLogo.style.transition = '';
+                            // staticLogo.style.transformOrigin = ''; // Reset opzionale, ma 'top left' potrebbe rompere layout se usato altrove
+                        }
                         statics.forEach(function(el) { el.style.transition = ''; });
                         
                     }, 800);
