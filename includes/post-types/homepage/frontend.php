@@ -254,8 +254,8 @@ function iml_homepage_lottie_preloader() {
         // --- SYNC LOGIC CONFIGURATION ---
         // Imposta a true per attivare il riposizionamento forzato dei layer Lottie
         // affinché coincidano con gli elementi statici HTML.
-        var enableSync = true; 
-        var debugSync = true; // ATTIVA DEBUG VISUALE (Richiesta Utente)
+        var enableSync = false; 
+        var debugSync = false; // ATTIVA DEBUG VISUALE (Richiesta Utente)
 
         // Mappa di corrispondenza: NOME LAYER LOTTIE => SELETTORE HTML STATICO
         // Assicurati che il JSON Lottie sia stato esportato con l'opzione "Include Layer Names" (Bodymovin/LottieFiles)
