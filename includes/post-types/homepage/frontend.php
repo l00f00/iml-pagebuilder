@@ -573,6 +573,29 @@ function iml_homepage_lottie_preloader() {
             }
         };
 
+        // --- SCROLL VISIBILITY LOGIC ---
+        // Hide #image-pair-container when scrolled past
+        // Utilizziamo un event listener sullo scroll
+        var scrollTarget = document.getElementById('image-pair-container');
+        if (scrollTarget) {
+            // Aggiungi stili per la transizione se non presenti
+            scrollTarget.style.transition = 'opacity 0.5s ease, visibility 0.5s';
+            
+            window.addEventListener('scroll', function() {
+                var rect = scrollTarget.getBoundingClientRect();
+                
+                // Se la parte inferiore dell'elemento è sopra la parte superiore della viewport (rect.bottom < 0)
+                // significa che l'abbiamo scrollato via completamente.
+                if (rect.bottom < 0) {
+                     scrollTarget.style.opacity = '0';
+                     scrollTarget.style.visibility = 'hidden';
+                } else {
+                     scrollTarget.style.opacity = '1';
+                     scrollTarget.style.visibility = 'visible';
+                }
+            });
+        }
+
         try {
             console.log('Initializing Lottie animation with path:', lottieJSON);
             anim = lottie.loadAnimation({
