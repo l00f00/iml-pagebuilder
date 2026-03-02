@@ -54,6 +54,9 @@ function iml_render_project_single($atts) {
         $lightbox_attr = $has_single_page ? '' : 'data-lightbox="gallery"'; 
         $featured_image_url = get_the_post_thumbnail_url($post_id, 'full'); 
         
+        // Check for show title option
+        $show_title = get_post_meta($post_id, 'iml_show_title', true);
+        
         // Determine image orientation
         $thumb_meta = wp_get_attachment_metadata($thumbnail_id);
         $orientation_class = '';
@@ -68,10 +71,15 @@ function iml_render_project_single($atts) {
         }
         ?>
         <div class="progetto-content layout-3-col"> 
-            <div class="left-column-progetto <?php echo $orientation_class; ?>"> 
+            <div class="left-column-progetto <?php echo $orientation_class; ?>" style="position:relative;"> 
                 <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
                     <?php echo get_the_post_thumbnail($post_id, 'full'); ?>
                 </a> 
+                <?php if ($show_title): ?>
+                    <div class="main-image-title-overlay" style="position:absolute; bottom:20px; left:20px; z-index:10; color:white; pointer-events:none; font-size:16px; text-transform:uppercase; mix-blend-mode:difference;">
+                        <?php echo get_the_title($post_id); ?>
+                    </div>
+                <?php endif; ?>
                 <div class="left-column-bottom"> 
                     <nav class="foto-navigation"> 
                             <?php 
@@ -235,6 +243,10 @@ function iml_render_project_single($atts) {
     } else {
         // Load CSS for 1 Column (Standard/Original)
         wp_enqueue_style('iml-project-frontend-style-1col', IML_PLUGIN_URL . 'includes/post-types/project/frontend-style-1col.css', array(), '1.0');
+        
+        // Check for show title option
+        $show_title = get_post_meta($post_id, 'iml_show_title', true);
+        
         // Determine image orientation
         $thumb_meta = wp_get_attachment_metadata($thumbnail_id);
         $orientation_class = '';
@@ -249,10 +261,15 @@ function iml_render_project_single($atts) {
         }
         ?>
         <div class="progetto-content layout-1-col"> 
-            <div class="left-column-progetto <?php echo $orientation_class; ?>"> 
+            <div class="left-column-progetto <?php echo $orientation_class; ?>" style="position:relative;"> 
                 <a href="<?php echo esc_url($featured_image_url); ?>" style="color:black;" data-lightbox="gallery"> 
                     <?php echo get_the_post_thumbnail($post_id, 'full'); ?>
                 </a> 
+                <?php if ($show_title): ?>
+                    <div class="main-image-title-overlay" style="position:absolute; bottom:20px; left:20px; z-index:10; color:white; pointer-events:none; font-size:16px; text-transform:uppercase; mix-blend-mode:difference;">
+                        <?php echo get_the_title($post_id); ?>
+                    </div>
+                <?php endif; ?>
                 <div class="left-column-bottom"> 
                     <nav class="foto-navigation"> 
                         <?php 

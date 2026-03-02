@@ -326,5 +326,21 @@ function iml_register_meta_boxes( $meta_boxes ) {
         ],
     ];
 
+    // 3. Mostra Titolo (Overlay) per Progetti e Portfolio
+    $meta_boxes[] = [
+        'title'      => __( 'Impostazioni Titolo', 'iml-text-domain' ),
+        'id'         => 'iml_title_settings',
+        'post_types' => ['progetto', 'portfolio'],
+        'context'    => 'side',
+        'fields'     => [
+            [
+                'name' => __( 'Mostra Titolo', 'iml-text-domain' ),
+                'id'   => $prefix . 'iml_show_title',
+                'type' => 'checkbox',
+                'desc' => __( 'Se selezionato, il titolo verrà mostrato in sovraimpressione (in basso a sinistra) sull\'immagine principale.', 'iml-text-domain' ),
+            ],
+        ],
+    ];
+
     return $meta_boxes;
 }

@@ -36,13 +36,23 @@ function iml_render_portfolio_grid($atts) {
                 $title = get_the_title($portfolio_single_item_id);
                 $the_thumb = get_the_post_thumbnail($portfolio_single_item_id, 'full');
                 
+                // Check if title overlay should be shown
+                $show_title = get_post_meta($portfolio_single_item_id, 'iml_show_title', true);
+                
                 echo '<a href="' . esc_url(get_permalink($portfolio_single_item_id)) . '" class="grid-item fotoContainer ' . esc_attr($alignment) . '" data-id="' . esc_attr($portfolio_single_item_id) . '"> 
                       <div class="info-overlay"> 
                         <div class="year-title">
                           <span class="title">' . esc_html($title) . '</span> 
                         </div> 
                       </div> 
-                      <div class="image-wrapper">' . $the_thumb . '</div> 
+                      <div class="image-wrapper">' . $the_thumb;
+                
+                // Add overlay title if enabled
+                if ($show_title) {
+                    echo '<div class="main-image-title-overlay" style="position:absolute; bottom:20px; left:20px; z-index:10; color:white; pointer-events:none; font-size:16px; text-transform:uppercase; mix-blend-mode:difference;">' . esc_html($title) . '</div>';
+                }
+                      
+                echo '</div> 
                       </a>';
             
             } elseif ($post_type === 'attachment') {
