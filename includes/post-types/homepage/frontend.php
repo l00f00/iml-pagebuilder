@@ -262,10 +262,13 @@ function iml_homepage_lottie_preloader() {
                  // 6. Avvia transizione verso stato naturale
                  // Usa un piccolo delay per permettere al browser di renderizzare il frame "forzato"
                  requestAnimationFrame(function() {
-                     var staticLogo = document.querySelector('#staticLogoAlCentro svg') || 
-                                      document.querySelector('#staticLogoAlCentro img') || 
-                                      document.querySelector('#staticLogoAlCentro');
-                     
+                     // Tenta di trovare il logo statico con lo stesso criterio di forceStaticLogo
+                     var staticLogo = document.getElementById('staticLogoAlCentro');
+                     if (staticLogo && staticLogo.tagName !== 'svg' && staticLogo.tagName !== 'IMG') {
+                          var innerSVG = staticLogo.querySelector('svg');
+                          if (innerSVG) staticLogo = innerSVG;
+                     }
+
                      if (staticLogo) {
                          // Force reflow
                          void staticLogo.offsetWidth;
@@ -355,12 +358,18 @@ function iml_homepage_lottie_preloader() {
             }
 
             // Tenta di trovare il logo statico con selettori multipli per sicurezza
-            var staticLogo = document.querySelector('#staticLogoAlCentro svg') || 
-                             document.querySelector('#staticLogoAlCentro img') || 
-                             document.querySelector('#staticLogoAlCentro');
+            // PRIORITÀ: Cerca elemento con ID staticLogoAlCentro (che sia SVG, IMG o altro)
+            // Se è un DIV contenitore, cerchiamo l'SVG dentro. Se è direttamente SVG, usiamo quello.
+            var staticLogo = document.getElementById('staticLogoAlCentro');
+            
+            // Se l'elemento trovato non è un SVG e non è un'immagine, prova a cercare dentro
+            if (staticLogo && staticLogo.tagName !== 'svg' && staticLogo.tagName !== 'IMG') {
+                 var innerSVG = staticLogo.querySelector('svg');
+                 if (innerSVG) staticLogo = innerSVG;
+            }
 
             if (!staticLogo) {
-                console.warn('Static logo #staticLogoAlCentro (svg/img/div) not found in DOM');
+                console.warn('Static logo #staticLogoAlCentro not found');
                 // Fallback: prova a trovare tramite classe se ID fallisce (opzionale)
                 staticLogo = document.querySelector('.logoalcentro svg');
                 if (!staticLogo) {
