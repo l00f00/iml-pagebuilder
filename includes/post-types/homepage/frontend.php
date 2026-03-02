@@ -234,81 +234,95 @@ function iml_homepage_lottie_preloader() {
             if (done) return;
             done = true;
             
-            // --- SMOOTH TRANSITION LOGIC (OPACITY + DELTA CHECK) ---
-            
-            // 1. Metti in pausa l'animazione per "congelarla"
+            // --- SMOOTH TRANSITION LOGIC ---
+            // 1. Pause Lottie
             if (anim) anim.pause();
             
-            // 2. Misura Lottie
+            // 2. Measure Lottie
             var lottieRect = window.measureLottieLogo();
             
-            // 3. Trova il logo statico (ID garantito dall'utente)
+            // 3. Find Static Logo
             var staticLogo = document.getElementById('staticLogoAlCentro');
             
-            // 4. Log DELTA Check (Richiesta utente)
+            // 4. Calculate Delta and Apply Transform
             if (lottieRect && staticLogo) {
-                // Assicurati che lo statico sia renderizzato per misurarlo (anche se nascosto)
-                // Se è opacity:0 è misurabile. Se è display:none no.
-                // Attualmente è opacity:0 da CSS.
+                // Ensure static logo is measurable (even if opacity 0)
                 var staticRect = staticLogo.getBoundingClientRect();
                 
-                var dW = (lottieRect.width - staticRect.width).toFixed(2);
-                var dH = (lottieRect.height - staticRect.height).toFixed(2);
-                var dX = (lottieRect.left - staticRect.left).toFixed(2);
-                var dY = (lottieRect.top - staticRect.top).toFixed(2);
+                // Calculate Scale
+                // Prevent division by zero
+                var scaleX = staticRect.width > 0 ? (lottieRect.width / staticRect.width) : 1;
+                var scaleY = staticRect.height > 0 ? (lottieRect.height / staticRect.height) : 1;
                 
-                console.log('🐞 DELTA Check: Lottie [' + lottieRect.width.toFixed(2) + 'x' + lottieRect.height.toFixed(2) + '] vs Static [' + staticRect.width.toFixed(2) + 'x' + staticRect.height.toFixed(2) + '] | Diff: [dX=' + dX + ', dY=' + dY + ', dW=' + dW + ', dH=' + dH + ']');
+                // Calculate Translate
+                // We need to move the center of Static to the center of Lottie
+                // Note: This assumes transform-origin is center (default)
+                var lottieCenterX = lottieRect.left + lottieRect.width / 2;
+                var lottieCenterY = lottieRect.top + lottieRect.height / 2;
+                
+                var staticCenterX = staticRect.left + staticRect.width / 2;
+                var staticCenterY = staticRect.top + staticRect.height / 2;
+                
+                var deltaX = lottieCenterX - staticCenterX;
+                var deltaY = lottieCenterY - staticCenterY;
+                
+                // Apply Transform IMMEDIATELY
+                staticLogo.style.transformOrigin = 'center center';
+                staticLogo.style.transform = 'translate3d(' + deltaX + 'px, ' + deltaY + 'px, 0) scale(' + scaleX + ', ' + scaleY + ')';
+                
+                // Ensure visibility and initial opacity
+                staticLogo.style.visibility = 'visible';
+                staticLogo.style.opacity = '0';
+                
+                console.log('🐞 Applied Delta Transform: Translate(' + deltaX.toFixed(2) + 'px, ' + deltaY.toFixed(2) + 'px) Scale(' + scaleX.toFixed(4) + ', ' + scaleY.toFixed(4) + ')');
             } else {
-                console.warn('🐞 DELTA Check skipped: LottieRect or StaticLogo missing.');
+                console.warn('🐞 Transition skipped transform: LottieRect or StaticLogo missing.');
             }
 
-            // Altri elementi statici
+            // Other static elements (just fade in)
             var statics = document.querySelectorAll('#svg-container svg, .logoalcentro svg');
-            
-            // Imposta opacità iniziale a 0 per la transizione
-            if (staticLogo) {
-                staticLogo.style.opacity = '0';
-                staticLogo.style.visibility = 'visible';
-                // Assicurati che non ci siano trasformazioni residue
-                staticLogo.style.transform = '';
-                staticLogo.style.position = '';
-            }
-            
             statics.forEach(function(el) { 
-                el.style.opacity = '0';
-                el.style.visibility = 'visible';
+                if (el !== staticLogo) {
+                    el.style.opacity = '0';
+                    el.style.visibility = 'visible';
+                }
             });
             
-            // 5. Esegui la transizione di opacità
+            // 5. Animate Opacity (0.4s)
             requestAnimationFrame(function() {
                 // Force reflow
                 if (staticLogo) void staticLogo.offsetWidth;
                 
-                // Transizione fade-in elementi statici
+                // Animate Static Logo Opacity
                 if (staticLogo) {
-                    staticLogo.style.transition = 'opacity 0.8s ease-in-out';
+                    staticLogo.style.transition = 'opacity 0.4s ease-in-out';
                     staticLogo.style.opacity = '1';
                 }
                 
+                // Animate other statics
                 statics.forEach(function(el) {
-                    el.style.transition = 'opacity 0.8s ease-in-out';
-                    el.style.opacity = '1';
+                    if (el !== staticLogo) {
+                        el.style.transition = 'opacity 0.4s ease-in-out';
+                        el.style.opacity = '1';
+                    }
                 });
                 
-                // Transizione fade-out overlay Lottie
+                // Fade out Lottie overlay
                 if (overlay) {
-                    overlay.style.transition = 'opacity 0.5s ease-out';
+                    overlay.style.transition = 'opacity 0.4s ease-out';
                     overlay.style.opacity = '0';
                     
-                    // Rimuovi dal layout dopo la transizione
+                    // Remove from layout after transition
                     setTimeout(function() {
                         overlay.style.display = 'none';
                         
-                        // Pulizia transizioni statiche
-                        if (staticLogo) staticLogo.style.transition = '';
+                        // NOTE: We do NOT remove the transform from staticLogo as requested.
+                        // "la trasformazione applicata al logo statico viene calcolata con il delta cosi il logo statico sara' grande esattamente quanto quello dinamico"
+                        
+                        // Clean up other transitions
                         statics.forEach(function(el) { el.style.transition = ''; });
                         
-                    }, 800);
+                    }, 400); // Match transition duration
                 }
             });
         }
