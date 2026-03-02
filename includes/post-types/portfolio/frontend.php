@@ -49,7 +49,7 @@ function iml_render_portfolio_grid($atts) {
                 
                 // Add overlay title if enabled
                 if ($show_title) {
-                    echo '<div class="main-image-title-overlay" style="position:absolute; bottom:0; left:0; z-index:10; pointer-events:none;">
+                    echo '<div class="main-image-title-overlay" style="position:absolute; bottom:0; left:0; z-index:10; pointer-events:none; opacity:0; transition:opacity 0.3s ease;">
                             <span style="background-color:black; color:white; padding:0 5px; font-size:inherit; line-height:inherit; display:inline-block;">' . esc_html($title) . '</span>
                           </div>';
                 }
@@ -115,6 +115,16 @@ function iml_render_portfolio_grid($atts) {
     ?>
     <script>
     jQuery(document).ready(function($) {
+            // Hover effect for title overlay
+             $('.grid-item').hover(
+                 function() {
+                     $(this).find('.main-image-title-overlay').css('opacity', '1');
+                 },
+                 function() {
+                     $(this).find('.main-image-title-overlay').css('opacity', '0');
+                 }
+             );
+
             var gallery = jQuery('a[data-lightbox="gallery"]').simpleLightbox({
             className: 'simple-lightbox',
             widthRatio: 1,

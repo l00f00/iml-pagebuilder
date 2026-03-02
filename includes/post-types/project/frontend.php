@@ -76,7 +76,7 @@ function iml_render_project_single($atts) {
                     <?php echo get_the_post_thumbnail($post_id, 'full'); ?>
                 </a> 
                 <?php if ($show_title): ?>
-                    <div class="main-image-title-overlay" style="position:absolute; bottom:0; left:0; z-index:10; pointer-events:none;">
+                    <div class="main-image-title-overlay" style="position:absolute; bottom:0; left:0; z-index:10; pointer-events:none; opacity:0; transition:opacity 0.3s ease;">
                         <span style="background-color:black; color:white; padding:0 5px; font-size:inherit; line-height:inherit; display:inline-block;"><?php echo get_the_title($post_id); ?></span>
                     </div>
                 <?php endif; ?>
@@ -130,41 +130,60 @@ function iml_render_project_single($atts) {
                 // Determine the link URL and whether to use lightbox 
                 //$link_url = $single_page_true ? get_permalink($foto_id) : esc_url($image_url); 
                 $link_url = $single_page_true ? get_attachment_link($foto_id) : esc_url($image_url); 
-                // if single page true add image to hiddenImages so we can show it in the lightbox anyway 
-                if ($single_page_true) { 
-                    $hiddenImages[] = $image_url; 
-                } 
-            
-                $lightbox_attr = $single_page_true ? 'data-single="single-page-true"' : 'data-lightbox="gallery"'; 
-                // Conditionally add a border style for items with a single page 
-                //$border_style = $single_page_true ? 'border: 1px solid red;' : ''; 
-                ?> 
-                <a class="related-foto-item" href="<?php echo $link_url; ?>" style="color:black;" <?php echo $lightbox_attr;?>> 
-                    <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
-                        <div class="image-wrapper"> 
-                            <img src="<?php echo esc_url($thumbnail); ?>" alt=""> 
-                            <?php if($single_page_true): ?>
-                                <!-- Removed single-page-indicator as per user request -->
-                            <?php endif; ?>
-                        </div> 
-                    </div> 
-                </a> 
+                            
+                            // Determine caption/title for grid item
+                            $item_title = get_the_title($foto_id);
+                            
+                            // if single page true add image to hiddenImages so we can show it in the lightbox anyway 
+                            if ($single_page_true) { 
+                                $hiddenImages[] = $image_url; 
+                            } 
+                        
+                            $lightbox_attr = $single_page_true ? 'data-single="single-page-true"' : 'data-lightbox="gallery"'; 
+                            // Conditionally add a border style for items with a single page 
+                            //$border_style = $single_page_true ? 'border: 1px solid red;' : ''; 
+                            ?> 
+                            <a class="related-foto-item" href="<?php echo $link_url; ?>" style="color:black; position:relative;" <?php echo $lightbox_attr;?>> 
+                                <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
+                                    <div class="image-wrapper"> 
+                                        <img src="<?php echo esc_url($thumbnail); ?>" alt=""> 
+                                        <?php if($single_page_true): ?>
+                                            <!-- Removed single-page-indicator as per user request -->
+                                        <?php endif; ?>
+                                    </div> 
+                                </div> 
+                                <?php if ($show_title): ?>
+                                    <div class="grid-item-title-overlay" style="position:absolute; bottom:0; left:0; z-index:10; pointer-events:none; opacity:0; transition:opacity 0.3s ease;">
+                                        <span style="background-color:black; color:white; padding:0 5px; font-size:inherit; line-height:inherit; display:inline-block;"><?php echo esc_html($item_title); ?></span>
+                                    </div>
+                                <?php endif; ?>
+                            </a> 
+                            <?php 
+                        } 
+                    } 
+                    ?> 
+                <div id="hidden-images" style="display: none;"> 
                 <?php 
-            } 
-        } 
-        ?> 
-            <div id="hidden-images" style="display: none;"> 
-            <?php 
-            foreach ($hiddenImages as $path) { 
-                echo '<a href="' . esc_url($path) . '" data-lightbox="gallery"><img src="' . esc_url($path) . '" alt="Gallery Image"></a>'; 
-            } 
-            ?> 
-            </div> 
-            </div> 
-        
-        <script> 
-        jQuery(document).ready(function($) { 
-            // Read More functionality
+                foreach ($hiddenImages as $path) { 
+                    echo '<a href="' . esc_url($path) . '" data-lightbox="gallery"><img src="' . esc_url($path) . '" alt="Gallery Image"></a>'; 
+                } 
+                ?> 
+                </div> 
+                </div> 
+            
+            <script> 
+            jQuery(document).ready(function($) { 
+                 // Hover effect for title overlay
+                 $('.left-column-progetto, .related-foto-item').hover(
+                     function() {
+                         $(this).find('.main-image-title-overlay, .grid-item-title-overlay').css('opacity', '1');
+                     },
+                     function() {
+                         $(this).find('.main-image-title-overlay, .grid-item-title-overlay').css('opacity', '0');
+                     }
+                 );
+
+                // Read More functionality
             $('.description-content').each(function() {
                 var content = $(this);
                 var toggle = content.next('.read-more-toggle');
@@ -266,7 +285,7 @@ function iml_render_project_single($atts) {
                     <?php echo get_the_post_thumbnail($post_id, 'full'); ?>
                 </a> 
                 <?php if ($show_title): ?>
-                    <div class="main-image-title-overlay" style="position:absolute; bottom:0; left:0; z-index:10; pointer-events:none;">
+                    <div class="main-image-title-overlay" style="position:absolute; bottom:0; left:0; z-index:10; pointer-events:none; opacity:0; transition:opacity 0.3s ease;">
                         <span style="background-color:black; color:white; padding:0 5px; font-size:inherit; line-height:inherit; display:inline-block;"><?php echo get_the_title($post_id); ?></span>
                     </div>
                 <?php endif; ?>
@@ -312,6 +331,9 @@ function iml_render_project_single($atts) {
                             $thumbnail = wp_get_attachment_image_url($foto_id, 'large'); 
                             $link_url = $single_page_true ? get_attachment_link($foto_id) : esc_url($image_url); 
                             
+                            // Determine caption/title for grid item
+                            $item_title = get_the_title($foto_id);
+                            
                             // 1 Col specific lightbox logic
                             $lightbox_attr = $single_page_true ? '' : 'data-lightbox="gallery"';
                     
@@ -319,7 +341,7 @@ function iml_render_project_single($atts) {
                                 $hiddenImages[] = $image_url; 
                             } 
                             ?> 
-                            <a class="related-foto-item" href="<?php echo $link_url; ?>" style="color:black;" <?php echo $lightbox_attr; ?>> 
+                            <a class="related-foto-item" href="<?php echo $link_url; ?>" style="color:black; position:relative;" <?php echo $lightbox_attr; ?>> 
                                 <div class="fotoContainer <?php echo esc_attr($alignment); ?>"> 
                                     <div class="image-wrapper"> 
                                         <img src="<?php echo esc_url($thumbnail); ?>" alt=""> 
@@ -328,6 +350,11 @@ function iml_render_project_single($atts) {
                             <?php endif; ?>
                                     </div> 
                                 </div> 
+                                <?php if ($show_title): ?>
+                                    <div class="grid-item-title-overlay" style="position:absolute; bottom:0; left:0; z-index:10; pointer-events:none; opacity:0; transition:opacity 0.3s ease;">
+                                        <span style="background-color:black; color:white; padding:0 5px; font-size:inherit; line-height:inherit; display:inline-block;"><?php echo esc_html($item_title); ?></span>
+                                    </div>
+                                <?php endif; ?>
                             </a> 
                             <?php 
                         } 
@@ -347,6 +374,16 @@ function iml_render_project_single($atts) {
         
         <script> 
         jQuery(document).ready(function($) { 
+             // Hover effect for title overlay
+             $('.left-column-progetto, .related-foto-item').hover(
+                 function() {
+                     $(this).find('.main-image-title-overlay, .grid-item-title-overlay').css('opacity', '1');
+                 },
+                 function() {
+                     $(this).find('.main-image-title-overlay, .grid-item-title-overlay').css('opacity', '0');
+                 }
+             );
+
             // Read More functionality
             $('.description-content').each(function() {
                 var content = $(this);
