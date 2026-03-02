@@ -155,6 +155,25 @@ function iml_homepage_lottie_preloader() {
             align-items: center;
             justify-content: center;
         }
+        /* Debug Markers */
+        .debug-marker {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            z-index: 100000000;
+            transform: translate(-50%, -50%);
+        }
+        .debug-marker::before, .debug-marker::after {
+            content: '';
+            position: absolute;
+            background: currentColor;
+        }
+        .debug-marker::before { top: 9px; left: 0; width: 20px; height: 2px; }
+        .debug-marker::after { top: 0; left: 9px; width: 2px; height: 20px; }
+        .debug-center-lottie { color: red; border: 1px solid red; border-radius: 50%; }
+        .debug-center-static { color: #00ff00; border: 1px solid #00ff00; border-radius: 50%; }
+
         /* Static SVG elements initially hidden */
         #svg-container svg, .logoalcentro svg {
             opacity: 0;
@@ -235,8 +254,8 @@ function iml_homepage_lottie_preloader() {
         // --- SYNC LOGIC CONFIGURATION ---
         // Imposta a true per attivare il riposizionamento forzato dei layer Lottie
         // affinché coincidano con gli elementi statici HTML.
-        var enableSync = false; 
-        var debugSync = false; // Logga avvisi in console se false
+        var enableSync = true; 
+        var debugSync = true; // ATTIVA DEBUG VISUALE (Richiesta Utente)
 
         // Mappa di corrispondenza: NOME LAYER LOTTIE => SELETTORE HTML STATICO
         // Assicurati che il JSON Lottie sia stato esportato con l'opzione "Include Layer Names" (Bodymovin/LottieFiles)
@@ -255,31 +274,32 @@ function iml_homepage_lottie_preloader() {
         function syncElements() {
            if (!enableSync) return;
 
-           // Apply transform only in the last 0.3 seconds of the animation
+           // Apply transform only in the last 3 seconds of the animation (Richiesta utente)
            // Calculate start frame based on total frames and frame rate
            if (anim && anim.totalFrames && anim.frameRate) {
                var fps = anim.frameRate;
                var totalFrames = anim.totalFrames;
-               var durationSync = 1.8; // 0.3 seconds duration
+               var durationSync = 3.0; // 3.0 seconds duration
                var framesSync = fps * durationSync;
-               var startSyncFrame = totalFrames - framesSync; // Start 0.3 seconds before end
+               var startSyncFrame = totalFrames - framesSync; // Start 3 seconds before end
                
                var currentFrame = anim.currentFrame;
 
-               // If current frame is before the start threshold, do not apply transform
-               if (currentFrame < startSyncFrame) {
-                   return;
-               }
-
                // Calculate interpolation progress (0 to 1)
-               // Clamp between 0 and 1 just in case
                var progress = (currentFrame - startSyncFrame) / framesSync;
                if (progress < 0) progress = 0;
                if (progress > 1) progress = 1;
+               
+               // DEBUG VISUALIZERS: Se debugSync è attivo, mostra i centri
+               if (debugSync) {
+                   drawDebugMarkers();
+               }
 
-               // Use a simple ease-out for smoother landing? Or Linear?
-               // Linear is safer for short durations.
-               // Let's stick to linear 'progress'.
+               // Se siamo prima dell'inizio del sync (ultimi 3s), non applichiamo transform
+               if (progress === 0) {
+                   return;
+               }
+
            } else {
                return; 
            }
@@ -289,6 +309,12 @@ function iml_homepage_lottie_preloader() {
            if (!lottieSVG) return;
 
            map.forEach(function(item) {
+               // Per ora applichiamo il sync SOLO al Logo centrale se richiesto specificamente, 
+               // ma la mappa contiene tutti. Se l'utente vuole centrare TUTTO l'animazione sul logo, 
+               // è una logica diversa. Qui stiamo sincronizzando OGNI layer al suo statico.
+               // L'utente ha detto: "l-animazione sia perfettamente centrata sull elemento ... logo al centro".
+               // Assumiamo che intenda che il LAYER DEL LOGO (1071) debba combaciare con #staticLogoAlCentro.
+               
                // 1. TROVA IL LAYER LOTTIE
                var layerName = item.lottie;
                var lottieLayer = lottieSVG.querySelector('g[id="' + layerName + '"]') || 
@@ -309,38 +335,69 @@ function iml_homepage_lottie_preloader() {
                var nativeRect = lottieLayer.getBoundingClientRect();
                var targetRect = htmlEl.getBoundingClientRect();
 
-               // 4. CALCOLA IL DELTA (Differenza) E SCALE
-               var totalDx = targetRect.left - nativeRect.left;
-               var totalDy = targetRect.top - nativeRect.top;
+               // 4. CALCOLA IL DELTA (Differenza)
+               // Vogliamo che il CENTRO del Lottie vada sul CENTRO dello Statico
+               var nativeCenterX = nativeRect.left + nativeRect.width / 2;
+               var nativeCenterY = nativeRect.top + nativeRect.height / 2;
                
-               // Scale calculation
-                // We assume Lottie layer should scale to match target width/height
-                // Note: This assumes aspect ratios are similar or we stretch
-                // var scaleX = targetRect.width / nativeRect.width;
-                // var scaleY = targetRect.height / nativeRect.height;
+               var targetCenterX = targetRect.left + targetRect.width / 2;
+               var targetCenterY = targetRect.top + targetRect.height / 2;
+               
+               var deltaX = targetCenterX - nativeCenterX;
+               var deltaY = targetCenterY - nativeCenterY;
+               
+               // Log solo per il logo centrale e solo occasionalmente per non intasare
+               if (debugSync && item.lottie === "1071" && Math.random() < 0.05) {
+                   console.log('🐞 Delta Logo (1071): X=' + deltaX.toFixed(2) + ', Y=' + deltaY.toFixed(2));
+               }
+
+               // 5. APPLICA LA TRASFORMAZIONE INTERPOLATA
+               var currentDx = deltaX * progress;
+               var currentDy = deltaY * progress;
+               
+               lottieLayer.style.transform = 'translate3d(' + currentDx + 'px, ' + currentDy + 'px, 0)';
+            });
+        }
+        
+        function drawDebugMarkers() {
+            // Rimuovi vecchi marker
+            var old = document.querySelectorAll('.debug-marker');
+            old.forEach(function(el) { el.remove(); });
+            
+            var lottieSVG = container.querySelector('svg');
+            if (!lottieSVG) return;
+            
+            map.forEach(function(item) {
+                // Solo per il logo centrale (1071) come richiesto
+                if (item.lottie !== "1071") return;
                 
-                // 5. APPLICA LA TRASFORMAZIONE INTERPOLATA
-                // Interpolate Translation
-                var currentDx = totalDx * progress;
-                var currentDy = totalDy * progress;
+                var layerName = item.lottie;
+                var lottieLayer = lottieSVG.querySelector('g[id="' + layerName + '"]');
+                var htmlEl = document.querySelector(item.html);
                 
-                // Interpolate Scale (from 1 to targetScale)
-                // var currentSx = 1 + (scaleX - 1) * progress;
-                // var currentSy = 1 + (scaleY - 1) * progress;
-                
-                // lottieLayer.style.transform = 'translate3d(' + currentDx + 'px, ' + currentDy + 'px, 0) scale(' + currentSx + ', ' + currentSy + ')';
-                lottieLayer.style.transform = 'translate3d(' + currentDx + 'px, ' + currentDy + 'px, 0)';
-                
-                // Imposta transform-origin al centro o top-left?
-                // Default SVG transform origin is usually 0,0 of the element bbox in some browsers or 0,0 of SVG.
-                // CSS transform on SVG elements uses transform-box: view-box by default in some cases.
-                // To be safe, usually 'center center' or '0 0'.
-                // Given we use getBoundingClientRect (top-left), standard transform origin might shift it.
-                // Let's try forcing transform-origin to 0 0 relative to the element box?
-                // Actually, if we translate based on Top-Left difference, we implicitly assume origin is relevant.
-                // If scale is applied, it scales from center by default in CSS.
-                // We need to set transform-origin to top left (0 0) to make top-left matching work with scale.
-                // lottieLayer.style.transformOrigin = '0 0';
+                if (lottieLayer && htmlEl) {
+                    // Centro Lottie
+                    var r1 = lottieLayer.getBoundingClientRect();
+                    var cx1 = r1.left + r1.width / 2;
+                    var cy1 = r1.top + r1.height / 2;
+                    
+                    var m1 = document.createElement('div');
+                    m1.className = 'debug-marker debug-center-lottie debug-marker-lottie';
+                    m1.style.left = cx1 + 'px';
+                    m1.style.top = cy1 + 'px';
+                    document.body.appendChild(m1);
+                    
+                    // Centro Statico
+                    var r2 = htmlEl.getBoundingClientRect();
+                    var cx2 = r2.left + r2.width / 2;
+                    var cy2 = r2.top + r2.height / 2;
+                    
+                    var m2 = document.createElement('div');
+                    m2.className = 'debug-marker debug-center-static debug-marker-static';
+                    m2.style.left = cx2 + 'px';
+                    m2.style.top = cy2 + 'px';
+                    document.body.appendChild(m2);
+                }
             });
         }
         
