@@ -234,21 +234,66 @@ function iml_homepage_lottie_preloader() {
             if (done) return;
             done = true;
             
-            // Show static elements before removing lottie
-            var statics = document.querySelectorAll('#svg-container svg, .logoalcentro svg');
-            statics.forEach(function(el) { 
-                el.style.visibility = 'visible';
-                el.style.opacity = '1'; 
-            });
+            // --- SMOOTH TRANSITION LOGIC (STEP 5) ---
+            // 1. Metti in pausa l'animazione per "congelarla"
+            if (anim) anim.pause();
             
-            // Rimozione immediata (richiesta utente: "niente sfumatura")
-            if (overlay) {
-                overlay.style.display = 'none';
-                overlay.remove(); // Rimuovi completamente dal DOM
-                // document.documentElement.classList.remove('lottie-active');
-                // document.body.classList.remove('lottie-active');
-                console.log('🐞 Lottie DOM Removed completely at:', Date.now() - startTime, 'ms');
-            }
+            // 2. Misura Lottie e Forza Statico
+            // Questo sovrappone il logo statico esattamente sopra quello dinamico
+            var snapped = window.matchLogos();
+            
+            // 3. Nascondi Lottie (ora che lo statico è sopra, non si noterà)
+            // Usa setTimeout brevissimo per garantire che il rendering dello statico sia avvenuto
+            setTimeout(function() {
+                if (overlay) {
+                    overlay.style.opacity = '0'; // Fade out Lottie container (optional, or display none)
+                    overlay.style.display = 'none'; // Rimuovi dal layout
+                }
+                
+                // 4. Anima il logo statico alla sua posizione naturale
+                var staticLogo = document.querySelector('#staticLogoAlCentro svg');
+                if (staticLogo && snapped) {
+                    // Force reflow
+                    void staticLogo.offsetWidth;
+                    
+                    // Imposta transizione
+                    staticLogo.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+                    
+                    // Rimuovi gli override inline per farlo tornare al CSS originale
+                    // (width, height, top, left, position, transform)
+                    staticLogo.style.position = ''; 
+                    staticLogo.style.top = '';
+                    staticLogo.style.left = '';
+                    staticLogo.style.width = '';
+                    staticLogo.style.height = '';
+                    staticLogo.style.margin = '';
+                    staticLogo.style.transform = '';
+                    // Mantieni visibility e opacity
+                    staticLogo.style.visibility = 'visible';
+                    staticLogo.style.opacity = '1';
+                    
+                    // Dopo la transizione, rimuovi anche z-index elevato se necessario
+                    setTimeout(function() {
+                        staticLogo.style.zIndex = '';
+                        staticLogo.style.transition = ''; // Pulisci transition
+                    }, 800);
+                } else {
+                    // Fallback se matchLogos fallisce: mostra semplicemente gli elementi statici
+                    var statics = document.querySelectorAll('#svg-container svg, .logoalcentro svg');
+                    statics.forEach(function(el) { 
+                        el.style.visibility = 'visible';
+                        el.style.opacity = '1'; 
+                    });
+                }
+                
+                // Rimuovi overlay completamente dopo un po' se non l'abbiamo fatto
+                if (overlay) {
+                    // overlay.remove(); // Opzionale: rimuovi dal DOM
+                }
+                
+                console.log('🐞 Transition completed.');
+                
+            }, 50); // 50ms delay
         }
 
         // FALLBACK DI SICUREZZA LUNGO: 15 secondi
@@ -258,6 +303,73 @@ function iml_homepage_lottie_preloader() {
         }, 15000);
 
         var anim; // Declare anim here for scope visibility in debugLottie
+
+        // --- MEASURE & SYNC FUNCTIONS (STEP 1 & 2) ---
+        window.measureLottieLogo = function() {
+            if (!anim) {
+                console.warn('Lottie not initialized');
+                return null;
+            }
+            
+            // Trova l'elemento SVG del Lottie
+            var lottieSVG = container.querySelector('svg');
+            if (!lottieSVG) return null;
+            
+            // Trova il layer del logo (ID "1071")
+            var logoLayer = lottieSVG.querySelector('g[id="1071"]');
+            if (!logoLayer) {
+                console.warn('Lottie logo layer (1071) not found');
+                return null;
+            }
+            
+            // Misura dimensioni e posizione
+            var rect = logoLayer.getBoundingClientRect();
+            console.log('🐞 Measured Lottie Logo:', rect);
+            
+            // Calcola anche la trasformazione corrente (scale) se possibile
+            // Ma getBoundingClientRect include già tutte le trasformazioni
+            return rect;
+        };
+
+        window.forceStaticLogo = function(rect) {
+            var staticLogo = document.querySelector('#staticLogoAlCentro svg'); // Assumiamo sia l'SVG dentro il div
+            if (!staticLogo) {
+                console.warn('Static logo #staticLogoAlCentro svg not found');
+                return;
+            }
+            
+            // Applica stili per forzare la sovrapposizione esatta
+            // Poiché rect è relativo al viewport, usiamo position: fixed temporaneamente
+            // o calcoliamo la posizione assoluta se il parent è relativo.
+            // Per massima precisione nel momento di transizione, fixed è meglio.
+            
+            staticLogo.style.position = 'fixed';
+            staticLogo.style.top = rect.top + 'px';
+            staticLogo.style.left = rect.left + 'px';
+            staticLogo.style.width = rect.width + 'px';
+            staticLogo.style.height = rect.height + 'px';
+            staticLogo.style.margin = '0';
+            staticLogo.style.transform = 'none'; // Resetta trasformazioni CSS esistenti
+            staticLogo.style.zIndex = '999999999'; // Sopra tutto
+            staticLogo.style.visibility = 'visible';
+            staticLogo.style.opacity = '1';
+            
+            console.log('🐞 Forced Static Logo to match Lottie dimensions');
+        };
+        
+        window.matchLogos = function() {
+            // 1. Metti in pausa Lottie (opzionale, ma sicuro)
+            if (anim) anim.pause();
+            
+            // 2. Misura
+            var rect = window.measureLottieLogo();
+            if (rect) {
+                // 3. Forza statico
+                window.forceStaticLogo(rect);
+                return true;
+            }
+            return false;
+        };
 
         // --- PAUSE & ADVANCE FUNCTIONS ---
         // Funzione per mettere in pausa l'animazione da console
