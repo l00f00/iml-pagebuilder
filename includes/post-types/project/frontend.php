@@ -76,8 +76,8 @@ function iml_render_project_single($atts) {
                     <?php echo get_the_post_thumbnail($post_id, 'full'); ?>
                 </a> 
                 <?php if ($show_title): ?>
-                    <div class="main-image-title-overlay" style="position:absolute; bottom:20px; left:20px; z-index:10; color:white; pointer-events:none; font-size:16px; text-transform:uppercase; mix-blend-mode:difference;">
-                        <?php echo get_the_title($post_id); ?>
+                    <div class="main-image-title-overlay" style="position:absolute; bottom:0; left:0; z-index:10; pointer-events:none;">
+                        <span style="background-color:black; color:white; padding:0 5px; font-size:inherit; line-height:inherit; display:inline-block;"><?php echo get_the_title($post_id); ?></span>
                     </div>
                 <?php endif; ?>
                 <div class="left-column-bottom"> 
@@ -266,8 +266,8 @@ function iml_render_project_single($atts) {
                     <?php echo get_the_post_thumbnail($post_id, 'full'); ?>
                 </a> 
                 <?php if ($show_title): ?>
-                    <div class="main-image-title-overlay" style="position:absolute; bottom:20px; left:20px; z-index:10; color:white; pointer-events:none; font-size:16px; text-transform:uppercase; mix-blend-mode:difference;">
-                        <?php echo get_the_title($post_id); ?>
+                    <div class="main-image-title-overlay" style="position:absolute; bottom:0; left:0; z-index:10; pointer-events:none;">
+                        <span style="background-color:black; color:white; padding:0 5px; font-size:inherit; line-height:inherit; display:inline-block;"><?php echo get_the_title($post_id); ?></span>
                     </div>
                 <?php endif; ?>
                 <div class="left-column-bottom"> 

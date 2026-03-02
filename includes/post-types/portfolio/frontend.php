@@ -49,7 +49,9 @@ function iml_render_portfolio_grid($atts) {
                 
                 // Add overlay title if enabled
                 if ($show_title) {
-                    echo '<div class="main-image-title-overlay" style="position:absolute; bottom:20px; left:20px; z-index:10; color:white; pointer-events:none; font-size:16px; text-transform:uppercase; mix-blend-mode:difference;">' . esc_html($title) . '</div>';
+                    echo '<div class="main-image-title-overlay" style="position:absolute; bottom:0; left:0; z-index:10; pointer-events:none;">
+                            <span style="background-color:black; color:white; padding:0 5px; font-size:inherit; line-height:inherit; display:inline-block;">' . esc_html($title) . '</span>
+                          </div>';
                 }
                       
                 echo '</div> 
