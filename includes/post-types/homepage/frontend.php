@@ -234,18 +234,32 @@ function iml_homepage_lottie_preloader() {
             if (done) return;
             done = true;
             
-            // --- SMOOTH TRANSITION LOGIC (SIMPLIFIED OPACITY ONLY) ---
-            // Richiesta utente: "ok non animare la posizione di logo al centro anima l'opacita'"
+            // --- SMOOTH TRANSITION LOGIC (OPACITY + DELTA CHECK) ---
             
             // 1. Metti in pausa l'animazione per "congelarla"
             if (anim) anim.pause();
             
-            // 2. Assicurati che gli elementi statici siano visibili e al loro posto (senza override di posizione)
-            // Tenta di trovare il logo statico con lo stesso criterio
+            // 2. Misura Lottie
+            var lottieRect = window.measureLottieLogo();
+            
+            // 3. Trova il logo statico (ID garantito dall'utente)
             var staticLogo = document.getElementById('staticLogoAlCentro');
-            if (staticLogo && staticLogo.tagName !== 'svg' && staticLogo.tagName !== 'IMG') {
-                  var innerSVG = staticLogo.querySelector('svg');
-                  if (innerSVG) staticLogo = innerSVG;
+            
+            // 4. Log DELTA Check (Richiesta utente)
+            if (lottieRect && staticLogo) {
+                // Assicurati che lo statico sia renderizzato per misurarlo (anche se nascosto)
+                // Se è opacity:0 è misurabile. Se è display:none no.
+                // Attualmente è opacity:0 da CSS.
+                var staticRect = staticLogo.getBoundingClientRect();
+                
+                var dW = (lottieRect.width - staticRect.width).toFixed(2);
+                var dH = (lottieRect.height - staticRect.height).toFixed(2);
+                var dX = (lottieRect.left - staticRect.left).toFixed(2);
+                var dY = (lottieRect.top - staticRect.top).toFixed(2);
+                
+                console.log('🐞 DELTA Check: Lottie [' + lottieRect.width.toFixed(2) + 'x' + lottieRect.height.toFixed(2) + '] vs Static [' + staticRect.width.toFixed(2) + 'x' + staticRect.height.toFixed(2) + '] | Diff: [dX=' + dX + ', dY=' + dY + ', dW=' + dW + ', dH=' + dH + ']');
+            } else {
+                console.warn('🐞 DELTA Check skipped: LottieRect or StaticLogo missing.');
             }
 
             // Altri elementi statici
@@ -265,7 +279,7 @@ function iml_homepage_lottie_preloader() {
                 el.style.visibility = 'visible';
             });
             
-            // 3. Esegui la transizione di opacità
+            // 5. Esegui la transizione di opacità
             requestAnimationFrame(function() {
                 // Force reflow
                 if (staticLogo) void staticLogo.offsetWidth;
