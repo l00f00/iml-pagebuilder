@@ -715,3 +715,11 @@
     width: 18px !important;
     height: 18px !important;
 }
+
+/* Close Button Position */
+.sl-wrapper .sl-close {
+    display: block !important;
+    position: absolute !important;
+    right: 17.5px !important;
+    top: 10px !important;
+}
