@@ -277,6 +277,9 @@
         padding-left: 6px !important;
         padding-right: 6px !important;
     }
+    div#logo-mobile {
+    transform: translate(-2px, -35px) scale(0.5) rotate(90deg) !important;
+  }
 }
 
 /* Mobile styles */

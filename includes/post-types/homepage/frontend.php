@@ -148,6 +148,7 @@ function iml_homepage_lottie_preloader() {
             pointer-events: none;
             opacity: 1;
             mix-blend-mode: exclusion;
+            will-change: opacity; /* Safari optimization */
         }
         #lottie-container {
             width: 100%;
@@ -158,10 +159,12 @@ function iml_homepage_lottie_preloader() {
             display: flex;
             align-items: center;
             justify-content: center;
+            transform: translate3d(0,0,0); /* Hardware acceleration */
         }
         #lottie-container svg {
              transform: translate3d(7px, 0px, 0px) scale(1.14)!important;
              transform-origin: center center;
+             will-change: transform; /* Safari optimization */
         }
         /* Debug Markers */
         .debug-marker {
@@ -321,6 +324,12 @@ function iml_homepage_lottie_preloader() {
                         
                         // Clean up other transitions
                         statics.forEach(function(el) { el.style.transition = ''; });
+                        
+                        // Destroy Lottie instance to free memory (Safari optimization)
+                        if (anim) {
+                            anim.destroy();
+                            anim = null;
+                        }
                         
                     }, 400); // Match transition duration
                 }
@@ -621,15 +630,15 @@ function iml_homepage_lottie_preloader() {
             var layer = lottieSVG.querySelector('g[id="' + layerId + '"]');
             if (layer) {
                 layer.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
-                console.log('Applied transform to ' + layerId + ': ' + layer.style.transform);
+                // console.log('Applied transform to ' + layerId + ': ' + layer.style.transform);
             } else {
-                console.warn('Layer ' + layerId + ' not found');
+                // console.warn('Layer ' + layerId + ' not found');
             }
         };
 
         // DEBUG FUNCTION: Expose to window to allow manual replay
         window.resyncLottie = function(force) {
-            console.log('🐞 Manual Resync Triggered');
+            // console.log('🐞 Manual Resync Triggered');
             var originalEnable = enableSync;
             if (force) enableSync = true;
             syncElements();
@@ -640,14 +649,17 @@ function iml_homepage_lottie_preloader() {
         // Attiva questa modalità da console con: window.enableManualDrag()
         // Trascina i layer Lottie ("ILARIA", "LOGO", ecc.) e rilascia per vedere il transform CSS in console.
         window.enableManualDrag = function() {
-            console.log('🐞 MANUAL DRAG ENABLED: Trascina i layer Lottie per posizionarli.');
-            console.log('Il valore "transform" finale verrà stampato in console al rilascio.');
+            // console.log('🐞 MANUAL DRAG ENABLED: Trascina i layer Lottie per posizionarli.');
+            // console.log('Il valore "transform" finale verrà stampato in console al rilascio.');
             
             // Disabilita il sync automatico per non interferire
             enableSync = false;
             
             var lottieSVG = container.querySelector('svg');
-            if (!lottieSVG) { console.warn('SVG non trovato'); return; }
+            if (!lottieSVG) { 
+                // console.warn('SVG non trovato'); 
+                return; 
+            }
 
             map.forEach(function(item) {
                 var layerName = item.lottie;
@@ -706,22 +718,22 @@ function iml_homepage_lottie_preloader() {
                 window.addEventListener('mouseup', function(e) {
                     if (!isDragging) return;
                     isDragging = false;
-                    console.log('🎯 Layer [' + layerName + '] Final Transform:');
-                    console.log(layer.style.transform);
+                    // console.log('🎯 Layer [' + layerName + '] Final Transform:');
+                    // console.log(layer.style.transform);
                 });
             });
         };
 
         // Helper per stampare la posizione degli SVG statici
         window.logStaticPositions = function() {
-            console.log('--- STATIC ELEMENTS POSITIONS (getBoundingClientRect) ---');
+            // console.log('--- STATIC ELEMENTS POSITIONS (getBoundingClientRect) ---');
             map.forEach(function(item) {
                 var el = document.querySelector(item.html);
                 if (el) {
                     var rect = el.getBoundingClientRect();
-                    console.log(item.html, rect);
+                    // console.log(item.html, rect);
                 } else {
-                    console.warn(item.html, 'NOT FOUND');
+                    // console.warn(item.html, 'NOT FOUND');
                 }
             });
         };
@@ -743,7 +755,7 @@ function iml_homepage_lottie_preloader() {
             if (anim) {
                 var total = anim.totalFrames || 100; // Default fallback
                 var midFrame = Math.floor(total / 2);
-                console.log('🐞 Debug: Replaying from frame', midFrame, 'and keeping overlay visible.');
+                // console.log('🐞 Debug: Replaying from frame', midFrame, 'and keeping overlay visible.');
                 anim.playSegments([midFrame, total], true);
             }
         };
@@ -779,13 +791,13 @@ function iml_homepage_lottie_preloader() {
                      // Imposta display: none per rimuoverlo dal layout e impedire lo scroll indietro
                      scrollTarget.style.display = 'none';
                      hasHidden = true; // Blocca ulteriori controlli
-                     console.log('🐞 Image Pair Container nascosto permanentemente dopo scroll (rect.bottom <= 0).');
+                     // console.log('🐞 Image Pair Container nascosto permanentemente dopo scroll (rect.bottom <= 0).');
                 }
             });
         }
 
         try {
-            console.log('Initializing Lottie animation with path:', lottieJSON);
+            // console.log('Initializing Lottie animation with path:', lottieJSON);
             anim = lottie.loadAnimation({
                 container: container,
                 renderer: 'svg',
@@ -799,53 +811,53 @@ function iml_homepage_lottie_preloader() {
 
             // Log durata animazione e avvio dal frame desiderato
             anim.addEventListener('DOMLoaded', function() {
-                console.log('🐞 Lottie DOM Loaded. Total frames:', anim.totalFrames, 'Frame rate:', anim.frameRate);
+                // console.log('🐞 Lottie DOM Loaded. Total frames:', anim.totalFrames, 'Frame rate:', anim.frameRate);
                 
                 // --- ATTIVA SYNC ---
                 // Collega la funzione di sincronizzazione all'evento enterFrame
                 if (typeof syncElements === 'function' && enableSync) {
                     anim.addEventListener('enterFrame', syncElements);
-                    console.log('🐞 Sync Lottie-HTML attivo.');
+                    // console.log('🐞 Sync Lottie-HTML attivo.');
                 }
 
                 var duration = anim.totalFrames / anim.frameRate;
-                console.log('🐞 Estimated duration (s):', duration);
+                // console.log('🐞 Estimated duration (s):', duration);
 
                 // RICHIESTA UTENTE: Iniziare dal frame 1 (o 0)
                 var startFrame = 1; 
                 
                 // Controllo di sicurezza
                 if (startFrame >= anim.totalFrames) {
-                     console.warn('🐞 Start frame is > total frames. Resetting to 0.');
+                     // console.warn('🐞 Start frame is > total frames. Resetting to 0.');
                      startFrame = 0;
                 }
 
-                console.log('🐞 Starting animation from frame:', startFrame);
+                // console.log('🐞 Starting animation from frame:', startFrame);
                 // playSegments accetta [inizio, fine], true = force immediate render
                 anim.playSegments([startFrame, anim.totalFrames], true);
             });
             
             // Quando l'animazione è COMPLETATA (fine dei 7s), avvia il fade-out
             anim.addEventListener('complete', function() {
-                 console.log('🐞 Lottie Animation Complete Event fired at:', Date.now() - startTime, 'ms');
+                 // console.log('🐞 Lottie Animation Complete Event fired at:', Date.now() - startTime, 'ms');
                  clearTimeout(timeoutId); // Annulla il fallback
                  reveal('complete_event');
             });
 
             // Gestione errori
             anim.addEventListener('data_failed', function() {
-                console.warn('Lottie data failed to load');
+                // console.warn('Lottie data failed to load');
                 clearTimeout(timeoutId);
                 reveal('data_failed');
             });
             anim.addEventListener('error', function() {
-                console.warn('Lottie error');
+                // console.warn('Lottie error');
                 clearTimeout(timeoutId);
                 reveal('error');
             });
 
         } catch (e) {
-            console.error('Lottie init error:', e);
+            // console.error('Lottie init error:', e);
             clearTimeout(timeoutId);
             reveal('catch_error');
         }
