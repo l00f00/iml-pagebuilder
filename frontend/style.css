@@ -707,13 +707,13 @@
 .sl-wrapper .sl-navigation button,
 .sl-wrapper .sl-prev, 
 .sl-wrapper .sl-next {
-    font-size: 18px !important;
+    font-size: 1em !important;
 }
 
 /* Close Button SVG */
 .sl-wrapper .sl-close svg {
-    width: 18px !important;
-    height: 18px !important;
+    width: 1em !important;
+    height: 1em !important;
 }
 
 /* Close Button Position */
