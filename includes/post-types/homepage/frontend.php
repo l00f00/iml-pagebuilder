@@ -763,6 +763,7 @@ function iml_homepage_lottie_preloader() {
         // --- SCROLL VISIBILITY LOGIC ---
         // Hide #image-pair-container when scrolled past
         // Utilizziamo un event listener sullo scroll
+        /*
         var scrollTarget = document.getElementById('image-pair-container');
         if (scrollTarget) {
             // Rimuovi la transizione per rendere la scomparsa immediata (o tienila per l'effetto fade-out, ma display none alla fine)
@@ -795,6 +796,7 @@ function iml_homepage_lottie_preloader() {
                 }
             });
         }
+        */
 
         try {
             // console.log('Initializing Lottie animation with path:', lottieJSON);
