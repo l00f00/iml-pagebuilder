@@ -175,11 +175,7 @@
         min-height: auto !important;
         height: auto !important;
     } 
-    .left-column-bottom {
-        /* Ensure container allows fixed positioning if needed, though .back is fixed */
-        position: fixed !important;
-        z-index: 999999;
-    }
+
     .back{ 
       color: white; 
       background-color: black; 
@@ -262,3 +258,8 @@
 
 /*[data-single="single-page-true"] { 
     border: 1px solid red;*/
+.left-column-bottom {
+/*Last Fix*/
+        position: fixed !important;
+        z-index: 999999;
+}
