@@ -492,6 +492,7 @@ function iml_render_project_single($atts) {
       /*z-index: 30000000000!important;*/ 
       pointer-events: all; 
     }
+    
     </style>
     <?php
 
