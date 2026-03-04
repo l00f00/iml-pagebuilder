@@ -229,6 +229,11 @@
     .right-column-progetto .related-photo-item {
         width: 100%;
     }
+    .left-column-bottom {
+        /* Ensure container allows fixed positioning if needed, though .back is fixed */
+        position: fixed !important;
+        z-index: 999999;
+    }
     .back{
       color: white;
       background-color: black;
