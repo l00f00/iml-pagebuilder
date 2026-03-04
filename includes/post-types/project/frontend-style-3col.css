@@ -182,8 +182,6 @@
       color: white; 
       background-color: black; 
       position: fixed !important;
-      bottom: 10px;
-      left: 10px;
       z-index: 999999;
     } 
     .back:hover{ 
